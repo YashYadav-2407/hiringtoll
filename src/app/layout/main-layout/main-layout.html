@@ -1,0 +1,54 @@
+<div class="layout-container">
+  <!-- SIDE NAV -->
+  <aside class="sidenav" *ngIf="!showSidenav()">
+    <div class="sidenav-brand">
+      <mat-icon>rocket_launch</mat-icon>
+      <span>Hiring Tool</span>
+    </div>
+
+    <nav class="sidenav-nav">
+      <a routerLink="/" routerLinkActive="active">
+        <mat-icon>home</mat-icon>
+        Home
+      </a>
+
+      <a routerLink="/learn" routerLinkActive="active">
+        <mat-icon>menu_book</mat-icon>
+        Learn
+      </a>
+
+      <a routerLink="/practice" routerLinkActive="active">
+        <mat-icon>code</mat-icon>
+        Practice
+      </a>
+
+      <a routerLink="/assess" routerLinkActive="active">
+        <mat-icon>assignment</mat-icon>
+        Assess
+      </a>
+
+      <a routerLink="/help" routerLinkActive="active">
+        <mat-icon>help_outline</mat-icon>
+        Help
+      </a>
+    </nav>
+
+    <div class="sidenav-bottom">
+      <a routerLink="/login">
+        <mat-icon>login</mat-icon>
+        Login
+      </a>
+
+      <a class="logout">
+        <mat-icon>logout</mat-icon>
+        Logout
+      </a>
+    </div>
+  </aside>
+
+  <!-- PAGE CONTENT -->
+  <main class="page-content">
+    <!-- <app-header></app-header> -->
+    <router-outlet></router-outlet>
+  </main>
+</div>

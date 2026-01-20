@@ -5,6 +5,7 @@
     <h3>Schedule</h3>
 
     <mat-calendar
+      ngSkipHydration
       [selected]="selectedDate"
       (selectedChange)="onDateChange($event)"
       [dateClass]="dateClass">
