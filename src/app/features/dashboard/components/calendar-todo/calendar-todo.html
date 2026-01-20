@@ -1,0 +1,58 @@
+<div class="calendar-wrapper">
+
+  <!-- CALENDAR -->
+  <mat-card class="calendar-card">
+    <h3>Schedule</h3>
+
+    <mat-calendar
+      [selected]="selectedDate"
+      (selectedChange)="onDateChange($event)"
+      [dateClass]="dateClass">
+    </mat-calendar>
+  </mat-card>
+
+  <!-- TODO -->
+  <mat-card class="todo-card">
+    <h3>Tasks — {{ selectedDate | date:'mediumDate' }}</h3>
+
+    <div class="todo-input">
+      <mat-form-field appearance="outline" class="full">
+        <input
+          matInput
+          placeholder="Add or edit task"
+          [(ngModel)]="newTodo" />
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="addOrSave()">
+        {{ editingId ? 'Save' : 'Add' }}
+      </button>
+    </div>
+
+    <mat-list>
+      <mat-list-item *ngFor="let todo of todos">
+
+        <mat-checkbox
+          [checked]="todo.completed"
+          (change)="todoService.toggle(todo.id)">
+        </mat-checkbox>
+
+        <span
+          class="todo-text"
+          [class.done]="todo.completed">
+          {{ todo.text }}
+        </span>
+
+        <span class="actions">
+          <button mat-icon-button (click)="edit(todo)">✏️</button>
+          <button mat-icon-button (click)="todoService.delete(todo.id)">🗑️</button>
+        </span>
+
+      </mat-list-item>
+    </mat-list>
+
+  </mat-card>
+
+</div>

@@ -1,0 +1,29 @@
+<mat-card class="streak-card">
+
+  <div class="streak-header">
+    <span class="fire">🔥</span>
+    <h3>Your Coding Streak</h3>
+  </div>
+
+  <div class="streak-count">
+    <span class="current">{{ streak }}</span>
+    <span class="divider">/</span>
+    <span class="target">{{ target }}</span>
+  </div>
+
+  <p class="streak-text">
+    Build your habit. Code every day without breaking the chain.
+  </p>
+
+  <div class="streak-progress">
+    <div class="progress-bar">
+      <div class="progress-fill" [style.width.%]="progressPercentage"></div>
+    </div>
+    <span class="progress-label">{{ progressPercentage | number:'1.0-0' }}% completed</span>
+  </div>
+
+  <button mat-stroked-button (click)="logProgress()">
+    Log Today's Progress
+  </button>
+
+</mat-card>

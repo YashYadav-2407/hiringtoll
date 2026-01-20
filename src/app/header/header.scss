@@ -1,0 +1,108 @@
+/* =========================
+   APP HEADER — PRODUCT GRADE
+========================= */
+
+.app-header {
+  height: 72px;
+  background: #0b1220;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* LAYOUT */
+.header-container {
+  height: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* LEFT BLOCK */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 56px;
+}
+
+/* BRAND */
+.header-title {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+/* NAV */
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.nav-item {
+  position: relative;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  padding: 6px 0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #ffffff;
+  }
+
+  &.active {
+    color: #ffffff;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -12px;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, #4f7cff, #6c8cff);
+      border-radius: 2px;
+    }
+  }
+}
+
+/* RIGHT BLOCK */
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+/* PROFILE AVATAR */
+.profile-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.profile-avatar mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  color: #ffffff;
+}
+
+/* Hover */
+.profile-avatar:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: scale(1.06);
+}
+ 

@@ -1,0 +1,67 @@
+<div class="profile-container">
+
+  <!-- Top Section -->
+  <div class="profile-header">
+    <img class="avatar" src="assets/profile.jpg" alt="Profile" />
+    <div class="info">
+      <h2>{{ user.name }}</h2>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- Details -->
+  <div class="details">
+    <div class="row">
+      <span class="label">Username:</span>
+      <span class="value">{{ user.username }}</span>
+    </div>
+
+    <div class="row">
+      <span class="label">Country:</span>
+      <span class="value">
+        🇮🇳 {{ user.country }}
+      </span>
+    </div>
+
+    <div class="row">
+      <span class="label">Student/Professional:</span>
+      <span class="value">{{ user.role }}</span>
+    </div>
+
+    <div class="row">
+      <span class="label">Institution:</span>
+      <span class="value">{{ user.institution }}</span>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+<!-- Heat Map Box -->
+<div class="card heatmap-card">
+
+  <h3>Submissions Heat Map</h3>
+
+  <div class="heatmap-grid">
+    <div class="day" *ngFor="let d of [].constructor(180)"></div>
+  </div>
+
+  <p class="note">Daily submission activity overview</p>
+
+</div>
+
+<!-- Resume Builder Box -->
+<div class="card resume-card">
+
+  <h3>Resume Builder</h3>
+
+  <p class="resume-desc">
+    Build a professional resume using your profile and activity data.
+  </p>
+
+  <div class="resume-actions">
+    <button mat-raised-button color="primary">Create Resume</button>
+    <button mat-stroked-button color="accent">Edit Resume</button>
+    <button mat-stroked-button>Download PDF</button>
+  </div>
+
+</div>

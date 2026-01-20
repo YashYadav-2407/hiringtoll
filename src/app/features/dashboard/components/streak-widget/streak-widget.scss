@@ -1,0 +1,105 @@
+.streak-card {
+  padding: 22px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #ff6f00, #ff8f00);
+  color: #ffffff;
+  box-shadow: 0 14px 32px rgba(255, 111, 0, 0.35);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* glow effect */
+.streak-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at top,
+    rgba(255, 255, 255, 0.18),
+    transparent 70%
+  );
+}
+
+/* header */
+.streak-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.streak-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.fire {
+  font-size: 22px;
+}
+
+/* count */
+.streak-count {
+  margin: 12px 0 6px;
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.streak-count .divider {
+  opacity: 0.7;
+  margin: 0 4px;
+}
+
+.streak-count .target {
+  font-size: 22px;
+  opacity: 0.85;
+}
+
+/* text */
+.streak-text {
+  font-size: 13px;
+  opacity: 0.95;
+  margin-bottom: 14px;
+}
+
+/* progress */
+.streak-progress {
+  margin-bottom: 16px;
+}
+
+.progress-bar {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #ffffff;
+  border-radius: 6px;
+  transition: width 0.4s ease;
+}
+
+.progress-label {
+  font-size: 11px;
+  margin-top: 6px;
+  display: block;
+  opacity: 0.9;
+}
+
+/* button */
+button {
+  margin-top: 8px;
+  border-radius: 20px;
+  padding: 6px 18px;
+  font-weight: 600;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+button:hover {
+  background: rgba(255, 255, 255, 0.15);
+}

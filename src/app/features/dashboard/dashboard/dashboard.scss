@@ -1,0 +1,78 @@
+/* =========================
+   DASHBOARD CONTAINER
+========================= */
+
+.dashboard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 32px;
+  background: #fafafa;
+  min-height: calc(100vh - 64px);
+  overflow: hidden;
+}
+
+/* Animated Background Layer */
+.dashboard::before {
+  content: "";
+  position: absolute;
+  inset: -35%;
+  background: linear-gradient(
+    120deg,
+    rgba(37, 99, 235, 0.12),
+    rgba(22, 163, 74, 0.12),
+    rgba(245, 158, 11, 0.12)
+  );
+  background-size: 200% 200%;
+  animation: dashboardBgFlow 16s ease-in-out infinite;
+  z-index: 0;
+}
+
+/* Keep content above animation */
+.dashboard > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================
+   SECTIONS
+========================= */
+
+.welcome-section {
+  width: 100%;
+  animation: fadeUp 0.6s ease-out;
+}
+
+.info-section {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  animation: fadeUp 0.7s ease-out;
+}
+
+.schedule-section {
+  width: 100%;
+  animation: fadeUp 0.8s ease-out;
+}
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes dashboardBgFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,225 @@
+/* ===============================
+   Background Animation
+================================ */
+@keyframes softGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ===============================
+   Page Container
+================================ */
+.assess-container {
+  padding: 48px 24px;
+  display: flex;
+  justify-content: center;
+  min-height: calc(100vh - 64px);
+
+  background: linear-gradient(
+    120deg,
+    #f9fafb,
+    #f1f5ff,
+    #f9fafb
+  );
+  background-size: 200% 200%;
+  animation: softGradient 16s ease infinite;
+}
+
+/* ===============================
+   Main Card
+================================ */
+.assessment-card {
+  width: 100%;
+  max-width: 1000px;
+  padding: 36px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.08);
+}
+
+/* ===============================
+   Header
+================================ */
+mat-card-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #111827;
+}
+
+mat-card-subtitle {
+  margin-top: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+/* Intro Text */
+mat-card-content > p {
+  margin-top: 18px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #374151;
+  max-width: 780px;
+}
+
+/* ===============================
+   Overview Stats
+================================ */
+.assessment-overview {
+  margin-top: 32px;
+  display: flex;
+  gap: 22px;
+}
+
+.stat-card {
+  flex: 1;
+  padding: 24px;
+  border-radius: 16px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.12);
+}
+
+.stat-card mat-icon {
+  font-size: 34px;
+  color: #2563eb;
+}
+
+.stat-card h3 {
+  margin: 10px 0 4px;
+  font-size: 24px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.stat-card p {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+/* ===============================
+   Available Assessments
+================================ */
+.available-assessments {
+  margin-top: 42px;
+}
+
+.available-assessments h3 {
+  margin-bottom: 18px;
+  font-size: 22px;
+  font-weight: 800;
+  color: #111827;
+}
+
+/* ===============================
+   Assessment Item
+================================ */
+.assessment-item {
+  margin-bottom: 22px;
+  padding: 24px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.assessment-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+/* Header Row */
+.assessment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.assessment-header h4 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  color: #111827;
+}
+
+/* Difficulty Tags */
+.difficulty {
+  padding: 5px 12px;
+  border-radius: 14px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.difficulty.expert {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.difficulty.hard {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.difficulty.medium {
+  background: #dcfce7;
+  color: #166534;
+}
+
+/* Description */
+.assessment-item p {
+  margin: 10px 0 14px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #4b5563;
+}
+
+/* Meta Info */
+.assessment-meta {
+  display: flex;
+  gap: 24px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+  margin-bottom: 14px;
+}
+
+/* Progress Bar */
+mat-progress-bar {
+  height: 6px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+/* Button */
+.assessment-item button {
+  border-radius: 20px;
+  padding: 8px 24px;
+  font-size: 13px;
+  font-weight: 700;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.assessment-item button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+/* ===============================
+   Accessibility
+================================ */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

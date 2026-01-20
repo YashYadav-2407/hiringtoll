@@ -1,0 +1,49 @@
+.calendar-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+/* Cards */
+.calendar-card,
+.todo-card {
+  padding: 20px;
+  border-radius: 14px;
+}
+
+/* Input row */
+.todo-input {
+   display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.full {
+  width: 100%;
+}
+
+/* Todo list */
+.todo-text {
+   flex: 1;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.done {
+  text-decoration: line-through;
+    color: gray;
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+}
+
+/* Highlight streak days */
+::ng-deep .task-day .mat-calendar-body-cell-content {
+  background-color: #4caf50;
+  color: white;
+  border-radius: 50%;
+}

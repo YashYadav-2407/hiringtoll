@@ -1,0 +1,44 @@
+<header class="app-header">
+  <div class="header-container">
+
+    <!-- LEFT: Brand + Nav -->
+    <div class="header-left">
+      <span class="header-title">Hiring Tool</span>
+
+      <nav class="header-nav">
+        <a
+          class="nav-item"
+          routerLink="/learn"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          Learn
+        </a>
+
+        <a
+          class="nav-item"
+          routerLink="/practice"
+          routerLinkActive="active"
+        >
+          Practice
+        </a>
+
+        <a
+          class="nav-item"
+          routerLink="/assess"
+          routerLinkActive="active"
+        >
+          Assess
+        </a>
+      </nav>
+    </div>
+
+    <!-- RIGHT: Profile -->
+    <div class="header-right">
+      <div class="profile-avatar" routerLink="/profile">
+        <mat-icon>account_circle</mat-icon>
+      </div>
+    </div>
+
+  </div>
+</header>
