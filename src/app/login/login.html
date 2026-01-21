@@ -1,1 +1,183 @@
-<p>login works!</p>
+<div class="login-container">
+  <div class="login-box">
+    <div class="login-header">
+      <h1>{{ isSignUp() ? 'Create Account' : 'Welcome Back' }}</h1>
+      <p>{{ isSignUp() ? 'Join us to get started' : 'Sign in to your account' }}</p>
+    </div>
+
+    <!-- Alert Messages -->
+    <div class="alert-container">
+      <div *ngIf="errorMessage()" class="alert alert-error">
+        <span class="alert-icon">✕</span>
+        <span>{{ errorMessage() }}</span>
+      </div>
+      <div *ngIf="successMessage()" class="alert alert-success">
+        <span class="alert-icon">✓</span>
+        <span>{{ successMessage() }}</span>
+      </div>
+    </div>
+
+    <!-- Login Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" *ngIf="!isSignUp()" class="auth-form">
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="login-email">Email Address</label>
+        <input
+          id="login-email"
+          type="email"
+          formControlName="email"
+          placeholder="Enter your email"
+          class="form-control"
+          [class.is-invalid]="submitted() && loginForm.get('email')?.invalid"
+        />
+        <div *ngIf="submitted() && loginForm.get('email')?.invalid" class="error-text">
+          {{ getLoginErrorMessage('email') }}
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="login-password">Password</label>
+        <input
+          id="login-password"
+          type="password"
+          formControlName="password"
+          placeholder="Enter your password"
+          class="form-control"
+          [class.is-invalid]="submitted() && loginForm.get('password')?.invalid"
+        />
+        <div *ngIf="submitted() && loginForm.get('password')?.invalid" class="error-text">
+          {{ getLoginErrorMessage('password') }}
+        </div>
+      </div>
+
+      <!-- Remember Me -->
+      <div class="form-group checkbox">
+        <input
+          id="remember-me"
+          type="checkbox"
+          formControlName="rememberMe"
+          class="checkbox-input"
+        />
+        <label for="remember-me" class="checkbox-label">Remember me</label>
+      </div>
+
+      <!-- Login Button -->
+      <button 
+        type="submit" 
+        class="btn btn-primary btn-block"
+        [disabled]="loadingState()"
+      >
+        {{ loadingState() ? 'Signing in...' : 'Sign In' }}
+      </button>
+
+      <!-- Forgot Password Link -->
+      <div class="forgot-password">
+        <a href="#forgot">Forgot your password?</a>
+      </div>
+    </form>
+
+    <!-- Sign Up Form -->
+    <form [formGroup]="signUpForm" (ngSubmit)="onSignUp()" *ngIf="isSignUp()" class="auth-form">
+      <!-- Name Field -->
+      <div class="form-group">
+        <label for="signup-name">Full Name</label>
+        <input
+          id="signup-name"
+          type="text"
+          formControlName="name"
+          placeholder="Enter your full name"
+          class="form-control"
+          [class.is-invalid]="submitted() && signUpForm.get('name')?.invalid"
+        />
+        <div *ngIf="submitted() && signUpForm.get('name')?.invalid" class="error-text">
+          {{ getSignUpErrorMessage('name') }}
+        </div>
+      </div>
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="signup-email">Email Address</label>
+        <input
+          id="signup-email"
+          type="email"
+          formControlName="email"
+          placeholder="Enter your email"
+          class="form-control"
+          [class.is-invalid]="submitted() && signUpForm.get('email')?.invalid"
+        />
+        <div *ngIf="submitted() && signUpForm.get('email')?.invalid" class="error-text">
+          {{ getSignUpErrorMessage('email') }}
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="signup-password">Password</label>
+        <input
+          id="signup-password"
+          type="password"
+          formControlName="password"
+          placeholder="Enter password (min 8 characters)"
+          class="form-control"
+          [class.is-invalid]="submitted() && signUpForm.get('password')?.invalid"
+        />
+        <div *ngIf="submitted() && signUpForm.get('password')?.invalid" class="error-text">
+          {{ getSignUpErrorMessage('password') }}
+        </div>
+      </div>
+
+      <!-- Confirm Password Field -->
+      <div class="form-group">
+        <label for="signup-confirm-password">Confirm Password</label>
+        <input
+          id="signup-confirm-password"
+          type="password"
+          formControlName="confirmPassword"
+          placeholder="Confirm your password"
+          class="form-control"
+          [class.is-invalid]="submitted() && signUpForm.get('confirmPassword')?.invalid"
+        />
+        <div *ngIf="submitted() && signUpForm.get('confirmPassword')?.invalid" class="error-text">
+          {{ getSignUpErrorMessage('confirmPassword') }}
+        </div>
+      </div>
+
+      <!-- Terms Checkbox -->
+      <div class="form-group checkbox">
+        <input
+          id="agree-terms"
+          type="checkbox"
+          formControlName="agreeTerms"
+          class="checkbox-input"
+          [class.is-invalid]="submitted() && signUpForm.get('agreeTerms')?.invalid"
+        />
+        <label for="agree-terms" class="checkbox-label">
+          I agree to the <a href="#terms" class="link">Terms and Conditions</a>
+        </label>
+        <div *ngIf="submitted() && signUpForm.get('agreeTerms')?.invalid" class="error-text">
+          You must agree to the terms
+        </div>
+      </div>
+
+      <!-- Sign Up Button -->
+      <button 
+        type="submit" 
+        class="btn btn-primary btn-block"
+        [disabled]="loadingState()"
+      >
+        {{ loadingState() ? 'Creating account...' : 'Create Account' }}
+      </button>
+    </form>
+
+    <!-- Toggle Between Forms -->
+    <div class="auth-toggle">
+      <p>
+        {{ isSignUp() ? 'Already have an account?' : 'Don\'t have an account?' }}
+        <button type="button" class="toggle-link" (click)="toggleForm()">
+          {{ isSignUp() ? 'Sign In' : 'Sign Up' }}
+        </button>
+      </p>
+    </div>
+  </div>
+</div>
