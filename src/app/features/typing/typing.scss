@@ -1,0 +1,618 @@
+.typing-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.lessons-view {
+  .lessons-header {
+    text-align: center;
+    margin-bottom: 3rem;
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: #666;
+    }
+  }
+
+  .lessons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+
+    .lesson-card {
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-radius: 8px;
+      overflow: hidden;
+
+      &:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+      }
+
+      mat-card-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 1rem;
+        display: flex;
+        justify-content: flex-end;
+
+        .lesson-difficulty {
+          padding: 0.5rem 1rem;
+          border-radius: 20px;
+          color: white;
+          font-size: 0.85rem;
+          font-weight: 600;
+          text-transform: capitalize;
+        }
+      }
+
+      mat-card-content {
+        padding: 1.5rem;
+
+        h2 {
+          margin: 0 0 0.75rem 0;
+          font-size: 1.3rem;
+          color: #333;
+        }
+
+        .description {
+          color: #666;
+          font-size: 0.95rem;
+          margin-bottom: 1rem;
+          line-height: 1.5;
+        }
+
+        .lesson-meta {
+          display: flex;
+          gap: 1rem;
+          margin-bottom: 1rem;
+          font-size: 0.9rem;
+          color: #999;
+
+          .duration {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            mat-icon {
+              font-size: 1rem;
+              width: 1rem;
+              height: 1rem;
+            }
+          }
+        }
+
+        .excerpt {
+          background: #f5f5f5;
+          padding: 1rem;
+          border-radius: 4px;
+          font-family: 'Courier New', monospace;
+          font-size: 0.9rem;
+          color: #333;
+          word-break: break-all;
+          margin: 0;
+        }
+      }
+
+      mat-card-actions {
+        padding: 1rem;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+
+        .start-btn,
+        .race-btn {
+          flex: 1;
+        }
+      }
+    }
+  }
+}
+
+.typing-practice {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  .practice-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+
+    .back-btn {
+      color: white;
+      
+      mat-icon {
+        font-size: 1.5rem;
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+    }
+
+    h2 {
+      flex: 1;
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    .stats {
+      display: flex;
+      gap: 2rem;
+
+      .stat {
+        text-align: right;
+
+        .label {
+          display: block;
+          font-size: 0.85rem;
+          opacity: 0.9;
+          margin-bottom: 0.25rem;
+        }
+
+        .value {
+          display: block;
+          font-size: 1.5rem;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+
+  mat-divider {
+    margin: 0;
+  }
+
+  .practice-content {
+    padding: 2rem;
+
+    .text-to-type {
+      background: #f9f9f9;
+      padding: 1.5rem;
+      border-radius: 4px;
+      margin-bottom: 2rem;
+      border: 2px solid #e0e0e0;
+
+      .reference-text {
+        font-family: 'Courier New', monospace;
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin: 0;
+        color: #333;
+        word-break: break-all;
+      }
+    }
+
+    .input-section {
+      margin-bottom: 2rem;
+
+      .typing-input {
+        width: 100%;
+        min-height: 120px;
+        padding: 1rem;
+        font-family: 'Courier New', monospace;
+        font-size: 1rem;
+        border: 2px solid #ddd;
+        border-radius: 4px;
+        resize: vertical;
+        transition: border-color 0.3s ease;
+
+        &:focus {
+          outline: none;
+          border-color: #667eea;
+        }
+      }
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+
+      .progress {
+        height: 100%;
+        background: linear-gradient(90deg, #4CAF50, #45a049);
+        transition: width 0.2s ease;
+      }
+    }
+
+    .practice-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+
+      button {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        mat-icon {
+          font-size: 1.1rem;
+          width: 1.1rem;
+          height: 1.1rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .typing-container {
+    padding: 1rem;
+  }
+
+  .lessons-view {
+    .lessons-header {
+      h1 {
+        font-size: 1.8rem;
+      }
+    }
+
+    .lessons-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+
+  .typing-practice {
+    .practice-header {
+      flex-direction: column;
+      text-align: center;
+      gap: 1rem;
+
+      h2 {
+        font-size: 1.4rem;
+      }
+
+      .stats {
+        width: 100%;
+        justify-content: space-around;
+      }
+    }
+  }
+}
+
+// Race Mode Styles
+.race-mode {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  .race-header {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+    color: white;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+
+    .back-btn {
+      color: white;
+      mat-icon {
+        font-size: 1.5rem;
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+    }
+
+    h2 {
+      flex: 1;
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    .race-stats {
+      display: flex;
+      gap: 2rem;
+
+      .stat {
+        text-align: right;
+
+        .label {
+          display: block;
+          font-size: 0.85rem;
+          opacity: 0.9;
+          margin-bottom: 0.25rem;
+        }
+
+        .value {
+          display: block;
+          font-size: 1.5rem;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+
+  .race-content {
+    padding: 2rem;
+    position: relative;
+
+    .race-track {
+      background: linear-gradient(180deg, #f5f5f5 0%, #efefef 100%);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 3rem;
+
+      .race-lane {
+        margin-bottom: 3rem;
+        position: relative;
+
+        .lane-label {
+          font-weight: 600;
+          color: #333;
+          margin-bottom: 0.5rem;
+          font-size: 0.95rem;
+        }
+
+        .race-line {
+          height: 60px;
+          background: #fff;
+          border: 2px solid #ddd;
+          border-radius: 8px;
+          position: relative;
+          overflow: hidden;
+
+          .player-car,
+          .opponent-car {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.8rem;
+            transition: left 0.1s linear;
+          }
+
+          .player-car {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+          }
+
+          .opponent-car {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 4px 12px rgba(245, 87, 108, 0.4);
+          }
+        }
+
+        .progress-text {
+          margin-top: 0.5rem;
+          text-align: right;
+          font-weight: 600;
+          color: #666;
+          font-size: 0.9rem;
+        }
+      }
+
+      .vs-badge {
+        text-align: center;
+        font-weight: 700;
+        font-size: 1.3rem;
+        color: #ff8e53;
+        margin: 1.5rem 0;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+    }
+
+    .game-over-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+
+      .game-over-content {
+        background: white;
+        border-radius: 16px;
+        padding: 3rem 2rem;
+        text-align: center;
+        max-width: 400px;
+        animation: popIn 0.3s ease-out;
+
+        &.won {
+          background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+          color: white;
+        }
+
+        .game-result-icon {
+          font-size: 4rem;
+          width: 4rem;
+          height: 4rem;
+          margin: 0 auto 1rem;
+          color: #ff8e53;
+          display: block;
+
+          .won & {
+            color: #ffd700;
+          }
+        }
+
+        h3 {
+          font-size: 2rem;
+          margin: 1rem 0 0.5rem;
+          color: inherit;
+        }
+
+        .result-message {
+          font-size: 1.1rem;
+          margin-bottom: 1.5rem;
+          opacity: 0.9;
+        }
+
+        .final-stats {
+          background: rgba(0, 0, 0, 0.1);
+          padding: 1.5rem;
+          border-radius: 8px;
+          margin-bottom: 1.5rem;
+
+          p {
+            margin: 0.5rem 0;
+            font-size: 1rem;
+
+            strong {
+              font-size: 1.2rem;
+            }
+          }
+        }
+
+        .game-over-actions {
+          display: flex;
+          gap: 1rem;
+
+          button {
+            flex: 1;
+          }
+        }
+      }
+    }
+
+    .race-text-section {
+      .text-to-type {
+        background: #f9f9f9;
+        padding: 1.5rem;
+        border-radius: 4px;
+        margin-bottom: 2rem;
+        border: 2px solid #e0e0e0;
+
+        .reference-text {
+          font-family: 'Courier New', monospace;
+          font-size: 1rem;
+          line-height: 1.8;
+          margin: 0;
+          color: #333;
+          word-break: break-all;
+        }
+      }
+
+      .input-section {
+        margin-bottom: 2rem;
+
+        .race-typing-input {
+          width: 100%;
+          min-height: 100px;
+          padding: 1rem;
+          font-family: 'Courier New', monospace;
+          font-size: 1rem;
+          border: 2px solid #ddd;
+          border-radius: 4px;
+          resize: vertical;
+          transition: border-color 0.3s ease;
+
+          &:focus {
+            outline: none;
+            border-color: #ff8e53;
+          }
+
+          &:disabled {
+            background: #f5f5f5;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+
+    .race-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+
+      button {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        mat-icon {
+          font-size: 1.1rem;
+          width: 1.1rem;
+          height: 1.1rem;
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .race-mode {
+    .race-header {
+      flex-direction: column;
+      text-align: center;
+      gap: 1rem;
+
+      h2 {
+        font-size: 1.4rem;
+      }
+
+      .race-stats {
+        width: 100%;
+        justify-content: space-around;
+      }
+    }
+
+    .race-content {
+      .game-over-modal {
+        .game-over-content {
+          margin: 1rem;
+        }
+      }
+
+      .race-track {
+        padding: 1rem;
+
+        .race-lane {
+          margin-bottom: 2rem;
+
+          .race-line {
+            height: 50px;
+
+            .player-car,
+            .opponent-car {
+              width: 40px;
+              height: 40px;
+              font-size: 1.5rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}

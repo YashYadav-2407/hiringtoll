@@ -1,48 +1,213 @@
 <div class="practice-container">
-  <mat-card class="practice-card">
-    <mat-card-header>
-      <mat-card-title>Practice Arena</mat-card-title>
-      <mat-card-subtitle>Test your skills with real-world challenges</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <p>Sharpen your coding skills with interactive challenges, coding problems, and skill assessments.</p>
-      <div class="practice-grid">
-        <mat-card class="challenge-card">
-          <mat-card-content>
-            <mat-icon>code</mat-icon>
-            <h4>Algorithm Challenges</h4>
-            <p>Solve complex algorithmic problems</p>
-            <button mat-stroked-button>Start Challenge</button>
-          </mat-card-content>
-        </mat-card>
+  <div class="practice-content">
+    <div class="header-card">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Practice Arena</mat-card-title>
+          <mat-card-subtitle>Master your coding skills through practice</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Sharpen your coding skills with interactive challenges, beginner exercises, speed coding, and skill assessments.</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
 
-        <mat-card class="challenge-card">
-          <mat-card-content>
-            <mat-icon>bug_report</mat-icon>
-            <h4>Debug Exercises</h4>
-            <p>Find and fix bugs in code snippets</p>
-            <button mat-stroked-button>Debug Code</button>
-          </mat-card-content>
-        </mat-card>
+    <!-- Tabs for different sections -->
+    <mat-tab-group class="practice-tabs" dynamicHeight>
+      <!-- ALGORITHM CHALLENGES TAB -->
+      <mat-tab label="🎯 Algorithm Challenges" class="algorithm-tab">
+        <ng-template mat-tab-label>
+          <span class="tab-icon">🎯</span>
+          <span>Algorithm Challenges</span>
+        </ng-template>
 
-        <mat-card class="challenge-card">
-          <mat-card-content>
-            <mat-icon>speed</mat-icon>
-            <h4>Speed Coding</h4>
-            <p>Race against time to solve problems</p>
-            <button mat-stroked-button>Quick Challenge</button>
-          </mat-card-content>
-        </mat-card>
+        <div class="tab-content">
+          <div *ngIf="isLoadingAlgorithm" class="loading-container">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Loading algorithm challenges...</p>
+          </div>
 
-        <mat-card class="challenge-card">
-          <mat-card-content>
-            <mat-icon>school</mat-icon>
-            <h4>Skill Assessment</h4>
-            <p>Take comprehensive skill tests</p>
-            <button mat-stroked-button>Take Test</button>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    </mat-card-content>
-  </mat-card>
+          <div *ngIf="!isLoadingAlgorithm && algorithmChallenges.length === 0" class="empty-state">
+            <p>No algorithm challenges available.</p>
+          </div>
+
+          <div *ngIf="!isLoadingAlgorithm && algorithmChallenges.length > 0" class="cards-grid">
+            <mat-card class="content-card" *ngFor="let challenge of algorithmChallenges">
+              <mat-card-header>
+                <div mat-card-avatar class="avatar-icon">🔧</div>
+                <mat-card-title>{{ challenge.title }}</mat-card-title>
+                <mat-card-subtitle>{{ challenge.category }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p class="description">{{ challenge.description }}</p>
+                <div class="metadata">
+                  <mat-chip-set>
+                    <mat-chip [color]="getDifficultyColor(challenge.difficulty)" selected>
+                      {{ challenge.difficulty | titlecase }}
+                    </mat-chip>
+                    <mat-chip>⏱️ {{ challenge.timeLimit }} min</mat-chip>
+                    <mat-chip *ngIf="challenge.acceptance_rate">
+                      ✅ {{ challenge.acceptance_rate }}%
+                    </mat-chip>
+                  </mat-chip-set>
+                </div>
+              </mat-card-content>
+              <mat-card-actions>
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="openChallenge(challenge.leetcodeUrl)"
+                  [disabled]="!challenge.leetcodeUrl"
+                >
+                  Solve Now
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- BEGINNER EXERCISES TAB -->
+      <mat-tab label="📚 Beginner Exercises" class="beginner-tab">
+        <ng-template mat-tab-label>
+          <span class="tab-icon">📚</span>
+          <span>Beginner Exercises</span>
+        </ng-template>
+
+        <div class="tab-content">
+          <div *ngIf="isLoadingBeginner" class="loading-container">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Loading beginner exercises...</p>
+          </div>
+
+          <div *ngIf="!isLoadingBeginner && beginnerExercises.length === 0" class="empty-state">
+            <p>No beginner exercises available.</p>
+          </div>
+
+          <div *ngIf="!isLoadingBeginner && beginnerExercises.length > 0" class="cards-grid">
+            <mat-card class="content-card beginner-card" *ngFor="let exercise of beginnerExercises">
+              <mat-card-header>
+                <div mat-card-avatar class="avatar-icon">✏️</div>
+                <mat-card-title>{{ exercise.title }}</mat-card-title>
+                <mat-card-subtitle>{{ exercise.topic }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p class="description">{{ exercise.description }}</p>
+                <div class="metadata">
+                  <mat-chip-set>
+                    <mat-chip [color]="getDifficultyColor(exercise.difficulty)" selected>
+                      {{ exercise.difficulty | titlecase }}
+                    </mat-chip>
+                    <mat-chip>🕐 {{ exercise.duration }}</mat-chip>
+                    <mat-chip>🐍 {{ exercise.language }}</mat-chip>
+                    <mat-chip *ngIf="exercise.hints">
+                      💡 {{ exercise.hints }} hints
+                    </mat-chip>
+                  </mat-chip-set>
+                </div>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-raised-button color="primary">
+                  Start Exercise
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- SPEED CODING TAB -->
+      <mat-tab label="⚡ Speed Coding" class="speed-tab">
+        <ng-template mat-tab-label>
+          <span class="tab-icon">⚡</span>
+          <span>Speed Coding</span>
+        </ng-template>
+
+        <div class="tab-content">
+          <div *ngIf="isLoadingSpeed" class="loading-container">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Loading speed coding challenges...</p>
+          </div>
+
+          <div *ngIf="!isLoadingSpeed && speedCodingChallenges.length === 0" class="empty-state">
+            <p>No speed coding challenges available.</p>
+          </div>
+
+          <div *ngIf="!isLoadingSpeed && speedCodingChallenges.length > 0" class="cards-grid">
+            <mat-card class="content-card speed-card" *ngFor="let challenge of speedCodingChallenges">
+              <mat-card-header>
+                <div mat-card-avatar class="avatar-icon">⚡</div>
+                <mat-card-title>{{ challenge.title }}</mat-card-title>
+                <mat-card-subtitle>{{ challenge.category }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p class="description">{{ challenge.description }}</p>
+                <div class="metadata">
+                  <mat-chip-set>
+                    <mat-chip [color]="getDifficultyColor(challenge.difficulty)" selected>
+                      {{ challenge.difficulty | titlecase }}
+                    </mat-chip>
+                    <mat-chip>⏱️ {{ challenge.timeLimit }}s</mat-chip>
+                    <mat-chip>🏆 {{ challenge.reward }} pts</mat-chip>
+                  </mat-chip-set>
+                </div>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-raised-button color="primary">
+                  Race Now
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- SKILL ASSESSMENT TAB -->
+      <mat-tab label="🎓 Skill Assessment" class="assessment-tab">
+        <ng-template mat-tab-label>
+          <span class="tab-icon">🎓</span>
+          <span>Skill Assessment</span>
+        </ng-template>
+
+        <div class="tab-content">
+          <div *ngIf="isLoadingAssessment" class="loading-container">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Loading skill assessments...</p>
+          </div>
+
+          <div *ngIf="!isLoadingAssessment && skillAssessments.length === 0" class="empty-state">
+            <p>No skill assessments available.</p>
+          </div>
+
+          <div *ngIf="!isLoadingAssessment && skillAssessments.length > 0" class="cards-grid">
+            <mat-card class="content-card assessment-card" *ngFor="let assessment of skillAssessments">
+              <mat-card-header>
+                <div mat-card-avatar class="avatar-icon">📊</div>
+                <mat-card-title>{{ assessment.title }}</mat-card-title>
+                <mat-card-subtitle>{{ assessment.topic }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p class="description">{{ assessment.description }}</p>
+                <div class="metadata">
+                  <mat-chip-set>
+                    <mat-chip [color]="getLevelColor(assessment.level)" selected>
+                      {{ assessment.level | titlecase }}
+                    </mat-chip>
+                    <mat-chip>❓ {{ assessment.questions }} Q</mat-chip>
+                    <mat-chip>⏱️ {{ assessment.duration }} min</mat-chip>
+                    <mat-chip>📈 {{ assessment.passingScore }}% pass</mat-chip>
+                  </mat-chip-set>
+                </div>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-raised-button color="primary" (click)="takeTest(assessment)">
+                  Take Test
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
 </div>

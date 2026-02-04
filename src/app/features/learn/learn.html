@@ -1,28 +1,162 @@
 <div class="learn-container">
-  <mat-card class="welcome-card">
-    <mat-card-header>
-      <mat-card-title>Learning Center</mat-card-title>
-      <mat-card-subtitle>Master the skills you need</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <p>Access comprehensive learning materials, tutorials, and resources to build your technical skills.</p>
-      <div class="learning-sections">
-        <div class="section">
-          <h3>📚 Tutorials</h3>
-          <p>Step-by-step guides for various technologies</p>
+  <div class="learn-content">
+    <div class="header-card">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Learning Center</mat-card-title>
+          <mat-card-subtitle>Master the skills you need</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Access comprehensive learning materials, tutorials, coding challenges, and documentation to build your technical skills.</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Tabs for different sections -->
+    <mat-tab-group class="learning-tabs" dynamicHeight>
+      <!-- TUTORIALS TAB -->
+      <mat-tab label="📚 Tutorials" class="tutorial-tab">
+        <ng-template mat-tab-label>
+          <span class="tab-icon">📚</span>
+          <span>Tutorials</span>
+        </ng-template>
+
+        <div class="tab-content">
+          <div *ngIf="isLoadingTutorials" class="loading-container">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Loading tutorials...</p>
+          </div>
+
+          <div *ngIf="!isLoadingTutorials && tutorials.length === 0" class="empty-state">
+            <p>No tutorials available at the moment.</p>
+          </div>
+
+          <div *ngIf="!isLoadingTutorials && tutorials.length > 0" class="cards-grid">
+            <mat-card class="content-card" *ngFor="let tutorial of tutorials">
+              <mat-card-header>
+                <div mat-card-avatar class="avatar-icon">📖</div>
+                <mat-card-title>{{ tutorial.title }}</mat-card-title>
+                <mat-card-subtitle>{{ tutorial.language }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p class="description">{{ tutorial.description }}</p>
+                <div class="metadata">
+                  <mat-chip-set>
+                    <mat-chip [color]="getDifficultyColor(tutorial.difficulty)" selected>
+                      {{ tutorial.difficulty | titlecase }}
+                    </mat-chip>
+                    <mat-chip>⏱️ {{ tutorial.duration }}</mat-chip>
+                  </mat-chip-set>
+                </div>
+              </mat-card-content>
+              <mat-card-actions>
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="openLink(tutorial.url)"
+                  [disabled]="!tutorial.url"
+                >
+                  Learn More
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
         </div>
-        <div class="section">
-          <h3>🎯 Challenges</h3>
-          <p>Practice coding problems and exercises</p>
+      </mat-tab>
+
+      <!-- CHALLENGES TAB -->
+      <mat-tab label="🎯 Challenges" class="challenge-tab">
+        <ng-template mat-tab-label>
+          <span class="tab-icon">🎯</span>
+          <span>Challenges</span>
+        </ng-template>
+
+        <div class="tab-content">
+          <div *ngIf="isLoadingChallenges" class="loading-container">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Loading challenges...</p>
+          </div>
+
+          <div *ngIf="!isLoadingChallenges && challenges.length === 0" class="empty-state">
+            <p>No challenges available at the moment.</p>
+          </div>
+
+          <div *ngIf="!isLoadingChallenges && challenges.length > 0" class="cards-grid">
+            <mat-card class="content-card challenge-card" *ngFor="let challenge of challenges">
+              <mat-card-header>
+                <div mat-card-avatar class="avatar-icon">⚡</div>
+                <mat-card-title>{{ challenge.title }}</mat-card-title>
+                <mat-card-subtitle>{{ challenge.category }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p class="description">{{ challenge.description }}</p>
+                <div class="metadata">
+                  <mat-chip-set>
+                    <mat-chip [color]="getDifficultyColor(challenge.difficulty)" selected>
+                      {{ challenge.difficulty | titlecase }}
+                    </mat-chip>
+                    <mat-chip *ngIf="challenge.acceptance_rate">
+                      ✅ {{ challenge.acceptance_rate }}% solved
+                    </mat-chip>
+                  </mat-chip-set>
+                </div>
+              </mat-card-content>
+              <mat-card-actions>
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="openLink(challenge.leetcodeUrl)"
+                  [disabled]="!challenge.leetcodeUrl"
+                >
+                  Solve on LeetCode
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
         </div>
-        <div class="section">
-          <h3>📖 Documentation</h3>
-          <p>Reference materials and API documentation</p>
+      </mat-tab>
+
+      <!-- DOCUMENTATION TAB -->
+      <mat-tab label="📖 Documentation" class="docs-tab">
+        <ng-template mat-tab-label>
+          <span class="tab-icon">📖</span>
+          <span>Documentation</span>
+        </ng-template>
+
+        <div class="tab-content">
+          <div *ngIf="isLoadingDocumentation" class="loading-container">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Loading documentation...</p>
+          </div>
+
+          <div *ngIf="!isLoadingDocumentation && documentation.length === 0" class="empty-state">
+            <p>No documentation available at the moment.</p>
+          </div>
+
+          <div *ngIf="!isLoadingDocumentation && documentation.length > 0" class="cards-grid">
+            <mat-card class="content-card doc-card" *ngFor="let doc of documentation">
+              <mat-card-header>
+                <div mat-card-avatar class="avatar-icon">📚</div>
+                <mat-card-title>{{ doc.title }}</mat-card-title>
+                <mat-card-subtitle>{{ doc.language }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p class="description">{{ doc.description }}</p>
+              </mat-card-content>
+              <mat-card-actions>
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="openLink(doc.official_url)"
+                  [disabled]="!doc.official_url"
+                >
+                  Read Docs
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
         </div>
-      </div>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-raised-button color="primary">Start Learning</button>
-    </mat-card-actions>
-  </mat-card>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
 </div>

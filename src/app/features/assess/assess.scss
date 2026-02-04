@@ -7,219 +7,588 @@
   100% { background-position: 0% 50%; }
 }
 
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ===============================
    Page Container
 ================================ */
 .assess-container {
-  padding: 48px 24px;
+  position: relative;
+  padding: 40px 24px;
   display: flex;
   justify-content: center;
+  background: #f9fafb;
   min-height: calc(100vh - 64px);
+  overflow-y: auto;
+}
 
+/* Animated Background */
+.assess-container::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
   background: linear-gradient(
     120deg,
-    #f9fafb,
-    #f1f5ff,
-    #f9fafb
+    rgba(37, 99, 235, 0.12),
+    rgba(22, 163, 74, 0.12),
+    rgba(245, 158, 11, 0.12)
   );
   background-size: 200% 200%;
-  animation: softGradient 16s ease infinite;
+  animation: softGradient 18s ease-in-out infinite;
+  z-index: 0;
 }
 
-/* ===============================
-   Main Card
-================================ */
-.assessment-card {
+/* Keep content above animation */
+.assess-content {
+  position: relative;
+  z-index: 1;
   width: 100%;
-  max-width: 1000px;
-  padding: 36px;
-  border-radius: 18px;
+  max-width: 1200px;
+}
+
+/* ===============================
+   HEADER CARD
+================================ */
+.header-card {
+  margin-bottom: 32px;
+
+  mat-card {
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+    animation: fadeUp 0.7s ease-out;
+  }
+
+  mat-card-title {
+    font-size: 30px;
+    font-weight: 800;
+    color: #111827;
+  }
+
+  mat-card-subtitle {
+    font-size: 15px;
+    margin-top: 6px;
+    color: #6b7280;
+  }
+
+  mat-card-content > p {
+    margin-top: 16px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #374151;
+  }
+}
+
+/* ===============================
+   TABS
+================================ */
+.assess-tabs {
   background: #ffffff;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.08);
-}
-
-/* ===============================
-   Header
-================================ */
-mat-card-title {
-  font-size: 32px;
-  font-weight: 800;
-  color: #111827;
-}
-
-mat-card-subtitle {
-  margin-top: 6px;
-  font-size: 15px;
-  font-weight: 500;
-  color: #6b7280;
-}
-
-/* Intro Text */
-mat-card-content > p {
-  margin-top: 18px;
-  font-size: 15px;
-  line-height: 1.7;
-  color: #374151;
-  max-width: 780px;
-}
-
-/* ===============================
-   Overview Stats
-================================ */
-.assessment-overview {
-  margin-top: 32px;
-  display: flex;
-  gap: 22px;
-}
-
-.stat-card {
-  flex: 1;
-  padding: 24px;
   border-radius: 16px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
 
-.stat-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.12);
-}
+  ::ng-deep {
+    .mat-tab-labels {
+      border-bottom: 2px solid #e5e7eb;
+      background: #fafbfc;
+    }
 
-.stat-card mat-icon {
-  font-size: 34px;
-  color: #2563eb;
-}
+    .mat-tab-label {
+      font-weight: 600;
+      font-size: 14px;
+      padding: 20px 24px;
+      min-width: 160px;
+      transition: all 0.3s ease;
 
-.stat-card h3 {
-  margin: 10px 0 4px;
-  font-size: 24px;
-  font-weight: 800;
-  color: #111827;
-}
+      &:hover {
+        background: #f3f4f6;
+      }
 
-.stat-card p {
-  font-size: 13px;
-  font-weight: 500;
-  color: #6b7280;
+      &.mat-tab-label-active {
+        color: #2563eb;
+        background: #eff6ff;
+      }
+
+      .tab-icon {
+        margin-right: 8px;
+        font-size: 18px;
+      }
+    }
+
+    .mat-tab-body {
+      padding: 0;
+    }
+  }
 }
 
 /* ===============================
-   Available Assessments
+   TAB CONTENT
 ================================ */
-.available-assessments {
-  margin-top: 42px;
-}
-
-.available-assessments h3 {
-  margin-bottom: 18px;
-  font-size: 22px;
-  font-weight: 800;
-  color: #111827;
+.tab-content {
+  padding: 32px 24px;
+  min-height: 400px;
 }
 
 /* ===============================
-   Assessment Item
+   STATS GRID
+================================ */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  animation: fadeUp 0.6s ease-out;
+
+  .stat-card {
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    padding: 24px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+      border-color: #d1d5db;
+    }
+
+    mat-card-content {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0;
+    }
+
+    .stat-icon {
+      font-size: 32px;
+      min-width: 50px;
+      text-align: center;
+    }
+
+    .stat-info {
+      flex-grow: 1;
+
+      h3 {
+        margin: 0 0 4px 0;
+        font-size: 24px;
+        font-weight: 700;
+        color: #111827;
+      }
+
+      p {
+        margin: 0;
+        font-size: 12px;
+        color: #6b7280;
+      }
+    }
+  }
+}
+
+/* ===============================
+   ASSESSMENTS GRID
+================================ */
+.assessments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  animation: fadeUp 0.6s ease-out;
+}
+
+/* ===============================
+   ASSESSMENT ITEM
 ================================ */
 .assessment-item {
-  margin-bottom: 22px;
-  padding: 24px;
-  border-radius: 16px;
+  border-radius: 12px;
   background: #ffffff;
   border: 1px solid #e5e7eb;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.assessment-item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
-}
-
-/* Header Row */
-.assessment-header {
+  transition: all 0.3s ease;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+  flex-direction: column;
+  height: 100%;
 
-.assessment-header h4 {
-  margin: 0;
-  font-size: 17px;
-  font-weight: 800;
-  color: #111827;
-}
+  &:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
+    border-color: #d1d5db;
+  }
 
-/* Difficulty Tags */
-.difficulty {
-  padding: 5px 12px;
-  border-radius: 14px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-}
+  &.recommended {
+    border: 2px solid #2563eb;
+    background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%);
+  }
 
-.difficulty.expert {
-  background: #fee2e2;
-  color: #b91c1c;
-}
+  mat-card-header {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border-bottom: 1px solid #f3f4f6;
 
-.difficulty.hard {
-  background: #ffedd5;
-  color: #c2410c;
-}
+    .recommended-badge {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #2563eb;
+      font-size: 12px;
+      font-weight: 600;
 
-.difficulty.medium {
-  background: #dcfce7;
-  color: #166534;
-}
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+    }
 
-/* Description */
-.assessment-item p {
-  margin: 10px 0 14px;
-  font-size: 14px;
-  line-height: 1.6;
-  color: #4b5563;
-}
+    .assessment-title-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
 
-/* Meta Info */
-.assessment-meta {
-  display: flex;
-  gap: 24px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #6b7280;
-  margin-bottom: 14px;
-}
+      mat-card-title {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+        color: #111827;
+      }
 
-/* Progress Bar */
-mat-progress-bar {
-  height: 6px;
-  border-radius: 6px;
-  margin-bottom: 16px;
-}
+      mat-chip-set {
+        display: flex;
+        gap: 8px;
+      }
 
-/* Button */
-.assessment-item button {
-  border-radius: 20px;
-  padding: 8px 24px;
-  font-size: 13px;
-  font-weight: 700;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
+      mat-chip {
+        font-size: 12px;
+        height: 28px;
+        padding: 0 12px !important;
 
-.assessment-item button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+        &.mat-warn {
+          background: #fef3c7 !important;
+          color: #92400e;
+        }
+
+        &.mat-danger {
+          background: #fee2e2 !important;
+          color: #b91c1c;
+        }
+
+        &.mat-primary {
+          background: #dbeafe !important;
+          color: #1e40af;
+        }
+
+        &.mat-accent {
+          background: #dcfce7 !important;
+          color: #15803d;
+        }
+      }
+    }
+  }
+
+  mat-card-content {
+    padding: 20px;
+    flex-grow: 1;
+
+    .description {
+      font-size: 14px;
+      color: #4b5563;
+      line-height: 1.6;
+      margin: 0 0 16px 0;
+    }
+
+    .metadata {
+      margin-bottom: 16px;
+
+      mat-chip-set {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      mat-chip {
+        font-size: 12px;
+        height: 28px;
+        padding: 0 12px !important;
+        background: #f3f4f6;
+        color: #374151;
+      }
+    }
+
+    .last-attempted,
+    .recommendation-reason {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #e5e7eb;
+
+      small,
+      strong {
+        font-size: 12px;
+        color: #6b7280;
+      }
+
+      p {
+        margin: 4px 0 0 0;
+        font-size: 12px;
+        color: #374151;
+      }
+    }
+  }
+
+  mat-card-actions {
+    padding: 16px 20px;
+    display: flex;
+    gap: 8px;
+    border-top: 1px solid #f3f4f6;
+
+    button {
+      flex: 1;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 8px 12px;
+      border-radius: 6px;
+    }
+  }
+
+  mat-progress-bar {
+    margin: 16px 0;
+    height: 6px;
+  }
 }
 
 /* ===============================
-   Accessibility
+   RESULTS LIST
 ================================ */
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeUp 0.6s ease-out;
+
+  .result-item {
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    padding: 20px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+      border-color: #d1d5db;
+    }
+
+    mat-card-content {
+      padding: 0;
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+
+      .result-title {
+        flex-grow: 1;
+
+        h4 {
+          margin: 0 0 8px 0;
+          font-size: 16px;
+          font-weight: 700;
+          color: #111827;
+        }
+
+        .difficulty {
+          display: inline-block;
+          padding: 4px 10px;
+          border-radius: 12px;
+          font-size: 11px;
+          font-weight: 600;
+          text-transform: uppercase;
+
+          &.beginner {
+            background: #dcfce7;
+            color: #15803d;
+          }
+
+          &.intermediate {
+            background: #fef3c7;
+            color: #92400e;
+          }
+
+          &.hard {
+            background: #fee2e2;
+            color: #b91c1c;
+          }
+
+          &.expert {
+            background: #f3e8ff;
+            color: #6b21a8;
+          }
+        }
+      }
+
+      .result-score {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 18px;
+        font-weight: 700;
+        color: #6b7280;
+        padding: 8px 16px;
+        border-radius: 8px;
+        background: #f3f4f6;
+
+        &.passed {
+          color: #16a34a;
+          background: #dcfce7;
+
+          mat-icon {
+            color: #16a34a;
+          }
+        }
+
+        &.failed {
+          color: #dc2626;
+          background: #fee2e2;
+
+          mat-icon {
+            color: #dc2626;
+          }
+        }
+
+        mat-icon {
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+
+    .result-stats {
+      display: flex;
+      gap: 16px;
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    mat-progress-bar {
+      height: 8px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 8px;
+
+      button {
+        flex: 1;
+        font-size: 12px;
+        padding: 6px 12px;
+      }
+    }
+  }
+}
+
+/* ===============================
+   LOADING & EMPTY STATES
+================================ */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  gap: 16px;
+
+  p {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 24px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* ===============================
+   OVERVIEW SECTION
+================================ */
+.overview-section {
+  animation: fadeUp 0.6s ease-out;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+  .assess-container {
+    padding: 20px 12px;
+  }
+
+  .assess-content {
+    max-width: 100%;
+  }
+
+  .header-card {
+    mat-card-title {
+      font-size: 24px;
+    }
+  }
+
+  .assess-tabs {
+    ::ng-deep {
+      .mat-tab-label {
+        min-width: 100px;
+        padding: 16px 12px;
+        font-size: 12px;
+
+        .tab-icon {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .tab-content {
+    padding: 20px 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+
+  .assessments-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .result-header {
+    flex-direction: column;
+
+    .result-score {
+      align-self: flex-start;
+    }
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;
     transition: none !important;
   }
 }
+

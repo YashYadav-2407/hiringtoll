@@ -7,16 +7,16 @@
   padding: 40px 24px;
   display: flex;
   justify-content: center;
-  min-height: calc(100vh - 64px);
   background: #f9fafb;
-  overflow: hidden;
+  min-height: calc(100vh - 64px);
+  overflow-y: auto;
 }
 
 /* Animated Background */
 .practice-container::before {
   content: "";
   position: absolute;
-  inset: -35%;
+  inset: -40%;
   background: linear-gradient(
     120deg,
     rgba(37, 99, 235, 0.12),
@@ -28,109 +28,239 @@
   z-index: 0;
 }
 
-/* Keep content above background */
-.practice-container > * {
+/* Keep content above animation */
+.practice-content {
   position: relative;
   z-index: 1;
+  width: 100%;
+  max-width: 1200px;
 }
 
 /* =========================
-   MAIN CARD
+   HEADER CARD
 ========================= */
 
-.practice-card {
-  width: 100%;
-  max-width: 1000px;
-  padding: 32px;
-  border-radius: 16px;
+.header-card {
+  margin-bottom: 32px;
+
+  mat-card {
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+    animation: fadeUp 0.7s ease-out;
+  }
+
+  mat-card-title {
+    font-size: 30px;
+    font-weight: 800;
+    color: #111827;
+  }
+
+  mat-card-subtitle {
+    font-size: 15px;
+    margin-top: 6px;
+    color: #6b7280;
+  }
+
+  mat-card-content > p {
+    margin-top: 16px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #374151;
+  }
+}
+
+/* =========================
+   TABS
+========================= */
+
+.practice-tabs {
   background: #ffffff;
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+
+  ::ng-deep {
+    .mat-tab-labels {
+      border-bottom: 2px solid #e5e7eb;
+      background: #fafbfc;
+    }
+
+    .mat-tab-label {
+      font-weight: 600;
+      font-size: 14px;
+      padding: 20px 24px;
+      min-width: 160px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: #f3f4f6;
+      }
+
+      &.mat-tab-label-active {
+        color: #2563eb;
+        background: #eff6ff;
+      }
+
+      .tab-icon {
+        margin-right: 8px;
+        font-size: 18px;
+      }
+    }
+
+    .mat-tab-body {
+      padding: 0;
+    }
+  }
+}
+
+/* =========================
+   TAB CONTENT
+========================= */
+
+.tab-content {
+  padding: 32px 24px;
+  min-height: 400px;
+}
+
+/* =========================
+   CARDS GRID
+========================= */
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
   animation: fadeUp 0.6s ease-out;
 }
 
-/* =========================
-   HEADER
-========================= */
-
-mat-card-title {
-  font-size: 30px;
-  font-weight: 800;
-  color: #111827;
-}
-
-mat-card-subtitle {
-  margin-top: 6px;
-  font-size: 15px;
-  color: #6b7280;
-}
-
-/* INTRO TEXT */
-mat-card-content > p {
-  margin-top: 16px;
-  font-size: 15px;
-  line-height: 1.6;
-  color: #374151;
-  max-width: 760px;
-}
-
-/* =========================
-   PRACTICE GRID
-========================= */
-
-.practice-grid {
-  margin-top: 32px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-}
-
-/* =========================
-   CHALLENGE CARD
-========================= */
-
-.challenge-card {
-  padding: 22px;
-  border-radius: 14px;
-  background: #f3f4f6;
+.content-card {
+  border-radius: 12px;
+  background: #ffffff;
   border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
+    border-color: #d1d5db;
+  }
+
+  mat-card-header {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  .avatar-icon {
+    font-size: 32px;
+    margin-right: 16px;
+    min-width: 50px;
+    text-align: center;
+  }
+
+  mat-card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+  }
+
+  mat-card-subtitle {
+    font-size: 12px;
+    color: #6b7280;
+    margin: 4px 0 0 0;
+  }
+
+  mat-card-content {
+    padding: 20px;
+    flex-grow: 1;
+
+    .description {
+      font-size: 14px;
+      color: #4b5563;
+      line-height: 1.6;
+      margin: 0 0 16px 0;
+    }
+
+    .metadata {
+      margin-top: 12px;
+
+      mat-chip-set {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      mat-chip {
+        font-size: 12px;
+        height: 28px;
+        padding: 0 12px !important;
+        background: #f3f4f6;
+        color: #374151;
+
+        &.mat-warn {
+          background: #fef3c7;
+          color: #92400e;
+        }
+
+        &.mat-primary {
+          background: #dbeafe;
+          color: #1e40af;
+        }
+
+        &.mat-accent {
+          background: #dcfce7;
+          color: #15803d;
+        }
+      }
+    }
+  }
+
+  mat-card-actions {
+    padding: 16px 20px;
+    display: flex;
+    gap: 8px;
+    border-top: 1px solid #f3f4f6;
+
+    button {
+      flex: 1;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 8px 12px;
+      border-radius: 6px;
+    }
+  }
+}
+
+/* =========================
+   LOADING & EMPTY STATES
+========================= */
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  gap: 16px;
+
+  p {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0;
+  }
+}
+
+.empty-state {
   text-align: center;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  animation: fadeUp 0.7s ease-out;
-}
-
-.challenge-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.1);
-}
-
-/* ICON */
-.challenge-card mat-icon {
-  font-size: 36px;
-  margin-bottom: 10px;
-  color: #2563eb;
-}
-
-/* TITLE */
-.challenge-card h4 {
-  margin: 6px 0;
-  font-size: 17px;
-  font-weight: 800;
-  color: #111827;
-}
-
-/* DESCRIPTION */
-.challenge-card p {
+  padding: 60px 24px;
+  color: #6b7280;
   font-size: 14px;
-  color: #4b5563;
-  margin-bottom: 14px;
-}
-
-/* BUTTON */
-.challenge-card button {
-  border-radius: 18px;
-  padding: 6px 20px;
-  font-weight: 700;
-  font-size: 13px;
 }
 
 /* =========================
@@ -151,5 +281,33 @@ mat-card-content > p {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tab-content {
+    padding: 20px 16px;
+  }
+
+  .header-card mat-card-title {
+    font-size: 24px;
+  }
+
+  ::ng-deep .mat-tab-label {
+    min-width: 100px;
+    padding: 16px 12px;
+    font-size: 12px;
+
+    .tab-icon {
+      display: none;
+    }
   }
 }

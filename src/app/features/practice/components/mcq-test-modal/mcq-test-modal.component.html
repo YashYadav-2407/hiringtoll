@@ -1,0 +1,178 @@
+<div class="mcq-test-container">
+  <!-- Test Header -->
+  <div class="test-header" *ngIf="!showResults">
+    <div class="header-info">
+      <h2>{{ assessment.title }}</h2>
+      <p class="test-meta">Question {{ currentQuestionIndex + 1 }} of {{ questions.length }}</p>
+    </div>
+    <div class="timer" [class.warning]="timeRemaining < 300">
+      <mat-icon>schedule</mat-icon>
+      <span>{{ formatTime(timeRemaining) }}</span>
+    </div>
+  </div>
+
+  <!-- Progress Bar -->
+  <mat-progress-bar mode="determinate" [value]="getProgressPercentage()" *ngIf="!showResults"></mat-progress-bar>
+
+  <!-- Test Content -->
+  <div class="test-content" *ngIf="!showResults">
+    <!-- Question Card -->
+    <mat-card class="question-card">
+      <mat-card-content>
+        <div class="question-text">
+          <h3>{{ currentQuestion.question }}</h3>
+          <span class="difficulty-badge" [class]="currentQuestion.difficulty">
+            {{ currentQuestion.difficulty | uppercase }}
+          </span>
+        </div>
+
+        <!-- Options -->
+        <div class="options-container">
+          <mat-radio-group [(ngModel)]="selectedAnswers[currentQuestion.id]" class="options-group">
+            <div class="option" *ngFor="let option of currentQuestion.options">
+              <mat-radio-button
+                [value]="option.id"
+                (click)="selectAnswer(option)"
+              >
+                <span class="option-text">{{ option.text }}</span>
+              </mat-radio-button>
+            </div>
+          </mat-radio-group>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Navigation Buttons -->
+    <div class="navigation-buttons">
+      <button
+        mat-stroked-button
+        (click)="previousQuestion()"
+        [disabled]="currentQuestionIndex === 0"
+      >
+        <mat-icon>chevron_left</mat-icon>
+        Previous
+      </button>
+
+      <div class="question-indicator">
+        <span *ngFor="let q of questions; let i = index"
+              class="indicator"
+              [class.answered]="selectedAnswers[q.id]"
+              [class.current]="i === currentQuestionIndex"
+              (click)="currentQuestionIndex = i; currentQuestion = q;"
+              title="Question {{ i + 1 }}">
+          {{ i + 1 }}
+        </span>
+      </div>
+
+      <button
+        mat-stroked-button
+        (click)="nextQuestion()"
+        *ngIf="currentQuestionIndex < questions.length - 1"
+      >
+        Next
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="submitTest()"
+        *ngIf="currentQuestionIndex === questions.length - 1"
+      >
+        Submit Test
+        <mat-icon>check</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Results View -->
+  <div class="test-results" *ngIf="showResults">
+    <mat-card class="results-card">
+      <mat-card-header>
+        <div class="results-header" [class]="testResult.passed ? 'passed' : 'failed'">
+          <div class="result-icon">
+            <mat-icon *ngIf="testResult.passed">check_circle</mat-icon>
+            <mat-icon *ngIf="!testResult.passed">cancel</mat-icon>
+          </div>
+          <h2>{{ testResult.passed ? 'Congratulations!' : 'Test Not Passed' }}</h2>
+          <p>{{ testResult.passed ? 'You have successfully passed the test!' : 'Keep practicing to improve your score!' }}</p>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="score-display">
+          <div class="score-circle" [style.background]="testResult.score >= 70 ? '#4CAF50' : '#FF6B6B'">
+            <div class="score-value">{{ testResult.score.toFixed(1) }}%</div>
+            <div class="score-label">SCORE</div>
+          </div>
+
+          <div class="result-stats">
+            <div class="stat">
+              <span class="stat-label">Questions Answered:</span>
+              <span class="stat-value">{{ testResult.totalQuestions }}</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Correct Answers:</span>
+              <span class="stat-value" style="color: #4CAF50;">{{ testResult.correctAnswers }}</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Wrong Answers:</span>
+              <span class="stat-value" style="color: #FF6B6B;">{{ testResult.totalQuestions - testResult.correctAnswers }}</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Passing Score:</span>
+              <span class="stat-value">{{ data.passingScore }}%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Answer Review -->
+        <div class="answer-review">
+          <h3>Answer Review</h3>
+          <div class="review-items">
+            <div class="review-item" *ngFor="let question of questions; let i = index" [class]="isAnswerCorrect(question) ? 'correct' : 'incorrect'">
+              <div class="review-header" [class.correct]="isAnswerCorrect(question)">
+                <span class="question-number">Q{{ i + 1 }}</span>
+                <span class="review-status">
+                  <mat-icon *ngIf="isAnswerCorrect(question)">
+                    check_circle
+                  </mat-icon>
+                  <mat-icon *ngIf="!isAnswerCorrect(question) && selectedAnswers[question.id]">
+                    cancel
+                  </mat-icon>
+                  <mat-icon *ngIf="!selectedAnswers[question.id]">
+                    help
+                  </mat-icon>
+                </span>
+              </div>
+              <div class="review-question">{{ question.question }}</div>
+              <div class="review-answer" *ngIf="getSelectedOption(question)">
+                <strong>Your Answer:</strong>
+                {{ getSelectedOption(question)?.text }}
+              </div>
+              <div class="review-answer" *ngIf="!isAnswerCorrect(question) && getSelectedOption(question)">
+                <strong>Correct Answer:</strong>
+                {{ getCorrectOption(question)?.text }}
+              </div>
+              <div class="review-explanation">
+                <strong>Explanation:</strong>
+                {{ question.explanation }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-stroked-button (click)="retakeTest()">
+          <mat-icon>refresh</mat-icon>
+          Retake Test
+        </button>
+        <button mat-raised-button color="primary" (click)="closeDialog()">
+          <mat-icon>close</mat-icon>
+          Close
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

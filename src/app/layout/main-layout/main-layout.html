@@ -7,7 +7,7 @@
     </div>
 
     <nav class="sidenav-nav">
-      <a routerLink="/" routerLinkActive="active">
+      <a routerLink="/dashboard" routerLinkActive="active">
         <mat-icon>home</mat-icon>
         Home
       </a>
@@ -27,19 +27,19 @@
         Assess
       </a>
 
-      <a routerLink="/help" routerLinkActive="active">
-        <mat-icon>help_outline</mat-icon>
-        Help
+      <a routerLink="/typing" routerLinkActive="active">
+        <mat-icon>keyboard</mat-icon>
+        Typing Tool
       </a>
     </nav>
 
     <div class="sidenav-bottom">
-      <a routerLink="/login">
+      <!-- <a routerLink="/login">
         <mat-icon>login</mat-icon>
         Login
-      </a>
+      </a> -->
 
-      <a class="logout">
+      <a class="logout" (click)="logout()" role="button">
         <mat-icon>logout</mat-icon>
         Logout
       </a>

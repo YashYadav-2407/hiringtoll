@@ -143,6 +143,74 @@
         </div>
       </div>
 
+      <!-- Username Field -->
+      <div class="form-group">
+        <label for="signup-username">Username</label>
+        <input
+          id="signup-username"
+          type="text"
+          formControlName="username"
+          placeholder="Enter your username"
+          class="form-control"
+          [class.is-invalid]="submitted() && signUpForm.get('username')?.invalid"
+        />
+        <div *ngIf="submitted() && signUpForm.get('username')?.invalid" class="error-text">
+          {{ getSignUpErrorMessage('username') }}
+        </div>
+      </div>
+
+      <!-- Country Field -->
+      <div class="form-group">
+        <label for="signup-country">Country</label>
+        <input
+          id="signup-country"
+          type="text"
+          formControlName="country"
+          placeholder="Enter your country"
+          class="form-control"
+          [class.is-invalid]="submitted() && signUpForm.get('country')?.invalid"
+        />
+        <div *ngIf="submitted() && signUpForm.get('country')?.invalid" class="error-text">
+          {{ getSignUpErrorMessage('country') }}
+        </div>
+      </div>
+
+      <!-- Role Field -->
+      <div class="form-group">
+        <label for="signup-role">Role</label>
+        <select
+          id="signup-role"
+          formControlName="role"
+          class="form-control"
+          [class.is-invalid]="submitted() && signUpForm.get('role')?.invalid"
+        >
+          <option value="" disabled selected>Select your role</option>
+          <option value="Student">Student</option>
+          <option value="Professional">Professional</option>
+          <option value="Educator">Educator</option>
+          <option value="Other">Other</option>
+        </select>
+        <div *ngIf="submitted() && signUpForm.get('role')?.invalid" class="error-text">
+          {{ getSignUpErrorMessage('role') }}
+        </div>
+      </div>
+
+      <!-- Institution Field -->
+      <div class="form-group">
+        <label for="signup-institution">Institution</label>
+        <input
+          id="signup-institution"
+          type="text"
+          formControlName="institution"
+          placeholder="Enter your institution name"
+          class="form-control"
+          [class.is-invalid]="submitted() && signUpForm.get('institution')?.invalid"
+        />
+        <div *ngIf="submitted() && signUpForm.get('institution')?.invalid" class="error-text">
+          {{ getSignUpErrorMessage('institution') }}
+        </div>
+      </div>
+
       <!-- Terms Checkbox -->
       <div class="form-group checkbox">
         <input

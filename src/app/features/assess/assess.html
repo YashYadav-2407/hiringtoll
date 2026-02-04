@@ -1,81 +1,260 @@
 <div class="assess-container">
-  <mat-card class="assessment-card">
-    <mat-card-header>
-      <mat-card-title>Assessment Center</mat-card-title>
-      <mat-card-subtitle>Evaluate your readiness for technical interviews</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <p>Take comprehensive assessments to gauge your technical skills and interview readiness.</p>
+  <div class="assess-content">
+    <!-- Header Card -->
+    <div class="header-card">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Assessment Center</mat-card-title>
+          <mat-card-subtitle>Evaluate your readiness for technical interviews</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Take comprehensive assessments to gauge your technical skills and interview readiness.</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
 
-      <div class="assessment-overview">
-        <div class="stat-card">
-          <mat-icon>assignment_turned_in</mat-icon>
-          <h3>5</h3>
-          <p>Assessments Completed</p>
+    <!-- Tabs for different sections -->
+    <mat-tab-group class="assess-tabs" dynamicHeight>
+      <!-- OVERVIEW TAB -->
+      <mat-tab label="📊 Overview" class="overview-tab">
+        <ng-template mat-tab-label>
+          <span class="tab-icon">📊</span>
+          <span>Overview</span>
+        </ng-template>
+
+        <div class="tab-content">
+          <div *ngIf="isLoadingOverview" class="loading-container">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Loading overview...</p>
+          </div>
+
+          <div *ngIf="!isLoadingOverview && overview" class="overview-section">
+            <div class="stats-grid">
+              <mat-card class="stat-card">
+                <mat-card-content>
+                  <div class="stat-icon">✅</div>
+                  <div class="stat-info">
+                    <h3>{{ overview.completedCount }}</h3>
+                    <p>Assessments Completed</p>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="stat-card">
+                <mat-card-content>
+                  <div class="stat-icon">📈</div>
+                  <div class="stat-info">
+                    <h3>{{ overview.averageScore }}%</h3>
+                    <p>Average Score</p>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="stat-card">
+                <mat-card-content>
+                  <div class="stat-icon">⏱️</div>
+                  <div class="stat-info">
+                    <h3>{{ overview.averageTime }}h</h3>
+                    <p>Average Time</p>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="stat-card">
+                <mat-card-content>
+                  <div class="stat-icon">🎯</div>
+                  <div class="stat-info">
+                    <h3>{{ overview.totalAttempts }}</h3>
+                    <p>Total Attempts</p>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
         </div>
-        <div class="stat-card">
-          <mat-icon>trending_up</mat-icon>
-          <h3>85%</h3>
-          <p>Average Score</p>
+      </mat-tab>
+
+      <!-- ALL ASSESSMENTS TAB -->
+      <mat-tab label="🎓 All Assessments" class="assessments-tab">
+        <ng-template mat-tab-label>
+          <span class="tab-icon">🎓</span>
+          <span>All Assessments</span>
+        </ng-template>
+
+        <div class="tab-content">
+          <div *ngIf="isLoadingAssessments" class="loading-container">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Loading assessments...</p>
+          </div>
+
+          <div *ngIf="!isLoadingAssessments && assessments.length === 0" class="empty-state">
+            <p>No assessments available.</p>
+          </div>
+
+          <div *ngIf="!isLoadingAssessments && assessments.length > 0" class="assessments-grid">
+            <mat-card class="assessment-item" *ngFor="let assessment of assessments">
+              <mat-card-header>
+                <div class="assessment-title-section">
+                  <mat-card-title>{{ assessment.title }}</mat-card-title>
+                  <mat-chip-set>
+                    <mat-chip [color]="getDifficultyColor(assessment.difficulty)" selected>
+                      {{ assessment.difficulty | titlecase }}
+                    </mat-chip>
+                  </mat-chip-set>
+                </div>
+              </mat-card-header>
+
+              <mat-card-content>
+                <p class="description">{{ assessment.description }}</p>
+
+                <div class="metadata">
+                  <mat-chip-set>
+                    <mat-chip>⏱️ {{ formatDuration(assessment.duration) }}</mat-chip>
+                    <mat-chip>❓ {{ assessment.questionCount }} Q</mat-chip>
+                    <mat-chip>📊 Category: {{ assessment.category }}</mat-chip>
+                    <mat-chip *ngIf="assessment.bestScore">
+                      🏆 Best: {{ assessment.bestScore }}%
+                    </mat-chip>
+                  </mat-chip-set>
+                </div>
+
+                <div *ngIf="assessment.lastAttempted" class="last-attempted">
+                  <small>Last attempted: {{ assessment.lastAttempted }}</small>
+                </div>
+              </mat-card-content>
+
+              <mat-card-actions>
+                <button mat-raised-button color="primary" (click)="startAssessment(assessment)">
+                  Start Assessment
+                </button>
+                <button mat-stroked-button *ngIf="assessment.bestScore">
+                  View Results
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
         </div>
-        <div class="stat-card">
-          <mat-icon>schedule</mat-icon>
-          <h3>2.5h</h3>
-          <p>Average Time</p>
+      </mat-tab>
+
+      <!-- RESULTS TAB -->
+      <mat-tab label="📋 Results" class="results-tab">
+        <ng-template mat-tab-label>
+          <span class="tab-icon">📋</span>
+          <span>Results</span>
+        </ng-template>
+
+        <div class="tab-content">
+          <div *ngIf="isLoadingResults" class="loading-container">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Loading results...</p>
+          </div>
+
+          <div *ngIf="!isLoadingResults && assessmentResults.length === 0" class="empty-state">
+            <p>No assessment results yet. Start an assessment to see results here.</p>
+          </div>
+
+          <div *ngIf="!isLoadingResults && assessmentResults.length > 0" class="results-list">
+            <mat-card class="result-item" *ngFor="let result of assessmentResults">
+              <mat-card-content>
+                <div class="result-header">
+                  <div class="result-title">
+                    <h4>{{ result.title }}</h4>
+                    <span class="difficulty" [class]="result.difficulty.toLowerCase()">
+                      {{ result.difficulty }}
+                    </span>
+                  </div>
+                  <div class="result-score" [class.passed]="result.passed" [class.failed]="!result.passed">
+                    <mat-icon>{{ result.passed ? 'check_circle' : 'cancel' }}</mat-icon>
+                    <span>{{ result.score.toFixed(1) }}%</span>
+                  </div>
+                </div>
+
+                <div class="result-stats">
+                  <span>✅ {{ result.correctAnswers }} / {{ result.totalQuestions }} Correct</span>
+                  <span>⏱️ {{ result.duration }} minutes</span>
+                  <span>📅 {{ result.completedDate }}</span>
+                </div>
+
+                <mat-progress-bar
+                  mode="determinate"
+                  [value]="result.percentage"
+                  [color]="result.passed ? 'primary' : 'warn'"
+                ></mat-progress-bar>
+
+                <div class="result-actions">
+                  <button mat-stroked-button (click)="viewResults(result)">
+                    View Details
+                  </button>
+                  <button mat-stroked-button (click)="retakeAssessment(result)">
+                    Retake
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
         </div>
-      </div>
+      </mat-tab>
 
-      <div class="available-assessments">
-        <h3>Available Assessments</h3>
+      <!-- RECOMMENDED TAB -->
+      <mat-tab label="💡 Recommended" class="recommended-tab">
+        <ng-template mat-tab-label>
+          <span class="tab-icon">💡</span>
+          <span>Recommended</span>
+        </ng-template>
 
-        <mat-card class="assessment-item">
-          <mat-card-content>
-            <div class="assessment-header">
-              <h4>Full-Stack Developer Assessment</h4>
-              <span class="difficulty expert">Expert</span>
-            </div>
-            <p>Comprehensive test covering frontend, backend, and database skills</p>
-            <div class="assessment-meta">
-              <span>⏱️ 3 hours</span>
-              <span>📊 50 questions</span>
-            </div>
-            <mat-progress-bar mode="determinate" value="0"></mat-progress-bar>
-            <button mat-raised-button color="primary">Start Assessment</button>
-          </mat-card-content>
-        </mat-card>
+        <div class="tab-content">
+          <div *ngIf="isLoadingRecommended" class="loading-container">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Loading recommendations...</p>
+          </div>
 
-        <mat-card class="assessment-item">
-          <mat-card-content>
-            <div class="assessment-header">
-              <h4>Algorithm & Data Structures</h4>
-              <span class="difficulty hard">Hard</span>
-            </div>
-            <p>Test your problem-solving skills with complex algorithmic challenges</p>
-            <div class="assessment-meta">
-              <span>⏱️ 2 hours</span>
-              <span>📊 25 questions</span>
-            </div>
-            <mat-progress-bar mode="determinate" value="0"></mat-progress-bar>
-            <button mat-raised-button color="primary">Start Assessment</button>
-          </mat-card-content>
-        </mat-card>
+          <div *ngIf="!isLoadingRecommended && recommendedAssessments.length === 0" class="empty-state">
+            <p>No recommendations available at this time.</p>
+          </div>
 
-        <mat-card class="assessment-item">
-          <mat-card-content>
-            <div class="assessment-header">
-              <h4>System Design Interview</h4>
-              <span class="difficulty medium">Medium</span>
-            </div>
-            <p>Practice designing scalable systems and architectures</p>
-            <div class="assessment-meta">
-              <span>⏱️ 1.5 hours</span>
-              <span>📊 10 scenarios</span>
-            </div>
-            <mat-progress-bar mode="determinate" value="0"></mat-progress-bar>
-            <button mat-raised-button color="primary">Start Assessment</button>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    </mat-card-content>
-  </mat-card>
+          <div *ngIf="!isLoadingRecommended && recommendedAssessments.length > 0" class="assessments-grid">
+            <mat-card class="assessment-item recommended" *ngFor="let assessment of recommendedAssessments">
+              <mat-card-header>
+                <div class="recommended-badge">
+                  <mat-icon>recommended</mat-icon>
+                  <span>Recommended</span>
+                </div>
+                <div class="assessment-title-section">
+                  <mat-card-title>{{ assessment.title }}</mat-card-title>
+                  <mat-chip-set>
+                    <mat-chip [color]="getDifficultyColor(assessment.difficulty)" selected>
+                      {{ assessment.difficulty | titlecase }}
+                    </mat-chip>
+                  </mat-chip-set>
+                </div>
+              </mat-card-header>
+
+              <mat-card-content>
+                <p class="description">{{ assessment.description }}</p>
+
+                <div class="metadata">
+                  <mat-chip-set>
+                    <mat-chip>⏱️ {{ formatDuration(assessment.duration) }}</mat-chip>
+                    <mat-chip>❓ {{ assessment.questionCount }} Q</mat-chip>
+                    <mat-chip>📊 Category: {{ assessment.category }}</mat-chip>
+                  </mat-chip-set>
+                </div>
+
+                <div class="recommendation-reason">
+                  <strong>Why this assessment?</strong>
+                  <p>Based on your performance, we recommend this assessment to improve your weak areas.</p>
+                </div>
+              </mat-card-content>
+
+              <mat-card-actions>
+                <button mat-raised-button color="accent" (click)="startAssessment(assessment)">
+                  Take This Assessment
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
 </div>

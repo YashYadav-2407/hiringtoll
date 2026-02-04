@@ -1,0 +1,199 @@
+<div class="typing-container">
+  <!-- Lessons List View -->
+  <div *ngIf="!selectedLesson" class="lessons-view">
+    <div class="lessons-header">
+      <h1>Typing Practice & Lessons</h1>
+      <p>Improve your typing speed and accuracy with our interactive lessons</p>
+    </div>
+
+    <div class="lessons-grid">
+      <mat-card
+        *ngFor="let lesson of lessons"
+        class="lesson-card"
+        (click)="selectLesson(lesson)"
+      >
+        <mat-card-header>
+          <div class="lesson-difficulty" [style.background-color]="getDifficultyColor(lesson.difficulty)">
+            {{ lesson.difficulty }}
+          </div>
+        </mat-card-header>
+
+        <mat-card-content>
+          <h2>{{ lesson.title }}</h2>
+          <p class="description">{{ lesson.description }}</p>
+
+          <div class="lesson-meta">
+            <span class="duration">
+              <mat-icon>schedule</mat-icon>
+              {{ lesson.duration }} min
+            </span>
+          </div>
+
+          <p class="excerpt">{{ lesson.excerpt }}</p>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <button mat-raised-button color="primary" class="start-btn" (click)="selectLesson(lesson)">
+            Start Lesson
+          </button>
+          <button mat-raised-button color="accent" class="race-btn" (click)="startRaceMode(lesson)">
+            <mat-icon>speed</mat-icon>
+            Race Mode
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Typing Practice View -->
+  <div *ngIf="selectedLesson && isTypingMode" class="typing-practice">
+    <div class="practice-header">
+      <button mat-icon-button (click)="goBack()" class="back-btn">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h2>{{ selectedLesson.title }}</h2>
+      <div class="stats">
+        <div class="stat">
+          <span class="label">Accuracy:</span>
+          <span class="value">{{ accuracy }}%</span>
+        </div>
+        <div class="stat">
+          <span class="label">WPM:</span>
+          <span class="value">{{ wpm | number: '1.0-0' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="practice-content">
+      <div class="text-to-type">
+        <p class="reference-text">{{ selectedLesson.excerpt }}</p>
+      </div>
+
+      <div class="input-section">
+        <textarea
+          class="typing-input"
+          placeholder="Click here and start typing..."
+          [(ngModel)]="userInput"
+          (input)="onInputChange($event)"
+          [style.border-color]="accuracy >= 80 ? '#4CAF50' : accuracy >= 50 ? '#FF9800' : '#F44336'"
+        ></textarea>
+      </div>
+
+      <div class="progress-bar">
+        <div
+          class="progress"
+          [style.width.%]="(userInput.length / selectedLesson.excerpt.length) * 100"
+        ></div>
+      </div>
+
+      <div class="practice-actions">
+        <button mat-raised-button color="warn" (click)="resetLesson()">
+          <mat-icon>refresh</mat-icon>
+          Reset
+        </button>
+        <button mat-raised-button color="primary" *ngIf="userInput.length === selectedLesson.excerpt.length">
+          <mat-icon>check_circle</mat-icon>
+          Complete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Race Mode View -->
+  <div *ngIf="selectedLesson && isRaceMode" class="race-mode">
+    <div class="race-header">
+      <button mat-icon-button (click)="goBack()" class="back-btn">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h2>{{ selectedLesson.title }} - Race Mode</h2>
+      <div class="race-stats">
+        <div class="stat">
+          <span class="label">Accuracy:</span>
+          <span class="value">{{ accuracy }}%</span>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="race-content">
+      <!-- Race Track -->
+      <div class="race-track">
+        <div class="race-lane">
+          <div class="lane-label">You</div>
+          <div class="race-line">
+            <div class="player-car" [style.left.%]="raceState.playerProgress">
+              <mat-icon>directions_car</mat-icon>
+            </div>
+          </div>
+          <div class="progress-text">{{ raceState.playerProgress.toFixed(0) }}%</div>
+        </div>
+
+        <div class="vs-badge">VS</div>
+
+        <div class="race-lane">
+          <div class="lane-label">Opponent</div>
+          <div class="race-line">
+            <div class="opponent-car" [style.left.%]="raceState.opponentProgress">
+              <mat-icon>directions_car</mat-icon>
+            </div>
+          </div>
+          <div class="progress-text">{{ raceState.opponentProgress.toFixed(0) }}%</div>
+        </div>
+      </div>
+
+      <!-- Game Over Screen -->
+      <div *ngIf="raceState.gameOver" class="game-over-modal">
+        <div class="game-over-content" [class.won]="raceState.playerWon">
+          <mat-icon class="game-result-icon">{{ raceState.playerWon ? 'emoji_events' : 'sentiment_dissatisfied' }}</mat-icon>
+          <h3>{{ raceState.playerWon ? '🎉 You Won! 🎉' : 'Game Over' }}</h3>
+          <p class="result-message">
+            {{ raceState.playerWon ? 'You finished the race faster!' : 'The opponent finished first.' }}
+          </p>
+          <div class="final-stats">
+            <p>Accuracy: <strong>{{ accuracy }}%</strong></p>
+            <p>WPM: <strong>{{ wpm | number: '1.0-0' }}</strong></p>
+          </div>
+          <div class="game-over-actions">
+            <button mat-raised-button color="primary" (click)="startRaceMode(selectedLesson)">
+              <mat-icon>refresh</mat-icon>
+              Try Again
+            </button>
+            <button mat-raised-button color="accent" (click)="goBack()">
+              <mat-icon>home</mat-icon>
+              Back to Lessons
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Text to Type -->
+      <div class="race-text-section">
+        <div class="text-to-type">
+          <p class="reference-text">{{ selectedLesson.excerpt }}</p>
+        </div>
+
+        <div class="input-section">
+          <textarea
+            class="race-typing-input"
+            placeholder="Type the text as fast as you can to beat the opponent!"
+            [(ngModel)]="userInput"
+            (input)="onInputChange($event)"
+            [disabled]="raceState.gameOver"
+            [style.border-color]="accuracy >= 80 ? '#4CAF50' : accuracy >= 50 ? '#FF9800' : '#F44336'"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Race Actions -->
+      <div class="race-actions">
+        <button mat-raised-button color="warn" (click)="resetRace()" [disabled]="!raceState.gameOver">
+          <mat-icon>refresh</mat-icon>
+          Reset Race
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -9,7 +9,7 @@
   justify-content: center;
   background: #f9fafb;
   min-height: calc(100vh - 64px);
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 /* Animated Background Layer */
@@ -29,115 +29,247 @@
 }
 
 /* Keep content above animation */
-.learn-container > * {
+.learn-content {
   position: relative;
   z-index: 1;
-}
-
-/* =========================
-   MAIN CARD
-========================= */
-
-.welcome-card {
   width: 100%;
-  max-width: 900px;
-  padding: 32px;
-  border-radius: 16px;
+  max-width: 1200px;
+}
+
+/* =========================
+   HEADER CARD
+========================= */
+
+.header-card {
+  margin-bottom: 32px;
+
+  mat-card {
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+    animation: fadeUp 0.7s ease-out;
+  }
+
+  mat-card-title {
+    font-size: 30px;
+    font-weight: 800;
+    color: #111827;
+  }
+
+  mat-card-subtitle {
+    font-size: 15px;
+    margin-top: 6px;
+    color: #6b7280;
+  }
+
+  mat-card-content > p {
+    margin-top: 16px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #374151;
+  }
+}
+
+/* =========================
+   TABS
+========================= */
+
+.learning-tabs {
   background: #ffffff;
+  border-radius: 16px;
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
-  animation: fadeUp 0.7s ease-out;
+  overflow: hidden;
+
+  ::ng-deep {
+    .mat-tab-labels {
+      border-bottom: 2px solid #e5e7eb;
+      background: #fafbfc;
+    }
+
+    .mat-tab-label {
+      font-weight: 600;
+      font-size: 14px;
+      padding: 20px 24px;
+      min-width: 140px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: #f3f4f6;
+      }
+
+      &.mat-tab-label-active {
+        color: #2563eb;
+        background: #eff6ff;
+      }
+
+      .tab-icon {
+        margin-right: 8px;
+        font-size: 18px;
+      }
+    }
+
+    .mat-tab-body {
+      padding: 0;
+    }
+  }
 }
 
 /* =========================
-   HEADER
+   TAB CONTENT
 ========================= */
 
-mat-card-title {
-  font-size: 30px;
-  font-weight: 800;
-  color: #111827;
-}
-
-mat-card-subtitle {
-  font-size: 15px;
-  margin-top: 6px;
-  color: #6b7280;
+.tab-content {
+  padding: 32px 24px;
+  min-height: 400px;
 }
 
 /* =========================
-   INTRO TEXT
+   CARDS GRID
 ========================= */
 
-mat-card-content > p {
-  margin-top: 16px;
-  font-size: 15px;
-  line-height: 1.6;
-  color: #374151;
-  max-width: 720px;
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  animation: fadeUp 0.6s ease-out;
 }
 
-/* =========================
-   SECTIONS
-========================= */
-
-.learning-sections {
-  margin-top: 32px;
+.content-card {
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-}
+  height: 100%;
 
-.section {
-  padding: 22px 24px;
-  border-radius: 14px;
-  background: #f3f4f6;
-  border-left: 6px solid transparent;
-  transition: all 0.25s ease;
-}
+  &:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
+    border-color: #d1d5db;
+  }
 
-.section:nth-child(1) {
-  border-left-color: #2563eb;
-}
+  mat-card-header {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #f3f4f6;
+  }
 
-.section:nth-child(2) {
-  border-left-color: #16a34a;
-}
+  .avatar-icon {
+    font-size: 32px;
+    margin-right: 16px;
+    min-width: 50px;
+    text-align: center;
+  }
 
-.section:nth-child(3) {
-  border-left-color: #f59e0b;
-}
+  mat-card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+  }
 
-.section:hover {
-  background: #eef2ff;
-  transform: translateX(4px);
-}
+  mat-card-subtitle {
+    font-size: 12px;
+    color: #6b7280;
+    margin: 4px 0 0 0;
+  }
 
-.section h3 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 800;
-  color: #111827;
-}
+  mat-card-content {
+    padding: 20px;
+    flex-grow: 1;
 
-.section p {
-  margin-top: 6px;
-  font-size: 14px;
-  color: #4b5563;
+    .description {
+      font-size: 14px;
+      color: #4b5563;
+      line-height: 1.6;
+      margin: 0 0 16px 0;
+    }
+
+    .metadata {
+      margin-top: 12px;
+
+      mat-chip-set {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      mat-chip {
+        font-size: 12px;
+        height: 28px;
+        padding: 0 12px !important;
+        background: #f3f4f6;
+        color: #374151;
+
+        &.mat-warn {
+          background: #fef3c7;
+          color: #92400e;
+        }
+
+        &.mat-primary {
+          background: #dbeafe;
+          color: #1e40af;
+        }
+
+        &.mat-accent {
+          background: #dcfce7;
+          color: #15803d;
+        }
+      }
+    }
+  }
+
+  mat-card-actions {
+    padding: 16px 20px;
+    display: flex;
+    gap: 8px;
+    border-top: 1px solid #f3f4f6;
+
+    button {
+      flex: 1;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 8px 12px;
+      border-radius: 6px;
+    }
+  }
 }
 
 /* =========================
-   ACTIONS
+   LOADING & EMPTY STATES
 ========================= */
 
-mat-card-actions {
-  margin-top: 32px;
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  gap: 16px;
+
+  p {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0;
+  }
 }
 
-mat-card-actions button {
-  padding: 10px 28px;
-  border-radius: 20px;
-  font-weight: 700;
+.empty-state {
+  text-align: center;
+  padding: 60px 24px;
+  color: #6b7280;
   font-size: 14px;
+}
+
+/* =========================
+   DIFFICULTY COLORS
+========================= */
+
+.tutorial-tab,
+.challenge-tab,
+.docs-tab {
 }
 
 /* =========================
@@ -158,5 +290,33 @@ mat-card-actions button {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tab-content {
+    padding: 20px 16px;
+  }
+
+  .header-card mat-card-title {
+    font-size: 24px;
+  }
+
+  ::ng-deep .mat-tab-label {
+    min-width: 100px;
+    padding: 16px 12px;
+    font-size: 12px;
+
+    .tab-icon {
+      display: none;
+    }
   }
 }
