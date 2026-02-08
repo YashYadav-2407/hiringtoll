@@ -34,10 +34,19 @@
   color: #cbd5e1;
   text-decoration: none;
   margin-bottom: 6px;
+  cursor: pointer;
+  transition: color 0.2s ease;
 }
 
 .links a:hover {
   color: #ffffff;
+  text-decoration: underline;
+}
+
+.footer-link {
+  &:active {
+    opacity: 0.8;
+  }
 }
 
 .copyright {

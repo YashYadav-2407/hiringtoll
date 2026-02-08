@@ -1,59 +1,103 @@
 <div class="calendar-wrapper">
 
   <!-- CALENDAR -->
-  <mat-card class="calendar-card">
-    <h3>Schedule</h3>
+  <div class="calendar-section">
+    <mat-card class="calendar-card">
+      <div class="card-header">
+        <h3 class="card-title">📅 Schedule</h3>
+      </div>
 
-    <mat-calendar
-      ngSkipHydration
-      [selected]="selectedDate"
-      (selectedChange)="onDateChange($event)"
-      [dateClass]="dateClass">
-    </mat-calendar>
-  </mat-card>
+      <mat-calendar
+        ngSkipHydration
+        [selected]="selectedDate"
+        (selectedChange)="onDateChange($event)"
+        [dateClass]="dateClass">
+      </mat-calendar>
+    </mat-card>
+  </div>
 
   <!-- TODO -->
-  <mat-card class="todo-card">
-    <h3>Tasks — {{ selectedDate | date:'mediumDate' }}</h3>
+  <div class="todo-section">
+    <mat-card class="todo-card">
+      <div class="card-header">
+        <h3 class="card-title">✓ Tasks</h3>
+        <span class="date-badge">{{ selectedDate | date:'MMM d, y' }}</span>
+      </div>
 
-    <div class="todo-input">
-      <mat-form-field appearance="outline" class="full">
-        <input
-          matInput
-          placeholder="Add or edit task"
-          [(ngModel)]="newTodo" />
-      </mat-form-field>
+      <!-- Add Task Section -->
+      <div class="add-task-section">
+        <mat-form-field appearance="fill" class="task-input">
+          <mat-label>Add a new task</mat-label>
+          <input
+            matInput
+            placeholder="Enter task description"
+            [(ngModel)]="newTodo"
+            (keyup.enter)="addOrSave()" />
+        </mat-form-field>
 
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="addOrSave()">
-        {{ editingId ? 'Save' : 'Add' }}
-      </button>
-    </div>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="addOrSave()"
+          class="add-btn">
+          {{ editingId ? '💾 Save' : '➕ Add Task' }}
+        </button>
+      </div>
 
-    <mat-list>
-      <mat-list-item *ngFor="let todo of todos">
+      <!-- Tasks List -->
+      <div class="tasks-list" *ngIf="todos.length > 0; else noTasks">
+        <div class="task-item" *ngFor="let todo of todos" 
+             [class.completed]="todo.completed">
+          
+          <mat-checkbox
+            [checked]="todo.completed"
+            (change)="todoService.toggle(todo.id)"
+            class="task-checkbox">
+          </mat-checkbox>
 
-        <mat-checkbox
-          [checked]="todo.completed"
-          (change)="todoService.toggle(todo.id)">
-        </mat-checkbox>
+          <span class="task-content">
+            <span class="task-text" [class.done]="todo.completed">
+              {{ todo.text }}
+            </span>
+          </span>
 
-        <span
-          class="todo-text"
-          [class.done]="todo.completed">
-          {{ todo.text }}
+          <div class="task-actions">
+            <button 
+              mat-icon-button 
+              (click)="edit(todo)"
+              class="edit-btn"
+              matTooltip="Edit task">
+              ✏️
+            </button>
+            <button 
+              mat-icon-button 
+              (click)="todoService.delete(todo.id)"
+              class="delete-btn"
+              matTooltip="Delete task">
+              🗑️
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <ng-template #noTasks>
+        <div class="empty-state">
+          <span class="empty-icon">📝</span>
+          <p class="empty-text">No tasks for this day</p>
+          <span class="empty-hint">Add a task to get started</span>
+        </div>
+      </ng-template>
+
+      <!-- Task Count -->
+      <div class="task-count" *ngIf="todos.length > 0">
+        <span class="count-text">
+          {{ todos.length }} 
+          {{ todos.length === 1 ? 'task' : 'tasks' }} •
+          {{ completedCount }} completed
         </span>
-
-        <span class="actions">
-          <button mat-icon-button (click)="edit(todo)">✏️</button>
-          <button mat-icon-button (click)="todoService.delete(todo.id)">🗑️</button>
-        </span>
-
-      </mat-list-item>
-    </mat-list>
-
-  </mat-card>
+      </div>
+    </mat-card>
+  </div>
 
 </div>

@@ -27,6 +27,7 @@
   justify-content: center;
   align-items: center;
   gap: 8px;
+  margin-bottom: 16px;
 }
 
 .streak-header h3 {
@@ -36,37 +37,56 @@
 }
 
 .fire {
-  font-size: 22px;
+  font-size: 28px;
+  cursor: help;
 }
 
-/* count */
-.streak-count {
-  margin: 12px 0 6px;
-  font-size: 34px;
-  font-weight: 800;
-  letter-spacing: 1px;
+/* stats */
+.streak-stats {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin: 12px 0 16px;
 }
 
-.streak-count .divider {
-  opacity: 0.7;
-  margin: 0 4px;
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.streak-count .target {
-  font-size: 22px;
+.stat-label {
+  font-size: 11px;
   opacity: 0.85;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 800;
+  margin-top: 4px;
+  line-height: 1;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.3);
 }
 
 /* text */
 .streak-text {
   font-size: 13px;
   opacity: 0.95;
-  margin-bottom: 14px;
+  margin: 12px 0 14px;
 }
 
 /* progress */
 .streak-progress {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .progress-bar {
@@ -74,6 +94,7 @@
   background: rgba(255, 255, 255, 0.3);
   border-radius: 6px;
   overflow: hidden;
+  margin-bottom: 6px;
 }
 
 .progress-fill {
@@ -81,25 +102,67 @@
   background: #ffffff;
   border-radius: 6px;
   transition: width 0.4s ease;
+
+  &.goal-reached {
+    background: #4caf50;
+    box-shadow: 0 0 12px rgba(76, 175, 80, 0.6);
+  }
 }
 
 .progress-label {
   font-size: 11px;
-  margin-top: 6px;
   display: block;
   opacity: 0.9;
+  font-weight: 500;
 }
 
-/* button */
-button {
-  margin-top: 8px;
+/* streak info */
+.streak-info {
+  margin: 10px 0 12px;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+.info-text {
+  display: block;
+}
+
+/* button group */
+.button-group {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.log-btn {
+  flex: 1;
   border-radius: 20px;
-  padding: 6px 18px;
+  padding: 8px 18px;
   font-weight: 600;
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.6);
+  transition: all 0.3s ease;
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.8);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 }
 
-button:hover {
-  background: rgba(255, 255, 255, 0.15);
+.reset-btn {
+  color: rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+
+  &:hover {
+    color: #ffffff;
+    transform: rotate(180deg);
+  }
 }
+

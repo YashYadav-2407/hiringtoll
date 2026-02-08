@@ -87,4 +87,13 @@ export class LocalDbService {
   generateToken(): string {
     return `token_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
+
+  /**
+   * Clear all data
+   */
+  clearAllData(): void {
+    localStorage.removeItem('hiring_tool_users');
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('user');
+  }
 }

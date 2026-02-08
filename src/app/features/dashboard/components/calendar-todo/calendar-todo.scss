@@ -3,47 +3,290 @@
   grid-template-columns: 1fr 1.3fr;
   gap: 24px;
   margin-top: 24px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
 }
 
-/* Cards */
-.calendar-card,
-.todo-card {
+/* Calendar Section */
+.calendar-section {
+  .calendar-card {
+    padding: 0;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+
+    .card-header {
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+
+      .card-title {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+    }
+
+    ::ng-deep .mat-calendar {
+      padding: 20px;
+      font-family: inherit;
+    }
+  }
+}
+
+/* Todo Section */
+.todo-section {
+  .todo-card {
+    padding: 0;
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    .card-header {
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .card-title {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+
+      .date-badge {
+        background: rgba(255, 255, 255, 0.25);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        backdrop-filter: blur(10px);
+      }
+    }
+  }
+}
+
+/* Add Task Section */
+.add-task-section {
   padding: 20px;
-  border-radius: 14px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+
+  .task-input {
+    flex: 1;
+
+    ::ng-deep {
+      .mat-mdc-form-field-hint-wrapper {
+        display: none;
+      }
+
+      .mdc-text-field {
+        background-color: #f8f9fa;
+
+        &:hover {
+          background-color: #f0f2f5;
+        }
+      }
+    }
+  }
+
+  .add-btn {
+    border-radius: 10px;
+    padding: 20px 24px;
+    
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+    }
+  }
 }
 
-/* Input row */
-.todo-input {
-   display: flex;
+/* Tasks List */
+.tasks-list {
+  padding: 12px;
+  flex: 1;
+  overflow-y: auto;
+  max-height: 400px;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 10px;
+
+    &:hover {
+      background: #ccc;
+    }
+  }
+}
+
+/* Task Item */
+.task-item {
+  display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 10px;
+  padding: 12px;
+  margin-bottom: 8px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border-left: 4px solid #667eea;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #f0f2f5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  &.completed {
+    border-left-color: #4caf50;
+    background: #f1f5f1;
+
+    .task-text {
+      color: #999;
+    }
+  }
+
+  .task-checkbox {
+    margin: 0;
+
+    ::ng-deep {
+      .mdc-checkbox__native-control {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .task-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .task-text {
+    font-size: 14px;
+    line-height: 1.5;
+    word-wrap: break-word;
+    word-break: break-word;
+    color: #333;
+    font-weight: 500;
+
+    &.done {
+      text-decoration: line-through;
+      color: #999;
+      font-weight: 400;
+    }
+  }
+
+  .task-actions {
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+
+    button {
+      border-radius: 6px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba(102, 126, 234, 0.1);
+      }
+
+      &.delete-btn:hover {
+        background: rgba(244, 67, 54, 0.1);
+      }
+    }
+  }
+
+  &:hover .task-actions {
+    opacity: 1;
+  }
 }
 
-.full {
-  width: 100%;
-}
-
-/* Todo list */
-.todo-text {
-   flex: 1;
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-.done {
-  text-decoration: line-through;
-    color: gray;
-}
-
-.actions {
+/* Empty State */
+.empty-state {
   display: flex;
-  gap: 6px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+
+  .empty-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+    opacity: 0.6;
+  }
+
+  .empty-text {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #666;
+  }
+
+  .empty-hint {
+    display: block;
+    font-size: 13px;
+    color: #999;
+    margin-top: 6px;
+  }
+}
+
+/* Task Count */
+.task-count {
+  padding: 12px 20px;
+  border-top: 1px solid #f0f0f0;
+  text-align: center;
+
+  .count-text {
+    font-size: 12px;
+    color: #999;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
 }
 
 /* Highlight streak days */
 ::ng-deep .task-day .mat-calendar-body-cell-content {
-  background-color: #4caf50;
+  background-color: #4caf50 !important;
+  color: white !important;
+  border-radius: 50%;
+  font-weight: 600;
+}
+
+::ng-deep .mat-calendar-body-selected {
+  background-color: #667eea;
   color: white;
   border-radius: 50%;
 }
+

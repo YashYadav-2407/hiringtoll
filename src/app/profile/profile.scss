@@ -165,6 +165,7 @@
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
+  margin-bottom: 16px;
 }
 
 .resume-actions button {
@@ -172,11 +173,85 @@
   font-size: 15px;
   font-weight: 600;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
 }
 
-.resume-actions button:hover {
+.resume-actions button:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.resume-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Resume Preview Section */
+.resume-preview {
+  background: linear-gradient(135deg, #f5f7fa 0%, #f0f3f9 100%);
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 20px;
+
+  h4 {
+    margin: 0 0 12px 0;
+    color: #1976d2;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .preview-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  .preview-item {
+    margin: 0;
+    padding: 8px 12px;
+    background: white;
+    border-left: 4px solid #1976d2;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #555;
+
+    strong {
+      color: #333;
+      font-weight: 600;
+      display: block;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-bottom: 4px;
+      color: #1976d2;
+    }
+  }
+
+  .preview-item.last-modified {
+    grid-column: 1 / -1;
+    border-left-color: #4caf50;
+    color: #666;
+    font-size: 12px;
+    font-style: italic;
+
+    strong {
+      color: #4caf50;
+    }
+  }
+}
+
+.preview-divider {
+  margin-bottom: 12px !important;
 }
 
 /* ===============================
@@ -191,6 +266,24 @@
 .note strong {
   font-weight: 700;
   color: #111;
+}
+
+/* ===============================
+   Responsive
+================================ */
+@media (max-width: 600px) {
+  .resume-actions {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .resume-preview .preview-content {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ===============================

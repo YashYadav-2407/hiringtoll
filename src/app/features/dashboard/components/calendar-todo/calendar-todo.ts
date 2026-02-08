@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCardModule } from '@angular/material/card';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { TodoService, Todo } from '../../../../core/services/todo.service';
 
@@ -20,6 +21,7 @@ import { TodoService, Todo } from '../../../../core/services/todo.service';
     MatListModule,
     MatCheckboxModule,
     MatCardModule,
+    MatTooltipModule,
     CommonModule
   ],
   templateUrl: './calendar-todo.html',
@@ -38,6 +40,10 @@ export class CalendarTodoComponent {
 
   get todos(): Todo[] {
     return this.todoService.getByDate(this.dateKey);
+  }
+
+  get completedCount(): number {
+    return this.todos.filter(t => t.completed).length;
   }
 
   onDateChange(date: Date | null) {

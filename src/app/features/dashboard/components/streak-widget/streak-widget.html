@@ -1,14 +1,25 @@
 <mat-card class="streak-card">
 
   <div class="streak-header">
-    <span class="fire">🔥</span>
+    <span class="fire" [matTooltip]="isLoggedInToday ? 'Logged in today!' : 'Not logged in yet today'">🔥</span>
     <h3>Your Coding Streak</h3>
   </div>
 
-  <div class="streak-count">
-    <span class="current">{{ streak }}</span>
-    <span class="divider">/</span>
-    <span class="target">{{ target }}</span>
+  <div class="streak-stats">
+    <div class="stat">
+      <span class="stat-label">Current</span>
+      <span class="stat-value">{{ streak }}</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-label">Best</span>
+      <span class="stat-value">{{ bestStreak }}</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-label">Goal</span>
+      <span class="stat-value">{{ target }}</span>
+    </div>
   </div>
 
   <p class="streak-text">
@@ -17,13 +28,29 @@
 
   <div class="streak-progress">
     <div class="progress-bar">
-      <div class="progress-fill" [style.width.%]="progressPercentage"></div>
+      <div class="progress-fill" [style.width.%]="progressPercentage" 
+           [class.goal-reached]="streak >= target"></div>
     </div>
     <span class="progress-label">{{ progressPercentage | number:'1.0-0' }}% completed</span>
   </div>
 
-  <button mat-stroked-button (click)="logProgress()">
-    Log Today's Progress
-  </button>
+  <div class="streak-info" *ngIf="lastLoginDate">
+    <span class="info-text">Last login: {{ lastLoginDate }}</span>
+  </div>
+
+  <div class="button-group">
+    <button mat-stroked-button (click)="logProgress()" 
+            [disabled]="isLoggedInToday"
+            [matTooltip]="isLoggedInToday ? 'Already logged in today' : 'Mark today as active'"
+            class="log-btn">
+      {{ isLoggedInToday ? '✓ Logged In Today' : 'Log Today\'s Progress' }}
+    </button>
+    <button mat-icon-button 
+            matTooltip="Reset streak counter"
+            (click)="resetStreak()"
+            class="reset-btn">
+      ↻
+    </button>
+  </div>
 
 </mat-card>

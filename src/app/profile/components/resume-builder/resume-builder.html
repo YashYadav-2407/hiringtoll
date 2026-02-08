@@ -1,0 +1,326 @@
+<div class="resume-builder-dialog">
+  <h2 mat-dialog-title>Resume Builder</h2>
+
+  <mat-dialog-content class="resume-content">
+    <mat-tab-group>
+      <!-- Personal Information Tab -->
+      <mat-tab label="Personal Information">
+        <div class="tab-content">
+          <form [formGroup]="personalInfoForm">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Full Name</mat-label>
+              <input matInput formControlName="fullName" placeholder="e.g., John Doe" />
+              <mat-error *ngIf="personalInfoForm.get('fullName')?.errors?.['required']">Name is required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email</mat-label>
+              <input matInput formControlName="email" placeholder="e.g., john@example.com" />
+              <mat-error *ngIf="personalInfoForm.get('email')?.errors?.['required']">Email is required</mat-error>
+              <mat-error *ngIf="personalInfoForm.get('email')?.errors?.['email']">Enter a valid email</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Phone</mat-label>
+              <input matInput formControlName="phone" placeholder="+1 (555) 123-4567" />
+              <mat-error>Enter a valid phone number</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Location</mat-label>
+              <input matInput formControlName="location" placeholder="e.g., San Francisco, CA" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Professional Summary</mat-label>
+              <textarea matInput formControlName="professionalSummary" rows="4" 
+                placeholder="Brief summary of your professional background and goals"></textarea>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>LinkedIn URL (Optional)</mat-label>
+              <input matInput formControlName="linkedin" placeholder="https://linkedin.com/in/yourprofile" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>GitHub URL (Optional)</mat-label>
+              <input matInput formControlName="github" placeholder="https://github.com/yourprofile" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Portfolio URL (Optional)</mat-label>
+              <input matInput formControlName="portfolio" placeholder="https://yourportfolio.com" />
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" (click)="savePersonalInfo()" class="action-button">
+              Save Personal Information
+            </button>
+          </form>
+        </div>
+      </mat-tab>
+
+      <!-- Experience Tab -->
+      <mat-tab label="Experience">
+        <div class="tab-content">
+          <div class="section-header">
+            <h3>Work Experience</h3>
+            <button mat-icon-button matTooltip="Add new experience" 
+              *ngIf="!editingExperienceId">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+
+          <form [formGroup]="experienceForm" class="form-section">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Job Title</mat-label>
+              <input matInput formControlName="jobTitle" placeholder="e.g., Senior Developer" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Company</mat-label>
+              <input matInput formControlName="company" placeholder="e.g., Tech Company Inc." />
+            </mat-form-field>
+
+            <div class="row">
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Start Date</mat-label>
+                <input matInput formControlName="startDate" type="date" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>End Date</mat-label>
+                <input matInput formControlName="endDate" type="date" />
+              </mat-form-field>
+            </div>
+
+            <div class="checkbox-group">
+              <mat-checkbox formControlName="currentlyWorking">
+                Currently Working Here
+              </mat-checkbox>
+            </div>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="description" rows="3" 
+                placeholder="Describe your responsibilities and contributions"></textarea>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Achievements (one per line)</mat-label>
+              <textarea matInput formControlName="achievements" rows="3" 
+                placeholder="• Increased sales by 30%&#10;• Led a team of 5 developers&#10;• Improved performance by 50%"></textarea>
+            </mat-form-field>
+
+            <div class="form-actions">
+              <button mat-raised-button color="primary" 
+                (click)="editingExperienceId ? updateExperience() : addExperience()" 
+                class="action-button">
+                {{ editingExperienceId ? 'Update Experience' : 'Add Experience' }}
+              </button>
+              <button mat-stroked-button (click)="cancelEditingExperience()" 
+                *ngIf="editingExperienceId" class="action-button">
+                Cancel
+              </button>
+            </div>
+          </form>
+
+          <mat-divider class="section-divider"></mat-divider>
+
+          <div class="experience-list" *ngIf="resume && resume.experience.length > 0">
+            <h4>Your Experience</h4>
+            <mat-card *ngFor="let exp of resume.experience" class="experience-card">
+              <mat-card-header>
+                <mat-card-title>{{ exp.jobTitle }}</mat-card-title>
+                <mat-card-subtitle>{{ exp.company }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p><strong>Period:</strong> {{ exp.startDate }} to {{ exp.endDate || 'Present' }}</p>
+                <p><strong>Description:</strong> {{ exp.description }}</p>
+                <div *ngIf="exp.achievements.length > 0">
+                  <strong>Achievements:</strong>
+                  <ul>
+                    <li *ngFor="let achievement of exp.achievements">{{ achievement }}</li>
+                  </ul>
+                </div>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-icon-button color="accent" (click)="editExperience(exp)" matTooltip="Edit">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteExperience(exp.id)" matTooltip="Delete">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+
+          <p *ngIf="!resume || resume.experience.length === 0" class="empty-state">
+            No experience added yet. Add your work experience to get started.
+          </p>
+        </div>
+      </mat-tab>
+
+      <!-- Education Tab -->
+      <mat-tab label="Education">
+        <div class="tab-content">
+          <div class="section-header">
+            <h3>Education</h3>
+          </div>
+
+          <form [formGroup]="educationForm" class="form-section">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Institution</mat-label>
+              <input matInput formControlName="institution" placeholder="e.g., Harvard University" />
+            </mat-form-field>
+
+            <div class="row">
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Degree</mat-label>
+                <input matInput formControlName="degree" placeholder="e.g., Bachelor" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Field of Study</mat-label>
+                <input matInput formControlName="field" placeholder="e.g., Computer Science" />
+              </mat-form-field>
+            </div>
+
+            <div class="row">
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Graduation Date</mat-label>
+                <input matInput formControlName="graduationDate" type="date" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>GPA (Optional)</mat-label>
+                <input matInput formControlName="gpa" placeholder="e.g., 3.8" />
+              </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Achievements (one per line)</mat-label>
+              <textarea matInput formControlName="achievements" rows="3" 
+                placeholder="• Dean's List&#10;• Graduated with Honors&#10;• Top 10 in class"></textarea>
+            </mat-form-field>
+
+            <div class="form-actions">
+              <button mat-raised-button color="primary" 
+                (click)="editingEducationId ? updateEducation() : addEducation()" 
+                class="action-button">
+                {{ editingEducationId ? 'Update Education' : 'Add Education' }}
+              </button>
+              <button mat-stroked-button (click)="cancelEditingEducation()" 
+                *ngIf="editingEducationId" class="action-button">
+                Cancel
+              </button>
+            </div>
+          </form>
+
+          <mat-divider class="section-divider"></mat-divider>
+
+          <div class="education-list" *ngIf="resume && resume.education.length > 0">
+            <h4>Your Education</h4>
+            <mat-card *ngFor="let edu of resume.education" class="education-card">
+              <mat-card-header>
+                <mat-card-title>{{ edu.degree }} in {{ edu.field }}</mat-card-title>
+                <mat-card-subtitle>{{ edu.institution }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p><strong>Graduation Date:</strong> {{ edu.graduationDate }}</p>
+                <p *ngIf="edu.gpa"><strong>GPA:</strong> {{ edu.gpa }}</p>
+                <div *ngIf="edu.achievements && edu.achievements.length > 0">
+                  <strong>Achievements:</strong>
+                  <ul>
+                    <li *ngFor="let achievement of edu.achievements">{{ achievement }}</li>
+                  </ul>
+                </div>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-icon-button color="accent" (click)="editEducation(edu)" matTooltip="Edit">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteEducation(edu.id)" matTooltip="Delete">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+
+          <p *ngIf="!resume || resume.education.length === 0" class="empty-state">
+            No education added yet. Add your educational background.
+          </p>
+        </div>
+      </mat-tab>
+
+      <!-- Skills Tab -->
+      <mat-tab label="Skills">
+        <div class="tab-content">
+          <div class="section-header">
+            <h3>Skills</h3>
+          </div>
+
+          <form [formGroup]="skillsForm" class="form-section">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Skill Category</mat-label>
+              <input matInput formControlName="category" placeholder="e.g., Programming Languages" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Skills (comma-separated)</mat-label>
+              <textarea matInput formControlName="skills" rows="3" 
+                placeholder="e.g., JavaScript, TypeScript, Angular, React"></textarea>
+            </mat-form-field>
+
+            <div class="form-actions">
+              <button mat-raised-button color="primary" 
+                (click)="editingSkillsId ? updateSkills() : addSkills()" 
+                class="action-button">
+                {{ editingSkillsId ? 'Update Skills' : 'Add Skills' }}
+              </button>
+              <button mat-stroked-button (click)="cancelEditingSkills()" 
+                *ngIf="editingSkillsId" class="action-button">
+                Cancel
+              </button>
+            </div>
+          </form>
+
+          <mat-divider class="section-divider"></mat-divider>
+
+          <div class="skills-list" *ngIf="resume && resume.skills.length > 0">
+            <h4>Your Skills</h4>
+            <div class="skills-grid">
+              <mat-card *ngFor="let skill of resume.skills" class="skill-card">
+                <mat-card-header>
+                  <mat-card-title>{{ skill.category }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="skill-chips">
+                    <mat-chip *ngFor="let s of skill.skills">
+                      {{ s }}
+                    </mat-chip>
+                  </div>
+                </mat-card-content>
+                <mat-card-actions>
+                  <button mat-icon-button color="accent" (click)="editSkills(skill)" matTooltip="Edit">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button color="warn" (click)="deleteSkills(skill.id)" matTooltip="Delete">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+            </div>
+          </div>
+
+          <p *ngIf="!resume || resume.skills.length === 0" class="empty-state">
+            No skills added yet. Add your professional skills.
+          </p>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-button (click)="closeDialog()">Close</button>
+  </mat-dialog-actions>
+</div>

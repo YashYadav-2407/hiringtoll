@@ -4,34 +4,23 @@
   <div class="footer-content">
     
     <div class="brand">
-      <h3>Hiring Tool</h3>
+      <h3>Hiring Toll</h3>
       <p>Prepare. Practice. Get Hired.</p>
     </div>
 
-    <div class="links">
-      <h4>Platform</h4>
-      <a href="#">Learn</a>
-      <a href="#">Practice</a>
-      <a href="#">Assess</a>
-    </div>
-
-    <div class="links">
-      <h4>Company</h4>
-      <a href="#">About</a>
-      <a href="#">Careers</a>
-      <a href="#">Contact</a>
-    </div>
-
-    <div class="links">
-      <h4>Resources</h4>
-      <a href="#">Blog</a>
-      <a href="#">Help</a>
-      <a href="#">Privacy</a>
+    <div class="links" *ngFor="let section of footerSections">
+      <h4>{{ section.title }}</h4>
+      <a 
+        *ngFor="let link of section.links" 
+        (click)="navigateTo(link.path)"
+        class="footer-link">
+        {{ link.label }}
+      </a>
     </div>
 
   </div>
 
   <div class="copyright">
-    © 2026 Hiring Tool. All rights reserved.
+    © 2026 Hiring Toll. All rights reserved.
   </div>
 </footer>

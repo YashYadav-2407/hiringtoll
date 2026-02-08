@@ -296,3 +296,64 @@
     transform: translateY(0);
   }
 }
+
+// OTP Verification Styles
+.otp-header {
+  text-align: center;
+  margin-bottom: 30px;
+
+  h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+    margin: 0 0 10px 0;
+  }
+
+  p {
+    font-size: 14px;
+    color: #777;
+    margin: 0;
+  }
+}
+
+.otp-options {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  font-size: 14px;
+
+  .btn-link {
+    background: none;
+    border: none;
+    color: #667eea;
+    cursor: pointer;
+    padding: 0;
+    font-size: 14px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+
+    &:hover:not(:disabled) {
+      color: #764ba2;
+      text-decoration: underline;
+    }
+
+    &:disabled {
+      color: #bbb;
+      cursor: not-allowed;
+    }
+  }
+
+  .separator {
+    color: #ddd;
+  }
+}
+
+.form-hint {
+  display: block;
+  font-size: 12px;
+  color: #999;
+  margin-top: 8px;
+  font-style: italic;
+}

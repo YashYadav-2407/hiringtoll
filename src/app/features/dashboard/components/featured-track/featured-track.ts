@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-featured-track',
@@ -9,4 +10,10 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './featured-track.html',
   styleUrl: './featured-track.scss'
 })
-export class FeaturedTrackComponent {}
+export class FeaturedTrackComponent {
+  constructor(private router: Router) {}
+
+  startTrack() {
+    this.router.navigate(['/practice']);
+  }
+}

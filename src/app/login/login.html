@@ -18,7 +18,7 @@
     </div>
 
     <!-- Login Form -->
-    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" *ngIf="!isSignUp()" class="auth-form">
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" *ngIf="!isSignUp() && !isOtpVerificationStep()" class="auth-form">
       <!-- Email Field -->
       <div class="form-group">
         <label for="login-email">Email Address</label>
@@ -77,8 +77,119 @@
       </div>
     </form>
 
+    <!-- OTP Verification Form -->
+    <form [formGroup]="otpForm" (ngSubmit)="onVerifyOtp()" *ngIf="!isSignUp() && isOtpVerificationStep()" class="auth-form">
+      <div class="otp-header">
+        <h2>Verify Your Email</h2>
+        <p>We've sent a 6-digit OTP to {{ userEmailForOtp() }}</p>
+      </div>
+
+      <!-- OTP Field -->
+      <div class="form-group">
+        <label for="otp">One-Time Password (OTP)</label>
+        <input
+          id="otp"
+          type="text"
+          formControlName="otp"
+          placeholder="Enter 6-digit OTP"
+          class="form-control"
+          [class.is-invalid]="submitted() && otpForm.get('otp')?.invalid"
+          maxlength="6"
+        />
+        <div *ngIf="submitted() && otpForm.get('otp')?.invalid" class="error-text">
+          {{ getOtpErrorMessage('otp') }}
+        </div>
+      </div>
+
+      <!-- Verify Button -->
+      <button 
+        type="submit" 
+        class="btn btn-primary btn-block"
+        [disabled]="loadingState()"
+      >
+        {{ loadingState() ? 'Verifying...' : 'Verify OTP' }}
+      </button>
+
+      <!-- Resend and Go Back Options -->
+      <div class="otp-options">
+        <button 
+          type="button" 
+          class="btn-link"
+          (click)="onResendOtp()"
+          [disabled]="loadingState() || otpResendCooldown() > 0"
+        >
+          {{ otpResendCooldown() > 0 ? 'Resend OTP (' + otpResendCooldown() + 's)' : 'Resend OTP' }}
+        </button>
+        <span class="separator">|</span>
+        <button 
+          type="button" 
+          class="btn-link"
+          (click)="goBackToLogin()"
+        >
+          Back to Login
+        </button>
+      </div>
+    </form>
+
+    <!-- Sign Up OTP Verification Form -->
+    <form *ngIf="isSignUp() && isSignUpOtpVerification()" class="auth-form">
+      <div class="otp-header">
+        <h2>Verify Your Email</h2>
+        <p>Enter the OTP sent to {{ userEmailForOtp() }} to activate your account</p>
+      </div>
+
+      <!-- OTP Field -->
+      <div class="form-group">
+        <label for="signup-otp-verify">One-Time Password (OTP)</label>
+        <input
+          id="signup-otp-verify"
+          type="text"
+          formControlName="otp"
+          [formGroup]="otpForm"
+          placeholder="Enter 6-digit OTP from your email"
+          class="form-control"
+          [class.is-invalid]="submitted() && otpForm.get('otp')?.invalid"
+          maxlength="6"
+        />
+        <div *ngIf="submitted() && otpForm.get('otp')?.invalid" class="error-text">
+          {{ getOtpErrorMessage('otp') }}
+        </div>
+        <small class="form-hint">This OTP will set your password and activate your account</small>
+      </div>
+
+      <!-- Verify Button -->
+      <button 
+        type="button"
+        (click)="onVerifySignUpOtp()"
+        class="btn btn-primary btn-block"
+        [disabled]="loadingState()"
+      >
+        {{ loadingState() ? 'Verifying...' : 'Verify & Activate Account' }}
+      </button>
+
+      <!-- Resend and Go Back Options -->
+      <div class="otp-options">
+        <button 
+          type="button" 
+          class="btn-link"
+          (click)="onResendSignUpOtp()"
+          [disabled]="loadingState() || otpResendCooldown() > 0"
+        >
+          {{ otpResendCooldown() > 0 ? 'Resend OTP (' + otpResendCooldown() + 's)' : 'Resend OTP' }}
+        </button>
+        <span class="separator">|</span>
+        <button 
+          type="button" 
+          class="btn-link"
+          (click)="goBackToSignUp()"
+        >
+          Back to Sign Up
+        </button>
+      </div>
+    </form>
+
     <!-- Sign Up Form -->
-    <form [formGroup]="signUpForm" (ngSubmit)="onSignUp()" *ngIf="isSignUp()" class="auth-form">
+    <form [formGroup]="signUpForm" (ngSubmit)="onSignUp()" *ngIf="isSignUp() && !isSignUpOtpVerification()" class="auth-form">
       <!-- Name Field -->
       <div class="form-group">
         <label for="signup-name">Full Name</label>
@@ -239,7 +350,7 @@
     </form>
 
     <!-- Toggle Between Forms -->
-    <div class="auth-toggle">
+    <div class="auth-toggle" *ngIf="!isOtpVerificationStep() && !isSignUpOtpVerification()">
       <p>
         {{ isSignUp() ? 'Already have an account?' : 'Don\'t have an account?' }}
         <button type="button" class="toggle-link" (click)="toggleForm()">

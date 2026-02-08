@@ -64,9 +64,50 @@
   </p>
 
   <div class="resume-actions">
-    <button mat-raised-button color="primary">Create Resume</button>
-    <button mat-stroked-button color="accent">Edit Resume</button>
-    <button mat-stroked-button>Download PDF</button>
+    <button mat-raised-button color="primary" (click)="openResumeBuilder()" matTooltip="Create or edit your resume">
+      <mat-icon>edit</mat-icon>
+      <span>Create Resume</span>
+    </button>
+    <button mat-stroked-button color="accent" (click)="editResume()" [disabled]="!hasResumeData()" matTooltip="Edit your existing resume">
+      <mat-icon>mode_edit</mat-icon>
+      <span>Edit Resume</span>
+    </button>
+    <button mat-stroked-button (click)="downloadPdf()" [disabled]="!hasResumeData()" matTooltip="Download your resume as PDF">
+      <mat-icon>download</mat-icon>
+      <span>Download PDF</span>
+    </button>
+  </div>
+
+  <!-- Resume Preview (if data exists) -->
+  <div class="resume-preview" *ngIf="hasResumeData() && resume">
+    <mat-divider class="preview-divider"></mat-divider>
+    <h4>Resume Summary</h4>
+    <div class="preview-content">
+      <p *ngIf="resume.personalInfo.fullName" class="preview-item">
+        <strong>Name:</strong> {{ resume.personalInfo.fullName }}
+      </p>
+      <p *ngIf="resume.experience.length > 0" class="preview-item">
+        <strong>Experience Entries:</strong> {{ resume.experience.length }}
+      </p>
+      <p *ngIf="resume.education.length > 0" class="preview-item">
+        <strong>Education Entries:</strong> {{ resume.education.length }}
+      </p>
+      <p *ngIf="resume.skills.length > 0" class="preview-item">
+        <strong>Skill Categories:</strong> {{ resume.skills.length }}
+      </p>
+      <p class="preview-item last-modified">
+        Last modified: {{ resume.lastModified | date: 'short' }}
+      </p>
+    </div>
   </div>
 
 </div>
+
+<script src="node_modules/pdfmake/build/pdfmake.js"></script>
+<script src="node_modules/pdfmake/build/vfs_fonts.js"></script>
+
+<!-- After a submission succeeds -->
+this.activityService.recordActivity().subscribe(
+  () => console.log('Activity recorded'),
+  (error) => console.error('Error:', error)
+);
