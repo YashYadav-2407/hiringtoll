@@ -1,0 +1,32 @@
+<div class="page-container">
+  <button mat-icon-button class="back-btn" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
+  <div class="page-header">
+    <h1>Help Center</h1>
+    <p class="subtitle">Find answers to your questions</p>
+  </div>
+
+  <div class="help-categories">
+    <mat-card class="category-card" *ngFor="let cat of categories">
+      <mat-icon>{{ cat.icon }}</mat-icon>
+      <h3>{{ cat.title }}</h3>
+      <p>{{ cat.desc }}</p>
+    </mat-card>
+  </div>
+
+  <mat-card class="section-card">
+    <mat-card-content>
+      <h2><mat-icon>help</mat-icon> Frequently Asked Questions</h2>
+      <mat-accordion>
+        <mat-expansion-panel *ngFor="let faq of faqs">
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{ faq.question }}</mat-panel-title>
+          </mat-expansion-panel-header>
+          <p class="faq-answer">{{ faq.answer }}</p>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-card-content>
+  </mat-card>
+</div>

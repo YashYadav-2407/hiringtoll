@@ -1,0 +1,37 @@
+<div class="page-container">
+  <button mat-icon-button class="back-btn" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
+  <div class="page-header">
+    <h1>Privacy Policy</h1>
+    <p class="subtitle">Last updated: {{ lastUpdated }}</p>
+  </div>
+
+  <mat-card class="section-card intro-card">
+    <mat-card-content>
+      <p>
+        At Hiring Toll, we take your privacy seriously. This policy explains what information we collect,
+        how we use it, and your rights regarding your data. By using our platform, you agree to the
+        practices described below.
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="section-card policy-section" *ngFor="let section of sections">
+    <mat-card-content>
+      <h2><mat-icon>{{ section.icon }}</mat-icon> {{ section.title }}</h2>
+      <p class="policy-text">{{ section.content }}</p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="section-card contact-card">
+    <mat-card-content>
+      <h2><mat-icon>contact_support</mat-icon> Questions?</h2>
+      <p class="policy-text">
+        If you have any questions about this Privacy Policy, please contact us at
+        <strong>support&#64;hiringtoll.com</strong>.
+      </p>
+    </mat-card-content>
+  </mat-card>
+</div>

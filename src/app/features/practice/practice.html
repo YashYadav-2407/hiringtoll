@@ -31,38 +31,55 @@
             <p>No algorithm challenges available.</p>
           </div>
 
-          <div *ngIf="!isLoadingAlgorithm && algorithmChallenges.length > 0" class="cards-grid">
-            <mat-card class="content-card" *ngFor="let challenge of algorithmChallenges">
-              <mat-card-header>
-                <div mat-card-avatar class="avatar-icon">🔧</div>
-                <mat-card-title>{{ challenge.title }}</mat-card-title>
-                <mat-card-subtitle>{{ challenge.category }}</mat-card-subtitle>
-              </mat-card-header>
-              <mat-card-content>
-                <p class="description">{{ challenge.description }}</p>
-                <div class="metadata">
-                  <mat-chip-set>
-                    <mat-chip [color]="getDifficultyColor(challenge.difficulty)" selected>
-                      {{ challenge.difficulty | titlecase }}
-                    </mat-chip>
-                    <mat-chip>⏱️ {{ challenge.timeLimit }} min</mat-chip>
-                    <mat-chip *ngIf="challenge.acceptance_rate">
-                      ✅ {{ challenge.acceptance_rate }}%
-                    </mat-chip>
-                  </mat-chip-set>
+          <div *ngIf="!isLoadingAlgorithm && algorithmChallenges.length > 0">
+            <div class="solved-progress-bar">
+              <span class="solved-count">{{ getSolvedCount('algo', algorithmChallenges) }} / {{ algorithmChallenges.length }} Solved</span>
+              <mat-progress-bar mode="determinate" [value]="(getSolvedCount('algo', algorithmChallenges) / algorithmChallenges.length) * 100"></mat-progress-bar>
+            </div>
+            <div class="cards-grid">
+              <mat-card class="content-card" *ngFor="let challenge of algorithmChallenges" [class.solved-card]="isSolved('algo', challenge.id)">
+                <div class="solved-badge" *ngIf="isSolved('algo', challenge.id)">
+                  <mat-icon>check_circle</mat-icon> Solved
                 </div>
-              </mat-card-content>
-              <mat-card-actions>
-                <button
-                  mat-raised-button
-                  color="primary"
-                  (click)="openChallenge(challenge.leetcodeUrl)"
-                  [disabled]="!challenge.leetcodeUrl"
-                >
-                  Solve Now
-                </button>
-              </mat-card-actions>
-            </mat-card>
+                <mat-card-header>
+                  <div mat-card-avatar class="avatar-icon">{{ isSolved('algo', challenge.id) ? '✅' : '🔧' }}</div>
+                  <mat-card-title>{{ challenge.title }}</mat-card-title>
+                  <mat-card-subtitle>{{ challenge.category }}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <p class="description">{{ challenge.description }}</p>
+                  <div class="metadata">
+                    <mat-chip-set>
+                      <mat-chip [color]="getDifficultyColor(challenge.difficulty)" selected>
+                        {{ challenge.difficulty | titlecase }}
+                      </mat-chip>
+                      <mat-chip>⏱️ {{ challenge.timeLimit }} min</mat-chip>
+                      <mat-chip *ngIf="challenge.acceptance_rate">
+                        ✅ {{ challenge.acceptance_rate }}%
+                      </mat-chip>
+                    </mat-chip-set>
+                  </div>
+                </mat-card-content>
+                <mat-card-actions>
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="openChallenge(challenge.leetcodeUrl)"
+                    [disabled]="!challenge.leetcodeUrl"
+                  >
+                    Solve on LeetCode
+                  </button>
+                  <button
+                    mat-raised-button
+                    [color]="isSolved('algo', challenge.id) ? 'warn' : 'accent'"
+                    (click)="toggleSolved('algo', challenge.id)"
+                  >
+                    <mat-icon>{{ isSolved('algo', challenge.id) ? 'undo' : 'check' }}</mat-icon>
+                    {{ isSolved('algo', challenge.id) ? 'Unmark' : 'Mark Solved' }}
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+            </div>
           </div>
         </div>
       </mat-tab>
@@ -84,34 +101,51 @@
             <p>No beginner exercises available.</p>
           </div>
 
-          <div *ngIf="!isLoadingBeginner && beginnerExercises.length > 0" class="cards-grid">
-            <mat-card class="content-card beginner-card" *ngFor="let exercise of beginnerExercises">
-              <mat-card-header>
-                <div mat-card-avatar class="avatar-icon">✏️</div>
-                <mat-card-title>{{ exercise.title }}</mat-card-title>
-                <mat-card-subtitle>{{ exercise.topic }}</mat-card-subtitle>
-              </mat-card-header>
-              <mat-card-content>
-                <p class="description">{{ exercise.description }}</p>
-                <div class="metadata">
-                  <mat-chip-set>
-                    <mat-chip [color]="getDifficultyColor(exercise.difficulty)" selected>
-                      {{ exercise.difficulty | titlecase }}
-                    </mat-chip>
-                    <mat-chip>🕐 {{ exercise.duration }}</mat-chip>
-                    <mat-chip>🐍 {{ exercise.language }}</mat-chip>
-                    <mat-chip *ngIf="exercise.hints">
-                      💡 {{ exercise.hints }} hints
-                    </mat-chip>
-                  </mat-chip-set>
+          <div *ngIf="!isLoadingBeginner && beginnerExercises.length > 0">
+            <div class="solved-progress-bar">
+              <span class="solved-count">{{ getSolvedCount('beginner', beginnerExercises) }} / {{ beginnerExercises.length }} Solved</span>
+              <mat-progress-bar mode="determinate" [value]="(getSolvedCount('beginner', beginnerExercises) / beginnerExercises.length) * 100"></mat-progress-bar>
+            </div>
+            <div class="cards-grid">
+              <mat-card class="content-card beginner-card" *ngFor="let exercise of beginnerExercises" [class.solved-card]="isSolved('beginner', exercise.id)">
+                <div class="solved-badge" *ngIf="isSolved('beginner', exercise.id)">
+                  <mat-icon>check_circle</mat-icon> Solved
                 </div>
-              </mat-card-content>
-              <mat-card-actions>
-                <button mat-raised-button color="primary">
-                  Start Exercise
-                </button>
-              </mat-card-actions>
-            </mat-card>
+                <mat-card-header>
+                  <div mat-card-avatar class="avatar-icon">{{ isSolved('beginner', exercise.id) ? '✅' : '✏️' }}</div>
+                  <mat-card-title>{{ exercise.title }}</mat-card-title>
+                  <mat-card-subtitle>{{ exercise.topic }}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <p class="description">{{ exercise.description }}</p>
+                  <div class="metadata">
+                    <mat-chip-set>
+                      <mat-chip [color]="getDifficultyColor(exercise.difficulty)" selected>
+                        {{ exercise.difficulty | titlecase }}
+                      </mat-chip>
+                      <mat-chip>🕐 {{ exercise.duration }}</mat-chip>
+                      <mat-chip>🐍 {{ exercise.language }}</mat-chip>
+                      <mat-chip *ngIf="exercise.hints">
+                        💡 {{ exercise.hints }} hints
+                      </mat-chip>
+                    </mat-chip-set>
+                  </div>
+                </mat-card-content>
+                <mat-card-actions>
+                  <button mat-raised-button color="primary">
+                    Start Exercise
+                  </button>
+                  <button
+                    mat-raised-button
+                    [color]="isSolved('beginner', exercise.id) ? 'warn' : 'accent'"
+                    (click)="toggleSolved('beginner', exercise.id)"
+                  >
+                    <mat-icon>{{ isSolved('beginner', exercise.id) ? 'undo' : 'check' }}</mat-icon>
+                    {{ isSolved('beginner', exercise.id) ? 'Unmark' : 'Mark Solved' }}
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+            </div>
           </div>
         </div>
       </mat-tab>
@@ -133,31 +167,48 @@
             <p>No speed coding challenges available.</p>
           </div>
 
-          <div *ngIf="!isLoadingSpeed && speedCodingChallenges.length > 0" class="cards-grid">
-            <mat-card class="content-card speed-card" *ngFor="let challenge of speedCodingChallenges">
-              <mat-card-header>
-                <div mat-card-avatar class="avatar-icon">⚡</div>
-                <mat-card-title>{{ challenge.title }}</mat-card-title>
-                <mat-card-subtitle>{{ challenge.category }}</mat-card-subtitle>
-              </mat-card-header>
-              <mat-card-content>
-                <p class="description">{{ challenge.description }}</p>
-                <div class="metadata">
-                  <mat-chip-set>
-                    <mat-chip [color]="getDifficultyColor(challenge.difficulty)" selected>
-                      {{ challenge.difficulty | titlecase }}
-                    </mat-chip>
-                    <mat-chip>⏱️ {{ challenge.timeLimit }}s</mat-chip>
-                    <mat-chip>🏆 {{ challenge.reward }} pts</mat-chip>
-                  </mat-chip-set>
+          <div *ngIf="!isLoadingSpeed && speedCodingChallenges.length > 0">
+            <div class="solved-progress-bar">
+              <span class="solved-count">{{ getSolvedCount('speed', speedCodingChallenges) }} / {{ speedCodingChallenges.length }} Solved</span>
+              <mat-progress-bar mode="determinate" [value]="(getSolvedCount('speed', speedCodingChallenges) / speedCodingChallenges.length) * 100"></mat-progress-bar>
+            </div>
+            <div class="cards-grid">
+              <mat-card class="content-card speed-card" *ngFor="let challenge of speedCodingChallenges" [class.solved-card]="isSolved('speed', challenge.id)">
+                <div class="solved-badge" *ngIf="isSolved('speed', challenge.id)">
+                  <mat-icon>check_circle</mat-icon> Solved
                 </div>
-              </mat-card-content>
-              <mat-card-actions>
-                <button mat-raised-button color="primary">
-                  Race Now
-                </button>
-              </mat-card-actions>
-            </mat-card>
+                <mat-card-header>
+                  <div mat-card-avatar class="avatar-icon">{{ isSolved('speed', challenge.id) ? '✅' : '⚡' }}</div>
+                  <mat-card-title>{{ challenge.title }}</mat-card-title>
+                  <mat-card-subtitle>{{ challenge.category }}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <p class="description">{{ challenge.description }}</p>
+                  <div class="metadata">
+                    <mat-chip-set>
+                      <mat-chip [color]="getDifficultyColor(challenge.difficulty)" selected>
+                        {{ challenge.difficulty | titlecase }}
+                      </mat-chip>
+                      <mat-chip>⏱️ {{ challenge.timeLimit }}s</mat-chip>
+                      <mat-chip>🏆 {{ challenge.reward }} pts</mat-chip>
+                    </mat-chip-set>
+                  </div>
+                </mat-card-content>
+                <mat-card-actions>
+                  <button mat-raised-button color="primary">
+                    Race Now
+                  </button>
+                  <button
+                    mat-raised-button
+                    [color]="isSolved('speed', challenge.id) ? 'warn' : 'accent'"
+                    (click)="toggleSolved('speed', challenge.id)"
+                  >
+                    <mat-icon>{{ isSolved('speed', challenge.id) ? 'undo' : 'check' }}</mat-icon>
+                    {{ isSolved('speed', challenge.id) ? 'Unmark' : 'Mark Solved' }}
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+            </div>
           </div>
         </div>
       </mat-tab>

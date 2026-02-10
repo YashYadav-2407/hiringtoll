@@ -1,0 +1,75 @@
+@import '../page-shared';
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 24px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.contact-form-card {
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    mat-form-field {
+      width: 100%;
+    }
+
+    button {
+      align-self: flex-start;
+      margin-top: 8px;
+    }
+  }
+}
+
+.success-msg {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 10px;
+  color: #065f46;
+  font-weight: 600;
+
+  mat-icon {
+    color: #10b981;
+  }
+}
+
+.contact-info-card {
+  .info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid #f0f0f0;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    mat-icon {
+      color: #2563eb;
+      margin-top: 2px;
+    }
+
+    strong {
+      display: block;
+      font-size: 14px;
+      color: #374151;
+    }
+
+    p {
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: #6b7280;
+    }
+  }
+}

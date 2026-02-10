@@ -1,0 +1,49 @@
+<div class="page-container">
+  <button mat-icon-button class="back-btn" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
+  <div class="page-header">
+    <h1>About Hiring Toll</h1>
+    <p class="subtitle">Empowering developers to ace their technical interviews</p>
+  </div>
+
+  <mat-card class="section-card">
+    <mat-card-content>
+      <h2><mat-icon>info</mat-icon> Our Mission</h2>
+      <p>
+        Hiring Toll is a comprehensive technical interview preparation platform built for developers at every stage of their career.
+        We believe that everyone deserves access to high-quality practice resources to land their dream job in tech.
+      </p>
+      <p>
+        From algorithm challenges and speed coding to skill assessments and resume building — we provide everything you need
+        to prepare, practice, and get hired.
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="section-card">
+    <mat-card-content>
+      <h2><mat-icon>timeline</mat-icon> Our Journey</h2>
+      <div class="timeline">
+        <div class="timeline-item" *ngFor="let m of milestones">
+          <span class="year">{{ m.year }}</span>
+          <span class="text">{{ m.text }}</span>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="section-card">
+    <mat-card-content>
+      <h2><mat-icon>groups</mat-icon> Our Team</h2>
+      <div class="team-grid">
+        <div class="team-member" *ngFor="let member of teamMembers">
+          <mat-icon class="member-icon">{{ member.icon }}</mat-icon>
+          <h3>{{ member.name }}</h3>
+          <p>{{ member.role }}</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

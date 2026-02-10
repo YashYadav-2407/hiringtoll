@@ -8,6 +8,12 @@ import { TypingComponent } from './features/typing/typing';
 import { ProfileComponent } from './profile/profile';
 import { Login } from './login/login';
 import { AuthGuard } from './core/guards/auth.guard';
+import { AboutComponent } from './pages/about/about';
+import { CareersComponent } from './pages/careers/careers';
+import { ContactComponent } from './pages/contact/contact';
+import { BlogComponent } from './pages/blog/blog';
+import { HelpComponent } from './pages/help/help';
+import { PrivacyComponent } from './pages/privacy/privacy';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -18,5 +24,12 @@ export const routes: Routes = [
   { path: 'assess', component: AssessComponent, canActivate: [AuthGuard] },
   { path: 'typing', component: TypingComponent, canActivate: [AuthGuard] },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+  // Public pages (footer links)
+  { path: 'about', component: AboutComponent },
+  { path: 'careers', component: CareersComponent },
+  { path: 'contact', component: ContactComponent },
+  { path: 'blog', component: BlogComponent },
+  { path: 'help', component: HelpComponent },
+  { path: 'privacy', component: PrivacyComponent },
   { path: '**', redirectTo: 'login' }
 ];

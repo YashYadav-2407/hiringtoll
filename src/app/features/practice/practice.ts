@@ -43,10 +43,15 @@ export class PracticeComponent implements OnInit {
   isLoadingSpeed = false;
   isLoadingAssessment = false;
 
+  private readonly SOLVED_KEY = 'practice_solved_problems';
+  solvedProblems: Set<string> = new Set();
+
   constructor(
     private practiceService: PracticeService,
     private dialog: MatDialog
-  ) {}
+  ) {
+    this.loadSolvedProblems();
+  }
 
   ngOnInit(): void {
     this.loadAllContent();
@@ -134,6 +139,43 @@ export class PracticeComponent implements OnInit {
       advanced: 'danger'
     };
     return colors[level] || 'primary';
+  }
+
+  // ========== SOLVED PROBLEM TRACKING ==========
+
+  private loadSolvedProblems(): void {
+    if (typeof localStorage !== 'undefined') {
+      try {
+        const saved = localStorage.getItem(this.SOLVED_KEY);
+        this.solvedProblems = new Set(saved ? JSON.parse(saved) : []);
+      } catch {
+        this.solvedProblems = new Set();
+      }
+    }
+  }
+
+  private saveSolvedProblems(): void {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(this.SOLVED_KEY, JSON.stringify([...this.solvedProblems]));
+    }
+  }
+
+  isSolved(type: string, id: string): boolean {
+    return this.solvedProblems.has(`${type}_${id}`);
+  }
+
+  toggleSolved(type: string, id: string): void {
+    const key = `${type}_${id}`;
+    if (this.solvedProblems.has(key)) {
+      this.solvedProblems.delete(key);
+    } else {
+      this.solvedProblems.add(key);
+    }
+    this.saveSolvedProblems();
+  }
+
+  getSolvedCount(type: string, items: { id: string }[]): number {
+    return items.filter(item => this.solvedProblems.has(`${type}_${item.id}`)).length;
   }
 
   openChallenge(url?: string): void {

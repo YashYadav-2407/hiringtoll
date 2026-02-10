@@ -1,0 +1,32 @@
+<div class="page-container">
+  <button mat-icon-button class="back-btn" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
+  <div class="page-header">
+    <h1>Blog</h1>
+    <p class="subtitle">Insights, guides, and tips for your interview journey</p>
+  </div>
+
+  <div class="blog-grid">
+    <mat-card class="blog-card" *ngFor="let post of posts">
+      <div class="blog-icon-wrap">
+        <mat-icon>{{ post.icon }}</mat-icon>
+      </div>
+      <mat-card-content>
+        <mat-chip-set>
+          <mat-chip highlighted>{{ post.tag }}</mat-chip>
+        </mat-chip-set>
+        <h3>{{ post.title }}</h3>
+        <p class="excerpt">{{ post.excerpt }}</p>
+        <div class="blog-meta">
+          <span><mat-icon>calendar_today</mat-icon> {{ post.date }}</span>
+          <span><mat-icon>schedule</mat-icon> {{ post.readTime }}</span>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary">Read More <mat-icon>arrow_forward</mat-icon></button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

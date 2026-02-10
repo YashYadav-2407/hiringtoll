@@ -1,0 +1,37 @@
+@import '../page-shared';
+
+.intro-card {
+  border-left: 4px solid #2563eb;
+
+  p {
+    font-size: 15px;
+    color: #374151;
+    line-height: 1.7;
+    margin: 0;
+  }
+}
+
+.policy-section {
+  .policy-text {
+    font-size: 14px;
+    color: #4b5563;
+    line-height: 1.8;
+    margin: 0;
+  }
+}
+
+.contact-card {
+  background: #f0f9ff;
+  border: 1px solid #bfdbfe;
+
+  .policy-text {
+    font-size: 14px;
+    color: #1e40af;
+    line-height: 1.7;
+    margin: 0;
+
+    strong {
+      color: #1d4ed8;
+    }
+  }
+}

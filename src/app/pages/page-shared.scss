@@ -1,0 +1,71 @@
+.page-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  position: relative;
+}
+
+.back-btn {
+  position: absolute;
+  top: 40px;
+  left: 24px;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 40px;
+
+  h1 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #111827;
+    margin: 0 0 8px;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: #6b7280;
+    margin: 0;
+  }
+}
+
+.section-card {
+  margin-bottom: 24px;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+
+  mat-card-content {
+    padding: 24px;
+
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 20px;
+      font-weight: 700;
+      color: #111827;
+      margin: 0 0 16px;
+
+      mat-icon {
+        color: #2563eb;
+      }
+    }
+
+    p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #374151;
+      margin: 0 0 12px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    padding: 24px 16px;
+  }
+
+  .page-header h1 {
+    font-size: 24px;
+  }
+}

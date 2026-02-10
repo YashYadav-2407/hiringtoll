@@ -238,6 +238,73 @@
 }
 
 /* =========================
+   SOLVED STATE
+========================= */
+
+.solved-progress-bar {
+  margin-bottom: 20px;
+  padding: 16px 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+
+  .solved-count {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #16a34a;
+    margin-bottom: 8px;
+  }
+
+  mat-progress-bar {
+    height: 8px;
+    border-radius: 4px;
+
+    ::ng-deep .mdc-linear-progress__bar-inner {
+      border-color: #16a34a;
+    }
+
+    ::ng-deep .mdc-linear-progress__buffer-bar {
+      background-color: #dcfce7;
+    }
+  }
+}
+
+.content-card.solved-card {
+  border: 2px solid #16a34a;
+  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+  position: relative;
+  overflow: visible;
+
+  &:hover {
+    border-color: #15803d;
+    box-shadow: 0 20px 40px rgba(22, 163, 74, 0.15);
+  }
+}
+
+.solved-badge {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  background: #16a34a;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 0 12px 0 12px;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 1;
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* =========================
    LOADING & EMPTY STATES
 ========================= */
 

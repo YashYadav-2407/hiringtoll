@@ -1,0 +1,62 @@
+<div class="page-container">
+  <button mat-icon-button class="back-btn" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
+  <div class="page-header">
+    <h1>Contact Us</h1>
+    <p class="subtitle">We'd love to hear from you. Get in touch!</p>
+  </div>
+
+  <div class="contact-layout">
+    <mat-card class="section-card contact-form-card">
+      <mat-card-content>
+        <h2><mat-icon>send</mat-icon> Send a Message</h2>
+
+        <div *ngIf="submitted" class="success-msg">
+          <mat-icon>check_circle</mat-icon>
+          <span>Thanks! Your message has been sent. We'll get back to you soon.</span>
+        </div>
+
+        <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" *ngIf="!submitted">
+          <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" placeholder="Your name" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" type="email" placeholder="you@example.com" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Subject</mat-label>
+            <input matInput formControlName="subject" placeholder="Subject" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Message</mat-label>
+            <textarea matInput formControlName="message" rows="5" placeholder="Tell us what's on your mind..."></textarea>
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" type="submit" [disabled]="contactForm.invalid">
+            <mat-icon>send</mat-icon> Send Message
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="section-card contact-info-card">
+      <mat-card-content>
+        <h2><mat-icon>info</mat-icon> Contact Info</h2>
+        <div class="info-item" *ngFor="let item of contactInfo">
+          <mat-icon>{{ item.icon }}</mat-icon>
+          <div>
+            <strong>{{ item.label }}</strong>
+            <p>{{ item.value }}</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

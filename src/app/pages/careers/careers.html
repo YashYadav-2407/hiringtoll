@@ -1,0 +1,42 @@
+<div class="page-container">
+  <button mat-icon-button class="back-btn" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
+  <div class="page-header">
+    <h1>Careers at Hiring Toll</h1>
+    <p class="subtitle">Join us in building the future of interview preparation</p>
+  </div>
+
+  <mat-card class="section-card">
+    <mat-card-content>
+      <h2><mat-icon>work</mat-icon> Open Positions</h2>
+      <div class="jobs-list">
+        <div class="job-card" *ngFor="let job of openings">
+          <mat-icon class="job-icon">{{ job.icon }}</mat-icon>
+          <div class="job-info">
+            <h3>{{ job.title }}</h3>
+            <div class="job-meta">
+              <span><mat-icon>group</mat-icon> {{ job.team }}</span>
+              <span><mat-icon>location_on</mat-icon> {{ job.location }}</span>
+              <span><mat-icon>schedule</mat-icon> {{ job.type }}</span>
+            </div>
+          </div>
+          <button mat-raised-button color="primary">Apply</button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="section-card">
+    <mat-card-content>
+      <h2><mat-icon>star</mat-icon> Perks & Benefits</h2>
+      <div class="perks-grid">
+        <div class="perk" *ngFor="let perk of perks">
+          <mat-icon>{{ perk.icon }}</mat-icon>
+          <span>{{ perk.text }}</span>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

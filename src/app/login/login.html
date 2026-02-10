@@ -1,362 +1,579 @@
-<div class="login-container">
-  <div class="login-box">
-    <div class="login-header">
-      <h1>{{ isSignUp() ? 'Create Account' : 'Welcome Back' }}</h1>
-      <p>{{ isSignUp() ? 'Join us to get started' : 'Sign in to your account' }}</p>
-    </div>
-
-    <!-- Alert Messages -->
-    <div class="alert-container">
-      <div *ngIf="errorMessage()" class="alert alert-error">
-        <span class="alert-icon">✕</span>
-        <span>{{ errorMessage() }}</span>
-      </div>
-      <div *ngIf="successMessage()" class="alert alert-success">
-        <span class="alert-icon">✓</span>
-        <span>{{ successMessage() }}</span>
+<div class="auth-container">
+  <!-- ALERT MESSAGES -->
+  <div class="alert" *ngIf="errorMessage()" [@slideInDown]>
+    <div class="alert-content">
+      <span class="alert-icon">✕</span>
+      <div class="alert-text">
+        <strong>Error:</strong>
+        <p>{{ errorMessage() }}</p>
       </div>
     </div>
+  </div>
 
-    <!-- Login Form -->
-    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" *ngIf="!isSignUp() && !isOtpVerificationStep()" class="auth-form">
-      <!-- Email Field -->
+  <div class="alert alert-success" *ngIf="successMessage()" [@slideInDown]>
+    <div class="alert-content">
+      <span class="alert-icon">✓</span>
+      <div class="alert-text">
+        <strong>Success!</strong>
+        <p>{{ successMessage() }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTH BOX -->
+  <div class="auth-box">
+    <!-- HEADER -->
+    <div class="auth-header">
+      <h1 class="auth-title">
+        <span *ngIf="isLogin()" class="step-text">Welcome Back</span>
+        <span *ngIf="isSignUp()" class="step-text">Create Account</span>
+        <span *ngIf="isLoginOtp() || isSignUpOtp() || isForgotPasswordOtp()" class="step-text">Verify Email</span>
+        <span *ngIf="isForgotPassword()" class="step-text">Reset Password</span>
+        <span *ngIf="isResetPassword()" class="step-text">Create New Password</span>
+      </h1>
+      <p class="auth-subtitle">
+        <span *ngIf="isLogin()">Sign in to your account to continue</span>
+        <span *ngIf="isSignUp()">Sign up to get started</span>
+        <span *ngIf="isLoginOtp() || isSignUpOtp() || isForgotPasswordOtp()">Enter the 6-digit code sent to your email</span>
+        <span *ngIf="isForgotPassword()">Enter your email to receive a reset code</span>
+        <span *ngIf="isResetPassword()">Create a strong password for your account</span>
+      </p>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <form *ngIf="isLogin()" [formGroup]="loginForm" (ngSubmit)="onLogin()" class="auth-form">
       <div class="form-group">
-        <label for="login-email">Email Address</label>
+        <label for="login-email" class="form-label">Email Address</label>
         <input
           id="login-email"
           type="email"
           formControlName="email"
           placeholder="Enter your email"
-          class="form-control"
-          [class.is-invalid]="submitted() && loginForm.get('email')?.invalid"
+          class="form-input"
+          [class.error]="submitted() && loginForm.get('email')?.invalid"
         />
-        <div *ngIf="submitted() && loginForm.get('email')?.invalid" class="error-text">
+        <span class="error-text" *ngIf="submitted() && loginForm.get('email')?.invalid">
           {{ getLoginErrorMessage('email') }}
-        </div>
+        </span>
       </div>
 
-      <!-- Password Field -->
       <div class="form-group">
-        <label for="login-password">Password</label>
+        <label for="login-password" class="form-label">Password</label>
         <input
           id="login-password"
           type="password"
           formControlName="password"
           placeholder="Enter your password"
-          class="form-control"
-          [class.is-invalid]="submitted() && loginForm.get('password')?.invalid"
+          class="form-input"
+          [class.error]="submitted() && loginForm.get('password')?.invalid"
         />
-        <div *ngIf="submitted() && loginForm.get('password')?.invalid" class="error-text">
+        <span class="error-text" *ngIf="submitted() && loginForm.get('password')?.invalid">
           {{ getLoginErrorMessage('password') }}
-        </div>
+        </span>
       </div>
 
-      <!-- Remember Me -->
-      <div class="form-group checkbox">
+      <div class="form-group form-group-checkbox">
         <input
           id="remember-me"
           type="checkbox"
           formControlName="rememberMe"
-          class="checkbox-input"
+          class="form-checkbox"
         />
         <label for="remember-me" class="checkbox-label">Remember me</label>
       </div>
 
-      <!-- Login Button -->
-      <button 
-        type="submit" 
+      <button
+        type="submit"
         class="btn btn-primary btn-block"
         [disabled]="loadingState()"
       >
-        {{ loadingState() ? 'Signing in...' : 'Sign In' }}
+        <span *ngIf="!loadingState()">Sign In</span>
+        <span *ngIf="loadingState()" class="loading-spinner">Signing in...</span>
       </button>
 
-      <!-- Forgot Password Link -->
-      <div class="forgot-password">
-        <a href="#forgot">Forgot your password?</a>
+      <div class="form-divider">
+        <span>Don't have an account?</span>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-secondary btn-block"
+        (click)="toggleAuthMode()"
+        [disabled]="loadingState()"
+      >
+        Create Account
+      </button>
+
+      <div class="forgot-password-link">
+        <a href="#" (click)="onForgotPasswordClick(); $event.preventDefault()" class="link">
+          Forgot your password?
+        </a>
       </div>
     </form>
 
-    <!-- OTP Verification Form -->
-    <form [formGroup]="otpForm" (ngSubmit)="onVerifyOtp()" *ngIf="!isSignUp() && isOtpVerificationStep()" class="auth-form">
-      <div class="otp-header">
-        <h2>Verify Your Email</h2>
-        <p>We've sent a 6-digit OTP to {{ userEmailForOtp() }}</p>
-      </div>
+    <!-- SIGNUP FORM -->
+    <form *ngIf="isSignUp()" [formGroup]="signUpForm" (ngSubmit)="onSignUp()" class="auth-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name" class="form-label">Full Name</label>
+          <input
+            id="name"
+            type="text"
+            formControlName="name"
+            placeholder="Your full name"
+            class="form-input"
+            [class.error]="submitted() && signUpForm.get('name')?.invalid"
+          />
+          <span class="error-text" *ngIf="submitted() && signUpForm.get('name')?.invalid">
+            {{ getSignUpErrorMessage('name') }}
+          </span>
+        </div>
 
-      <!-- OTP Field -->
-      <div class="form-group">
-        <label for="otp">One-Time Password (OTP)</label>
-        <input
-          id="otp"
-          type="text"
-          formControlName="otp"
-          placeholder="Enter 6-digit OTP"
-          class="form-control"
-          [class.is-invalid]="submitted() && otpForm.get('otp')?.invalid"
-          maxlength="6"
-        />
-        <div *ngIf="submitted() && otpForm.get('otp')?.invalid" class="error-text">
-          {{ getOtpErrorMessage('otp') }}
+        <div class="form-group">
+          <label for="username" class="form-label">Username</label>
+          <input
+            id="username"
+            type="text"
+            formControlName="username"
+            placeholder="Choose a username"
+            class="form-input"
+            [class.error]="submitted() && signUpForm.get('username')?.invalid"
+          />
+          <span class="error-text" *ngIf="submitted() && signUpForm.get('username')?.invalid">
+            {{ getSignUpErrorMessage('username') }}
+          </span>
         </div>
       </div>
 
-      <!-- Verify Button -->
-      <button 
-        type="submit" 
+      <div class="form-group">
+        <label for="signup-email" class="form-label">Email Address</label>
+        <input
+          id="signup-email"
+          type="email"
+          formControlName="email"
+          placeholder="your@email.com"
+          class="form-input"
+          [class.error]="submitted() && signUpForm.get('email')?.invalid"
+        />
+        <span class="error-text" *ngIf="submitted() && signUpForm.get('email')?.invalid">
+          {{ getSignUpErrorMessage('email') }}
+        </span>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="country" class="form-label">Country</label>
+          <input
+            id="country"
+            type="text"
+            formControlName="country"
+            placeholder="Your country"
+            class="form-input"
+            [class.error]="submitted() && signUpForm.get('country')?.invalid"
+          />
+          <span class="error-text" *ngIf="submitted() && signUpForm.get('country')?.invalid">
+            {{ getSignUpErrorMessage('country') }}
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="role" class="form-label">Role</label>
+          <input
+            id="role"
+            type="text"
+            formControlName="role"
+            placeholder="Your role"
+            class="form-input"
+            [class.error]="submitted() && signUpForm.get('role')?.invalid"
+          />
+          <span class="error-text" *ngIf="submitted() && signUpForm.get('role')?.invalid">
+            {{ getSignUpErrorMessage('role') }}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="institution" class="form-label">Institution/Company</label>
+        <input
+          id="institution"
+          type="text"
+          formControlName="institution"
+          placeholder="Your institution or company"
+          class="form-input"
+          [class.error]="submitted() && signUpForm.get('institution')?.invalid"
+        />
+        <span class="error-text" *ngIf="submitted() && signUpForm.get('institution')?.invalid">
+          {{ getSignUpErrorMessage('institution') }}
+        </span>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="signup-password" class="form-label">Password</label>
+          <input
+            id="signup-password"
+            type="password"
+            formControlName="password"
+            placeholder="Min. 8 characters"
+            class="form-input"
+            [class.error]="submitted() && signUpForm.get('password')?.invalid"
+          />
+          <span class="error-text" *ngIf="submitted() && signUpForm.get('password')?.invalid">
+            {{ getSignUpErrorMessage('password') }}
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="confirm-password" class="form-label">Confirm Password</label>
+          <input
+            id="confirm-password"
+            type="password"
+            formControlName="confirmPassword"
+            placeholder="Confirm password"
+            class="form-input"
+            [class.error]="submitted() && signUpForm.get('confirmPassword')?.invalid"
+          />
+          <span class="error-text" *ngIf="submitted() && signUpForm.get('confirmPassword')?.invalid">
+            {{ getSignUpErrorMessage('confirmPassword') }}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group form-group-checkbox">
+        <input
+          id="agree-terms"
+          type="checkbox"
+          formControlName="agreeTerms"
+          class="form-checkbox"
+        />
+        <label for="agree-terms" class="checkbox-label">
+          I agree to the <a href="#" class="link">Terms and Conditions</a>
+        </label>
+        <span class="error-text" *ngIf="submitted() && signUpForm.get('agreeTerms')?.invalid">
+          {{ getSignUpErrorMessage('agreeTerms') }}
+        </span>
+      </div>
+
+      <button
+        type="submit"
         class="btn btn-primary btn-block"
         [disabled]="loadingState()"
       >
-        {{ loadingState() ? 'Verifying...' : 'Verify OTP' }}
+        <span *ngIf="!loadingState()">Create Account</span>
+        <span *ngIf="loadingState()" class="loading-spinner">Creating account...</span>
       </button>
 
-      <!-- Resend and Go Back Options -->
+      <div class="form-divider">
+        <span>Already have an account?</span>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-secondary btn-block"
+        (click)="toggleAuthMode()"
+        [disabled]="loadingState()"
+      >
+        Sign In
+      </button>
+    </form>
+
+    <!-- LOGIN OTP VERIFICATION -->
+    <form *ngIf="isLoginOtp()" [formGroup]="otpForm" (ngSubmit)="onVerifyLoginOtp()" class="auth-form auth-form-otp">
+      <div class="otp-header">
+        <p class="otp-email">We sent a code to</p>
+        <p class="otp-email-value">{{ userEmailForOtp() }}</p>
+        <p class="otp-instruction">Enter the 6-digit code below</p>
+      </div>
+
+      <div class="form-group">
+        <label for="login-otp-input" class="form-label">Verification Code</label>
+        <input
+          id="login-otp-input"
+          type="text"
+          formControlName="otp"
+          placeholder="000000"
+          class="form-input otp-input"
+          (input)="otpForm.get('otp')?.setValue($any($event.target).value.replace(/[^0-9]/g, ''))"
+          maxlength="6"
+          [class.error]="submitted() && otpForm.get('otp')?.invalid"
+        />
+        <span class="error-text" *ngIf="submitted() && otpForm.get('otp')?.invalid">
+          {{ getOtpErrorMessage('otp') }}
+        </span>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary btn-block"
+        [disabled]="loadingState()"
+      >
+        <span *ngIf="!loadingState()">Verify Email</span>
+        <span *ngIf="loadingState()" class="loading-spinner">Verifying...</span>
+      </button>
+
       <div class="otp-options">
-        <button 
-          type="button" 
+        <button
+          type="button"
           class="btn-link"
           (click)="onResendOtp()"
-          [disabled]="loadingState() || otpResendCooldown() > 0"
+          [disabled]="otpResendCooldown() > 0 || loadingState()"
         >
-          {{ otpResendCooldown() > 0 ? 'Resend OTP (' + otpResendCooldown() + 's)' : 'Resend OTP' }}
+          <span *ngIf="otpResendCooldown() === 0">Resend Code</span>
+          <span *ngIf="otpResendCooldown() > 0">Resend in {{ otpResendCooldown() }}s</span>
         </button>
-        <span class="separator">|</span>
-        <button 
-          type="button" 
+
+        <span class="divider">•</span>
+
+        <button
+          type="button"
           class="btn-link"
           (click)="goBackToLogin()"
+          [disabled]="loadingState()"
         >
           Back to Login
         </button>
       </div>
     </form>
 
-    <!-- Sign Up OTP Verification Form -->
-    <form *ngIf="isSignUp() && isSignUpOtpVerification()" class="auth-form">
+    <!-- SIGNUP OTP VERIFICATION -->
+    <form *ngIf="isSignUpOtp()" [formGroup]="otpForm" (ngSubmit)="onVerifySignUpOtp()" class="auth-form auth-form-otp">
       <div class="otp-header">
-        <h2>Verify Your Email</h2>
-        <p>Enter the OTP sent to {{ userEmailForOtp() }} to activate your account</p>
+        <p class="otp-email">We sent a code to</p>
+        <p class="otp-email-value">{{ userEmailForOtp() }}</p>
+        <p class="otp-instruction">Enter the 6-digit code below</p>
       </div>
 
-      <!-- OTP Field -->
       <div class="form-group">
-        <label for="signup-otp-verify">One-Time Password (OTP)</label>
+        <label for="signup-otp-input" class="form-label">Verification Code</label>
         <input
-          id="signup-otp-verify"
+          id="signup-otp-input"
           type="text"
           formControlName="otp"
-          [formGroup]="otpForm"
-          placeholder="Enter 6-digit OTP from your email"
-          class="form-control"
-          [class.is-invalid]="submitted() && otpForm.get('otp')?.invalid"
+          placeholder="000000"
+          class="form-input otp-input"
+          (input)="otpForm.get('otp')?.setValue($any($event.target).value.replace(/[^0-9]/g, ''))"
           maxlength="6"
+          [class.error]="submitted() && otpForm.get('otp')?.invalid"
         />
-        <div *ngIf="submitted() && otpForm.get('otp')?.invalid" class="error-text">
+        <span class="error-text" *ngIf="submitted() && otpForm.get('otp')?.invalid">
           {{ getOtpErrorMessage('otp') }}
-        </div>
-        <small class="form-hint">This OTP will set your password and activate your account</small>
+        </span>
       </div>
 
-      <!-- Verify Button -->
-      <button 
-        type="button"
-        (click)="onVerifySignUpOtp()"
+      <button
+        type="submit"
         class="btn btn-primary btn-block"
         [disabled]="loadingState()"
       >
-        {{ loadingState() ? 'Verifying...' : 'Verify & Activate Account' }}
+        <span *ngIf="!loadingState()">Activate Account</span>
+        <span *ngIf="loadingState()" class="loading-spinner">Activating...</span>
       </button>
 
-      <!-- Resend and Go Back Options -->
       <div class="otp-options">
-        <button 
-          type="button" 
+        <button
+          type="button"
           class="btn-link"
-          (click)="onResendSignUpOtp()"
-          [disabled]="loadingState() || otpResendCooldown() > 0"
+          (click)="onResendOtp()"
+          [disabled]="otpResendCooldown() > 0 || loadingState()"
         >
-          {{ otpResendCooldown() > 0 ? 'Resend OTP (' + otpResendCooldown() + 's)' : 'Resend OTP' }}
+          <span *ngIf="otpResendCooldown() === 0">Resend Code</span>
+          <span *ngIf="otpResendCooldown() > 0">Resend in {{ otpResendCooldown() }}s</span>
         </button>
-        <span class="separator">|</span>
-        <button 
-          type="button" 
+
+        <span class="divider">•</span>
+
+        <button
+          type="button"
           class="btn-link"
-          (click)="goBackToSignUp()"
+          (click)="toggleAuthMode()"
+          [disabled]="loadingState()"
         >
           Back to Sign Up
         </button>
       </div>
     </form>
 
-    <!-- Sign Up Form -->
-    <form [formGroup]="signUpForm" (ngSubmit)="onSignUp()" *ngIf="isSignUp() && !isSignUpOtpVerification()" class="auth-form">
-      <!-- Name Field -->
+    <!-- FORGOT PASSWORD EMAIL FORM -->
+    <form *ngIf="isForgotPassword()" [formGroup]="forgotPasswordForm" (ngSubmit)="onForgotPassword()" class="auth-form">
       <div class="form-group">
-        <label for="signup-name">Full Name</label>
+        <label for="forgot-email" class="form-label">Email Address</label>
+        <p class="form-hint">Enter the email associated with your account and we'll send you a code to reset your password.</p>
         <input
-          id="signup-name"
-          type="text"
-          formControlName="name"
-          placeholder="Enter your full name"
-          class="form-control"
-          [class.is-invalid]="submitted() && signUpForm.get('name')?.invalid"
-        />
-        <div *ngIf="submitted() && signUpForm.get('name')?.invalid" class="error-text">
-          {{ getSignUpErrorMessage('name') }}
-        </div>
-      </div>
-
-      <!-- Email Field -->
-      <div class="form-group">
-        <label for="signup-email">Email Address</label>
-        <input
-          id="signup-email"
+          id="forgot-email"
           type="email"
           formControlName="email"
-          placeholder="Enter your email"
-          class="form-control"
-          [class.is-invalid]="submitted() && signUpForm.get('email')?.invalid"
+          placeholder="your@email.com"
+          class="form-input"
+          [class.error]="submitted() && forgotPasswordForm.get('email')?.invalid"
         />
-        <div *ngIf="submitted() && signUpForm.get('email')?.invalid" class="error-text">
-          {{ getSignUpErrorMessage('email') }}
-        </div>
+        <span class="error-text" *ngIf="submitted() && forgotPasswordForm.get('email')?.invalid">
+          {{ getForgotPasswordErrorMessage('email') }}
+        </span>
       </div>
 
-      <!-- Password Field -->
-      <div class="form-group">
-        <label for="signup-password">Password</label>
-        <input
-          id="signup-password"
-          type="password"
-          formControlName="password"
-          placeholder="Enter password (min 8 characters)"
-          class="form-control"
-          [class.is-invalid]="submitted() && signUpForm.get('password')?.invalid"
-        />
-        <div *ngIf="submitted() && signUpForm.get('password')?.invalid" class="error-text">
-          {{ getSignUpErrorMessage('password') }}
-        </div>
-      </div>
-
-      <!-- Confirm Password Field -->
-      <div class="form-group">
-        <label for="signup-confirm-password">Confirm Password</label>
-        <input
-          id="signup-confirm-password"
-          type="password"
-          formControlName="confirmPassword"
-          placeholder="Confirm your password"
-          class="form-control"
-          [class.is-invalid]="submitted() && signUpForm.get('confirmPassword')?.invalid"
-        />
-        <div *ngIf="submitted() && signUpForm.get('confirmPassword')?.invalid" class="error-text">
-          {{ getSignUpErrorMessage('confirmPassword') }}
-        </div>
-      </div>
-
-      <!-- Username Field -->
-      <div class="form-group">
-        <label for="signup-username">Username</label>
-        <input
-          id="signup-username"
-          type="text"
-          formControlName="username"
-          placeholder="Enter your username"
-          class="form-control"
-          [class.is-invalid]="submitted() && signUpForm.get('username')?.invalid"
-        />
-        <div *ngIf="submitted() && signUpForm.get('username')?.invalid" class="error-text">
-          {{ getSignUpErrorMessage('username') }}
-        </div>
-      </div>
-
-      <!-- Country Field -->
-      <div class="form-group">
-        <label for="signup-country">Country</label>
-        <input
-          id="signup-country"
-          type="text"
-          formControlName="country"
-          placeholder="Enter your country"
-          class="form-control"
-          [class.is-invalid]="submitted() && signUpForm.get('country')?.invalid"
-        />
-        <div *ngIf="submitted() && signUpForm.get('country')?.invalid" class="error-text">
-          {{ getSignUpErrorMessage('country') }}
-        </div>
-      </div>
-
-      <!-- Role Field -->
-      <div class="form-group">
-        <label for="signup-role">Role</label>
-        <select
-          id="signup-role"
-          formControlName="role"
-          class="form-control"
-          [class.is-invalid]="submitted() && signUpForm.get('role')?.invalid"
-        >
-          <option value="" disabled selected>Select your role</option>
-          <option value="Student">Student</option>
-          <option value="Professional">Professional</option>
-          <option value="Educator">Educator</option>
-          <option value="Other">Other</option>
-        </select>
-        <div *ngIf="submitted() && signUpForm.get('role')?.invalid" class="error-text">
-          {{ getSignUpErrorMessage('role') }}
-        </div>
-      </div>
-
-      <!-- Institution Field -->
-      <div class="form-group">
-        <label for="signup-institution">Institution</label>
-        <input
-          id="signup-institution"
-          type="text"
-          formControlName="institution"
-          placeholder="Enter your institution name"
-          class="form-control"
-          [class.is-invalid]="submitted() && signUpForm.get('institution')?.invalid"
-        />
-        <div *ngIf="submitted() && signUpForm.get('institution')?.invalid" class="error-text">
-          {{ getSignUpErrorMessage('institution') }}
-        </div>
-      </div>
-
-      <!-- Terms Checkbox -->
-      <div class="form-group checkbox">
-        <input
-          id="agree-terms"
-          type="checkbox"
-          formControlName="agreeTerms"
-          class="checkbox-input"
-          [class.is-invalid]="submitted() && signUpForm.get('agreeTerms')?.invalid"
-        />
-        <label for="agree-terms" class="checkbox-label">
-          I agree to the <a href="#terms" class="link">Terms and Conditions</a>
-        </label>
-        <div *ngIf="submitted() && signUpForm.get('agreeTerms')?.invalid" class="error-text">
-          You must agree to the terms
-        </div>
-      </div>
-
-      <!-- Sign Up Button -->
-      <button 
-        type="submit" 
+      <button
+        type="submit"
         class="btn btn-primary btn-block"
         [disabled]="loadingState()"
       >
-        {{ loadingState() ? 'Creating account...' : 'Create Account' }}
+        <span *ngIf="!loadingState()">Send Reset Code</span>
+        <span *ngIf="loadingState()" class="loading-spinner">Sending...</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-secondary btn-block"
+        (click)="goBackToLogin()"
+        [disabled]="loadingState()"
+      >
+        Back to Login
       </button>
     </form>
 
-    <!-- Toggle Between Forms -->
-    <div class="auth-toggle" *ngIf="!isOtpVerificationStep() && !isSignUpOtpVerification()">
-      <p>
-        {{ isSignUp() ? 'Already have an account?' : 'Don\'t have an account?' }}
-        <button type="button" class="toggle-link" (click)="toggleForm()">
-          {{ isSignUp() ? 'Sign In' : 'Sign Up' }}
+    <!-- FORGOT PASSWORD OTP VERIFICATION -->
+    <form *ngIf="isForgotPasswordOtp()" [formGroup]="otpForm" (ngSubmit)="onVerifyForgotPasswordOtp()" class="auth-form auth-form-otp">
+      <div class="otp-header">
+        <p class="otp-email">We sent a code to</p>
+        <p class="otp-email-value">{{ userEmailForOtp() }}</p>
+        <p class="otp-instruction">Enter the 6-digit code below</p>
+      </div>
+
+      <div class="form-group">
+        <label for="forgot-otp-input" class="form-label">Verification Code</label>
+        <input
+          id="forgot-otp-input"
+          type="text"
+          formControlName="otp"
+          placeholder="000000"
+          class="form-input otp-input"
+          (input)="otpForm.get('otp')?.setValue($any($event.target).value.replace(/[^0-9]/g, ''))"
+          maxlength="6"
+          [class.error]="submitted() && otpForm.get('otp')?.invalid"
+        />
+        <span class="error-text" *ngIf="submitted() && otpForm.get('otp')?.invalid">
+          {{ getOtpErrorMessage('otp') }}
+        </span>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary btn-block"
+        [disabled]="loadingState()"
+      >
+        <span *ngIf="!loadingState()">Verify Code</span>
+        <span *ngIf="loadingState()" class="loading-spinner">Verifying...</span>
+      </button>
+
+      <div class="otp-options">
+        <button
+          type="button"
+          class="btn-link"
+          (click)="onResendOtp()"
+          [disabled]="otpResendCooldown() > 0 || loadingState()"
+        >
+          <span *ngIf="otpResendCooldown() === 0">Resend Code</span>
+          <span *ngIf="otpResendCooldown() > 0">Resend in {{ otpResendCooldown() }}s</span>
         </button>
-      </p>
-    </div>
+
+        <span class="divider">•</span>
+
+        <button
+          type="button"
+          class="btn-link"
+          (click)="onForgotPasswordClick()"
+          [disabled]="loadingState()"
+        >
+          Different Email
+        </button>
+      </div>
+    </form>
+
+    <!-- PASSWORD RESET FORM -->
+    <form *ngIf="isResetPassword()" [formGroup]="resetPasswordForm" (ngSubmit)="onResetPassword()" class="auth-form">
+      <div class="form-group">
+        <label for="reset-otp-input" class="form-label">Verification Code</label>
+        <p class="form-hint">Enter the 6-digit code sent to {{ userEmailForOtp() }}</p>
+        <input
+          id="reset-otp-input"
+          type="text"
+          formControlName="otp"
+          placeholder="000000"
+          class="form-input otp-input"
+          (input)="resetPasswordForm.get('otp')?.setValue($any($event.target).value.replace(/[^0-9]/g, ''))"
+          maxlength="6"
+          [class.error]="submitted() && resetPasswordForm.get('otp')?.invalid"
+        />
+        <span class="error-text" *ngIf="submitted() && resetPasswordForm.get('otp')?.invalid">
+          {{ getResetPasswordErrorMessage('otp') }}
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="new-password" class="form-label">New Password</label>
+        <p class="form-hint">Create a strong password with at least 8 characters</p>
+        <input
+          id="new-password"
+          type="password"
+          formControlName="password"
+          placeholder="Min. 8 characters"
+          class="form-input"
+          [class.error]="submitted() && resetPasswordForm.get('password')?.invalid"
+        />
+        <span class="error-text" *ngIf="submitted() && resetPasswordForm.get('password')?.invalid">
+          {{ getResetPasswordErrorMessage('password') }}
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="confirm-new-password" class="form-label">Confirm Password</label>
+        <input
+          id="confirm-new-password"
+          type="password"
+          formControlName="confirmPassword"
+          placeholder="Confirm new password"
+          class="form-input"
+          [class.error]="submitted() && resetPasswordForm.get('confirmPassword')?.invalid"
+        />
+        <span class="error-text" *ngIf="submitted() && resetPasswordForm.get('confirmPassword')?.invalid">
+          {{ getResetPasswordErrorMessage('confirmPassword') }}
+        </span>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary btn-block"
+        [disabled]="loadingState()"
+      >
+        <span *ngIf="!loadingState()">Reset Password</span>
+        <span *ngIf="loadingState()" class="loading-spinner">Resetting...</span>
+      </button>
+
+      <div class="form-divider">
+        <span>Remember your password?</span>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-secondary btn-block"
+        (click)="goBackToLogin()"
+        [disabled]="loadingState()"
+      >
+        Back to Login
+      </button>
+    </form>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="auth-footer">
+    <p class="footer-text">
+      <span *ngIf="!isResetPassword() && !isForgotPassword() && !isForgotPasswordOtp()">
+        © 2024 Hiring Toll. All rights reserved. | 
+        <a href="#" class="footer-link">Privacy Policy</a> | 
+        <a href="#" class="footer-link">Terms of Service</a>
+      </span>
+      <span *ngIf="isResetPassword() || isForgotPassword() || isForgotPasswordOtp()">
+        Need help? <a href="mailto:support@hiringtoll.com" class="footer-link">Contact Support</a>
+      </span>
+    </p>
   </div>
 </div>
