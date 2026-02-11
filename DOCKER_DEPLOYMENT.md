@@ -91,7 +91,7 @@ The application will be accessible at `http://localhost:8080`
 The Docker Compose configuration includes health checks. You can check the container health:
 
 ```bash
-docker-compose ps
+docker compose ps
 ```
 
 ### Logs
@@ -100,7 +100,7 @@ View application logs:
 
 ```bash
 # Using Docker Compose
-docker-compose logs -f
+docker compose logs -f
 
 # Using Docker CLI
 docker logs -f hiring-tool
@@ -198,7 +198,7 @@ The Dockerfile uses:
 
 ## Security
 
-- The application runs as a non-root user in production
-- Only production dependencies are included
+- Only production dependencies are included in the final image
 - Environment files are excluded via .dockerignore
 - Health checks ensure the application is running correctly
+- Multi-stage builds minimize attack surface
