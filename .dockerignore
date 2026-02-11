@@ -1,0 +1,43 @@
+# Dependencies
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Build outputs
+dist
+.angular
+out-tsc
+bazel-out
+
+# Testing
+coverage
+__screenshots__
+
+# IDE
+.vscode
+.idea
+*.sublime-workspace
+.history
+
+# Git
+.git
+.gitignore
+.github
+
+# Documentation (optional - include if you want them in the image)
+*.md
+!README.md
+
+# Temporary files
+tmp
+*.tmp
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files (should be passed at runtime)
+.env
+.env.local
+.env.*.local
