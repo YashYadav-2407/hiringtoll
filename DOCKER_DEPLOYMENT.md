@@ -13,15 +13,33 @@ This guide explains how to build and deploy the HiringTool application using Doc
 
 1. Build and start the application:
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 2. Access the application at `http://localhost:4000`
 
 3. Stop the application:
 ```bash
-docker-compose down
+docker compose down
 ```
+
+### Production Setup with Nginx (Recommended for Production)
+
+For production deployments, we provide a setup with Nginx as a reverse proxy:
+
+1. Start the application with Nginx:
+```bash
+docker compose -f docker-compose.prod.yml up -d
+```
+
+2. Access the application at `http://localhost:80`
+
+This setup provides:
+- Nginx reverse proxy for better performance
+- Security headers
+- Gzip compression
+- Health check endpoint at `/health`
+- Proper connection handling
 
 ### Using Docker CLI
 

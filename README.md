@@ -2,6 +2,25 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.5.
 
+## Docker Deployment (Recommended for Production)
+
+The easiest way to deploy this application is using Docker. We provide a complete Docker setup with multi-stage builds for optimized production images.
+
+### Quick Start with Docker
+
+```bash
+# Using Docker Compose (recommended)
+docker compose up -d
+
+# Or using Docker directly
+docker build -t hiring-tool .
+docker run -d -p 4000:4000 hiring-tool
+```
+
+The application will be available at `http://localhost:4000`
+
+For detailed Docker deployment instructions, including cloud deployment guides, see [DOCKER_DEPLOYMENT.md](./DOCKER_DEPLOYMENT.md).
+
 ## Development server
 
 To start a local development server, run:
