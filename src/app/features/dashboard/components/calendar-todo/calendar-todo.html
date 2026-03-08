@@ -4,7 +4,7 @@
   <div class="calendar-section">
     <mat-card class="calendar-card">
       <div class="card-header">
-        <h3 class="card-title">📅 Schedule</h3>
+        <h3 class="card-title">Schedule Calendar</h3>
       </div>
 
       <mat-calendar
@@ -20,7 +20,7 @@
   <div class="todo-section">
     <mat-card class="todo-card">
       <div class="card-header">
-        <h3 class="card-title">✓ Tasks</h3>
+        <h3 class="card-title">Task Planner</h3>
         <span class="date-badge">{{ selectedDate | date:'MMM d, y' }}</span>
       </div>
 
@@ -40,7 +40,7 @@
           color="primary"
           (click)="addOrSave()"
           class="add-btn">
-          {{ editingId ? '💾 Save' : '➕ Add Task' }}
+          {{ editingId ? 'Save Task' : 'Add Task' }}
         </button>
       </div>
 
@@ -83,7 +83,7 @@
       <!-- Empty State -->
       <ng-template #noTasks>
         <div class="empty-state">
-          <span class="empty-icon">📝</span>
+          <span class="empty-icon">No Tasks</span>
           <p class="empty-text">No tasks for this day</p>
           <span class="empty-hint">Add a task to get started</span>
         </div>

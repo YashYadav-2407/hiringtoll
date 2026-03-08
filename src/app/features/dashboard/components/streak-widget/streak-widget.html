@@ -2,7 +2,10 @@
 
   <div class="streak-header">
     <span class="fire" [matTooltip]="isLoggedInToday ? 'Logged in today!' : 'Not logged in yet today'">🔥</span>
-    <h3>Your Coding Streak</h3>
+    <div>
+      <p class="eyebrow">Consistency Tracker</p>
+      <h3>Your Coding Streak</h3>
+    </div>
   </div>
 
   <div class="streak-stats">
@@ -23,7 +26,7 @@
   </div>
 
   <p class="streak-text">
-    Build your habit. Code every day without breaking the chain.
+    Build your habit with one meaningful coding session each day.
   </p>
 
   <div class="streak-progress">
@@ -49,7 +52,7 @@
             matTooltip="Reset streak counter"
             (click)="resetStreak()"
             class="reset-btn">
-      ↻
+      <mat-icon>restart_alt</mat-icon>
     </button>
   </div>
 

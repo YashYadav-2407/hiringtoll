@@ -24,9 +24,7 @@
 
     <div class="row">
       <span class="label">Country:</span>
-      <span class="value">
-        🇮🇳 {{ user.country }}
-      </span>
+      <span class="value">{{ user.country }}</span>
     </div>
 
     <div class="row">
@@ -102,12 +100,3 @@
   </div>
 
 </div>
-
-<script src="node_modules/pdfmake/build/pdfmake.js"></script>
-<script src="node_modules/pdfmake/build/vfs_fonts.js"></script>
-
-<!-- After a submission succeeds -->
-this.activityService.recordActivity().subscribe(
-  () => console.log('Activity recorded'),
-  (error) => console.error('Error:', error)
-);

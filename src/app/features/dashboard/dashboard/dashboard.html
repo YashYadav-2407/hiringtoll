@@ -1,20 +1,51 @@
 <app-header></app-header>
 
 <div class="dashboard">
+  <section class="dashboard-intro">
+    <div>
+      <p class="eyebrow">Workspace Overview</p>
+      <h1>Interview Preparation Dashboard</h1>
+      <p class="subtitle">
+        Track your consistency, plan focused tasks, and progress through structured interview prep.
+      </p>
+    </div>
+    <div class="summary-strip">
+      <div class="summary-item">
+        <span class="label">Focus Area</span>
+        <strong>DSA + System Design</strong>
+      </div>
+      <div class="summary-item">
+        <span class="label">Mode</span>
+        <strong>Daily Practice</strong>
+      </div>
+      <div class="summary-item">
+        <span class="label">Target</span>
+        <strong>Hiring Ready</strong>
+      </div>
+    </div>
 
-  <!-- WELCOME -->
-  <section class="welcome-section">
+    <nav class="dashboard-tabs" aria-label="Dashboard sections">
+      <a class="tab-pill active" href="#welcome-panel">Welcome</a>
+      <a class="tab-pill" href="#focus-panel">Focus Track</a>
+      <a class="tab-pill" href="#streak-panel">Streak</a>
+      <a class="tab-pill" href="#planner-panel">Planner</a>
+    </nav>
+  </section>
+
+  <section class="welcome-section" id="welcome-panel">
     <app-welcome-card></app-welcome-card>
   </section>
 
-  <!-- FEATURED + STREAK -->
   <section class="info-section">
-    <app-featured-track></app-featured-track>
-    <app-streak-widget></app-streak-widget>
+    <div id="focus-panel">
+      <app-featured-track></app-featured-track>
+    </div>
+    <div id="streak-panel">
+      <app-streak-widget></app-streak-widget>
+    </div>
   </section>
 
-  <!-- SCHEDULE -->
-  <section class="schedule-section">
+  <section class="schedule-section" id="planner-panel">
     <app-calendar-todo></app-calendar-todo>
   </section>
 

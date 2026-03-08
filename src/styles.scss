@@ -1,38 +1,63 @@
 
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
 
 html {
   height: 100%;
   @include mat.theme((
     color: (
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
+      primary: mat.$green-palette,
+      tertiary: mat.$green-palette,
     ),
-    typography: Roboto,
+    typography: Manrope,
     density: 0,
   ));
 }
 
+:root {
+  --brand-50: #f2fbf4;
+  --brand-100: #dff7e5;
+  --brand-200: #bff0cc;
+  --brand-500: #22a447;
+  --brand-600: #198a39;
+  --brand-700: #156e2f;
+  --surface-0: #ffffff;
+  --surface-1: #f8fbf8;
+  --surface-2: #eef6ef;
+  --text-1: #123020;
+  --text-2: #355244;
+  --line-1: #d3e5d8;
+  --shadow-soft: 0 12px 30px rgba(23, 92, 47, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
   color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
+  background:
+    radial-gradient(circle at top right, rgba(34, 164, 71, 0.14), transparent 36%),
+    radial-gradient(circle at bottom left, rgba(21, 110, 47, 0.11), transparent 42%),
+    var(--surface-1);
+  color: var(--text-1);
+  font-family: 'Manrope', 'Segoe UI', sans-serif;
   margin: 0;
   height: 100%;
 }
-/* You can add global styles to this file, and also import other style files */
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+a {
+  color: var(--brand-700);
+}
+
+mat-card {
+  border-radius: 16px !important;
+}
+

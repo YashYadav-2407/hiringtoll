@@ -284,6 +284,36 @@
   }
 }
 
+.typing-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: linear-gradient(180deg, #fbfefb 0%, #f0f8f2 100%);
+  border: 1px solid #d5e7db;
+  border-radius: 18px;
+  box-shadow: 0 14px 34px rgba(17, 82, 41, 0.08);
+}
+
+.lessons-view .lesson-card mat-card-header,
+.typing-practice .practice-header {
+  background: linear-gradient(135deg, #218f42 0%, #147437 100%);
+}
+
+.race-mode .race-header {
+  background: linear-gradient(135deg, #2e9f51 0%, #157137 100%);
+}
+
+.typing-practice,
+.race-mode {
+  border: 1px solid #d4e6da;
+  box-shadow: 0 10px 26px rgba(19, 81, 40, 0.1);
+}
+
+.typing-practice .practice-content .input-section .typing-input:focus,
+.race-mode .race-content .input-section .race-typing-input:focus {
+  border-color: #1c8a3d;
+}
+
 // Race Mode Styles
 .race-mode {
   background: #fff;

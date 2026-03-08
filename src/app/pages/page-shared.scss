@@ -18,13 +18,13 @@
   h1 {
     font-size: 32px;
     font-weight: 800;
-    color: #111827;
+    color: #123322;
     margin: 0 0 8px;
   }
 
   .subtitle {
     font-size: 16px;
-    color: #6b7280;
+    color: #567063;
     margin: 0;
   }
 }
@@ -32,7 +32,9 @@
 .section-card {
   margin-bottom: 24px;
   border-radius: 16px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #d2e5d8;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(20, 74, 41, 0.08);
 
   mat-card-content {
     padding: 24px;
@@ -43,18 +45,18 @@
       gap: 8px;
       font-size: 20px;
       font-weight: 700;
-      color: #111827;
+      color: #123322;
       margin: 0 0 16px;
 
       mat-icon {
-        color: #2563eb;
+        color: #1d8d3e;
       }
     }
 
     p {
       font-size: 14px;
       line-height: 1.7;
-      color: #374151;
+      color: #3f5d4e;
       margin: 0 0 12px;
     }
   }

@@ -2,15 +2,14 @@
 
 <footer class="footer">
   <div class="footer-content">
-    
     <div class="brand">
-      <h3>Hiring Toll</h3>
-      <p>Prepare. Practice. Get Hired.</p>
+      <h3>Hiring Tool</h3>
+      <p>Prepare. Practice. Get hired with confidence.</p>
     </div>
 
     <div class="links" *ngFor="let section of footerSections">
       <h4>{{ section.title }}</h4>
-      <a 
+      <a
         *ngFor="let link of section.links" 
         (click)="navigateTo(link.path)"
         class="footer-link">
@@ -21,6 +20,6 @@
   </div>
 
   <div class="copyright">
-    © 2026 Hiring Toll. All rights reserved.
+    © 2026 Hiring Tool. All rights reserved.
   </div>
 </footer>

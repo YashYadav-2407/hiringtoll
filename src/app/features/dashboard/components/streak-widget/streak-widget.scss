@@ -1,52 +1,58 @@
 .streak-card {
   padding: 22px;
-  border-radius: 20px;
-  background: linear-gradient(135deg, #ff6f00, #ff8f00);
-  color: #ffffff;
-  box-shadow: 0 14px 32px rgba(255, 111, 0, 0.35);
-  text-align: center;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #f3faf5 100%);
+  color: #133a27;
+  border: 1px solid #d4e7da;
+  box-shadow: 0 12px 26px rgba(15, 70, 35, 0.1);
+  text-align: left;
   position: relative;
   overflow: hidden;
 }
 
-/* glow effect */
 .streak-card::after {
   content: '';
   position: absolute;
   inset: 0;
   background: radial-gradient(
     circle at top,
-    rgba(255, 255, 255, 0.18),
+    rgba(27, 132, 60, 0.16),
     transparent 70%
   );
 }
 
-/* header */
 .streak-header {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   margin-bottom: 16px;
+
+  .eyebrow {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 11px;
+    color: #668476;
+  }
 }
 
 .streak-header h3 {
-  margin: 0;
+  margin: 2px 0 0;
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .fire {
-  font-size: 28px;
+  font-size: 24px;
   cursor: help;
 }
 
-/* stats */
 .streak-stats {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   margin: 12px 0 16px;
 }
 
@@ -58,7 +64,7 @@
 
 .stat-label {
   font-size: 11px;
-  opacity: 0.85;
+  color: #6a8778;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -69,29 +75,28 @@
   font-weight: 800;
   margin-top: 4px;
   line-height: 1;
+  color: #155934;
 }
 
 .stat-divider {
   width: 1px;
   height: 40px;
-  background: rgba(255, 255, 255, 0.3);
+  background: #d8e9de;
 }
 
-/* text */
 .streak-text {
   font-size: 13px;
-  opacity: 0.95;
+  color: #4c6a5b;
   margin: 12px 0 14px;
 }
 
-/* progress */
 .streak-progress {
   margin-bottom: 12px;
 }
 
 .progress-bar {
   height: 8px;
-  background: rgba(255, 255, 255, 0.3);
+  background: #e0eee4;
   border-radius: 6px;
   overflow: hidden;
   margin-bottom: 6px;
@@ -99,28 +104,27 @@
 
 .progress-fill {
   height: 100%;
-  background: #ffffff;
+  background: linear-gradient(90deg, #229245, #157136);
   border-radius: 6px;
   transition: width 0.4s ease;
 
   &.goal-reached {
-    background: #4caf50;
-    box-shadow: 0 0 12px rgba(76, 175, 80, 0.6);
+    background: #0f6030;
+    box-shadow: 0 0 12px rgba(20, 111, 53, 0.46);
   }
 }
 
 .progress-label {
   font-size: 11px;
   display: block;
-  opacity: 0.9;
+  color: #5e7a6c;
   font-weight: 500;
 }
 
-/* streak info */
 .streak-info {
   margin: 10px 0 12px;
   font-size: 12px;
-  opacity: 0.85;
+  color: #5e7a6c;
 }
 
 .info-text {
@@ -131,23 +135,24 @@
 .button-group {
   display: flex;
   gap: 8px;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   margin-top: 12px;
 }
 
 .log-btn {
   flex: 1;
-  border-radius: 20px;
+  border-radius: 12px;
   padding: 8px 18px;
   font-weight: 600;
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.6);
+  color: #195f31;
+  border-color: #c3ddcb;
+  background: #ecf8f0;
   transition: all 0.3s ease;
 
   &:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.8);
+    background: #e1f3e7;
+    border-color: #b5d6bf;
   }
 
   &:disabled {
@@ -157,12 +162,13 @@
 }
 
 .reset-btn {
-  color: rgba(255, 255, 255, 0.8);
+  color: #3d5f50;
   transition: all 0.3s ease;
 
   &:hover {
-    color: #ffffff;
+    color: #165a2e;
     transform: rotate(180deg);
+    background: #eaf5ee;
   }
 }
 

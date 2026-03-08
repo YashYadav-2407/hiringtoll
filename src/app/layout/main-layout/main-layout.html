@@ -1,10 +1,14 @@
 <div class="layout-container">
-  <!-- SIDE NAV -->
   <aside class="sidenav" *ngIf="!showSidenav()">
     <div class="sidenav-brand">
-      <mat-icon>rocket_launch</mat-icon>
-      <span>Hiring Toll</span>
+      <span class="brand-mark">HT</span>
+      <div class="brand-text">
+        <strong>Hiring Tool</strong>
+        <small>Career Prep Platform</small>
+      </div>
     </div>
+
+    <p class="sidenav-caption">Main Navigation</p>
 
     <nav class="sidenav-nav">
       <a routerLink="/dashboard" routerLinkActive="active">
@@ -34,10 +38,10 @@
     </nav>
 
     <div class="sidenav-bottom">
-      <!-- <a routerLink="/login">
-        <mat-icon>login</mat-icon>
-        Login
-      </a> -->
+      <div class="support-note">
+        <mat-icon>verified</mat-icon>
+        <span>Stay consistent and interview ready.</span>
+      </div>
 
       <a class="logout" (click)="logout()" role="button">
         <mat-icon>logout</mat-icon>
@@ -46,9 +50,7 @@
     </div>
   </aside>
 
-  <!-- PAGE CONTENT -->
   <main class="page-content">
-    <!-- <app-header></app-header> -->
     <router-outlet></router-outlet>
   </main>
 </div>

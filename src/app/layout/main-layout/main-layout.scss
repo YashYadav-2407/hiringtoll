@@ -7,48 +7,87 @@
   display: flex;
   height: 100%;
   width: 100%;
-  background: #0b1220;
-  color: #fff;
+  background: transparent;
+  color: #123020;
 }
 
 .sidenav {
-  width: 250px;
+  width: 280px;
   height: 100vh;
-  background: #0b1220;
-  border-right: 1px solid #1e2a3a;
+  background: linear-gradient(180deg, #ffffff 0%, #f4faf5 100%);
+  border-right: 1px solid #d7e7dc;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   flex-shrink: 0;
   position: sticky;
   top: 0;
+  box-shadow: 10px 0 30px rgba(21, 110, 47, 0.08);
+  padding: 14px;
 
   .sidenav-brand {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 20px;
-    font-weight: 600;
-    border-bottom: 1px solid #1e2a3a;
+    gap: 12px;
+    padding: 14px;
+    border-radius: 14px;
+    border: 1px solid #d7e7dc;
+    background: linear-gradient(135deg, #ffffff 0%, #edf9f0 100%);
+  }
+
+  .brand-mark {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    color: #ffffff;
+    background: linear-gradient(135deg, #22a447 0%, #156e2f 100%);
+  }
+
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    strong {
+      font-size: 16px;
+      color: #123020;
+    }
+
+    small {
+      color: #5f786b;
+      font-size: 12px;
+    }
+  }
+
+  .sidenav-caption {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6f8c7c;
+    margin: 18px 14px 6px;
   }
 
   .sidenav-nav {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    padding: 16px;
+    gap: 6px;
+    padding: 10px 0;
 
     a {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 12px 16px;
-      border-radius: 4px;
+      padding: 12px 14px;
+      border-radius: 12px;
       text-decoration: none;
-      color: #a0aec0;
+      color: #395447;
       cursor: pointer;
       transition: all 0.2s ease;
+      border: 1px solid transparent;
 
       mat-icon {
         width: 20px;
@@ -58,13 +97,16 @@
       }
 
       &:hover {
-        background: #1e2a3a;
-        color: #fff;
+        background: #eef8f1;
+        color: #123020;
+        border-color: #d3e7d9;
       }
 
       &.active {
-        background: #2d3e5f;
-        color: #fff;
+        background: linear-gradient(135deg, #daf4e2 0%, #edf9f1 100%);
+        color: #0d4d25;
+        border-color: #b6dfc4;
+        font-weight: 700;
       }
     }
   }
@@ -72,18 +114,37 @@
   .sidenav-bottom {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    padding: 16px;
-    border-top: 1px solid #1e2a3a;
+    gap: 10px;
+    padding: 14px;
+    border-top: 1px solid #dcebe0;
+
+    .support-note {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      color: #466356;
+      background: #eff8f1;
+      border: 1px solid #d3e6d8;
+
+      mat-icon {
+        width: 16px;
+        height: 16px;
+        font-size: 16px;
+        color: #198a39;
+      }
+    }
 
     a {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 12px 16px;
-      border-radius: 4px;
+      padding: 11px 12px;
+      border-radius: 12px;
       text-decoration: none;
-      color: #a0aec0;
+      color: #395447;
       cursor: pointer;
       transition: all 0.2s ease;
 
@@ -95,8 +156,8 @@
       }
 
       &:hover {
-        background: #1e2a3a;
-        color: #fff;
+        background: #fff3f3;
+        color: #8b2525;
       }
     }
   }
@@ -108,6 +169,7 @@
   flex-direction: column;
   overflow: auto;
   min-height: 0;
+  background: transparent;
 
   app-header {
     flex-shrink: 0;
@@ -117,5 +179,20 @@
   router-outlet {
     flex: 1;
     overflow-y: auto;
+  }
+}
+
+@media (max-width: 900px) {
+  .sidenav {
+    width: 100%;
+    height: auto;
+    position: static;
+    box-shadow: none;
+    border-right: none;
+    border-bottom: 1px solid #d7e7dc;
+  }
+
+  .layout-container {
+    flex-direction: column;
   }
 }

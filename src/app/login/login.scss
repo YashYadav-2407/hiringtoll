@@ -956,3 +956,49 @@ body {
     color: #fca5a5;
   }
 }
+
+/* Green and white redesign overrides */
+.auth-container {
+  max-width: 680px;
+}
+
+.auth-box {
+  border: 1px solid #d4e6da;
+  box-shadow: 0 22px 40px rgba(16, 73, 35, 0.14);
+}
+
+.auth-box::before {
+  background: linear-gradient(90deg, #1f9342 0%, #2faf58 100%);
+  opacity: 1;
+}
+
+.auth-title {
+  color: #123322;
+}
+
+.auth-subtitle,
+.form-label,
+.footer-text,
+.checkbox-label {
+  color: #4b6a5b;
+}
+
+.btn.btn-primary {
+  background: linear-gradient(135deg, #1f9342 0%, #167033 100%);
+  border: none;
+}
+
+.btn.btn-primary:hover {
+  box-shadow: 0 10px 20px rgba(19, 88, 43, 0.22);
+}
+
+.btn.btn-secondary {
+  border-color: #b8d8c2;
+  color: #195b2f;
+}
+
+.form-input:focus,
+.otp-input:focus {
+  border-color: #1f9342;
+  box-shadow: 0 0 0 4px rgba(31, 147, 66, 0.12);
+}
