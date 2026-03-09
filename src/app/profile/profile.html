@@ -1,16 +1,48 @@
 <div class="profile-container">
   <section class="profile-hero">
-    <img class="avatar" [src]="user.avatar || 'assets/profile.jpg'" alt="Profile" />
-    <div class="hero-content">
-      <p class="eyebrow">Your Profile</p>
-      <h2>{{ user.name || 'Complete your profile' }}</h2>
-      <p class="subtext">Keep details updated, monitor activity streaks, and maintain your resume in one place.</p>
-      <div class="hero-chips">
-        <span>{{ profileCompletion }}% profile complete</span>
-        <span>{{ totalSolvedProblems }} solved in practice</span>
-        <span>{{ currentStreak }} day streak</span>
+    <div class="hero-main">
+      <div class="avatar-stack">
+        <img class="avatar" [src]="user.avatar || 'assets/profile.jpg'" alt="Profile" />
+      </div>
+      <div class="hero-content">
+        <p class="eyebrow">Performance Profile</p>
+        <h2>{{ user.name || 'Complete your profile' }}</h2>
+        <p class="subtext">{{ bioPreview }}</p>
+        <button mat-button type="button" class="bio-action-btn" (click)="openBioEditor()">{{ bioActionLabel }}</button>
+        <div class="hero-chips">
+          <span>{{ profileCompletion }}% complete</span>
+          <span>{{ totalSolvedProblems }} solved</span>
+          <span>{{ currentStreak }} day streak</span>
+        </div>
       </div>
     </div>
+
+    <div class="hero-metrics">
+      <div class="metric-card">
+        <p>Profile Health</p>
+        <strong>{{ profileCompletion }}%</strong>
+      </div>
+      <div class="metric-card">
+        <p>Resume Health</p>
+        <strong>{{ resumeCompletion }}%</strong>
+      </div>
+      <div class="metric-card">
+        <p>Best Streak</p>
+        <strong>{{ bestStreak }} days</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="profile-health-panel">
+    <div class="health-head">
+      <h3>Profile Readiness</h3>
+      <span>{{ profileStatusLabel }}</span>
+    </div>
+    <div class="progress-track" role="progressbar" [attr.aria-valuenow]="profileCompletion" aria-valuemin="0" aria-valuemax="100">
+      <div class="progress-fill" [style.width.%]="profileCompletion"></div>
+    </div>
+    <p class="missing-label" *ngIf="requiredMissingFields.length > 0">Missing required fields: {{ requiredMissingFields.join(', ') }}</p>
+    <p class="missing-label" *ngIf="requiredMissingFields.length === 0">Required profile fields are complete.</p>
   </section>
 
   <mat-tab-group class="profile-tabs" animationDuration="200ms">
@@ -27,41 +59,64 @@
               <mat-icon>content_copy</mat-icon>
               Copy Email
             </button>
+            <button *ngIf="!isEditingProfile" mat-button (click)="copyUsername()" [disabled]="!user.username" matTooltip="Copy your username">
+              <mat-icon>person_pin</mat-icon>
+              Copy Username
+            </button>
+            <button *ngIf="!isEditingProfile" mat-button (click)="reloadProfileFromStorage()" matTooltip="Sync profile from saved local data">
+              <mat-icon>sync</mat-icon>
+              Sync
+            </button>
           </div>
         </div>
 
         <div class="details" *ngIf="!isEditingProfile">
-          <div class="row"><span class="label">Email</span><span class="value">{{ user.email || 'Not added' }}</span></div>
-          <div class="row"><span class="label">Username</span><span class="value">{{ user.username || 'Not added' }}</span></div>
-          <div class="row"><span class="label">Country</span><span class="value">{{ user.country || 'Not added' }}</span></div>
-          <div class="row"><span class="label">Role</span><span class="value">{{ user.role || 'Not added' }}</span></div>
-          <div class="row"><span class="label">Institution</span><span class="value">{{ user.institution || 'Not added' }}</span></div>
+          <div class="row" *ngFor="let field of profileFields">
+            <span class="label">
+              <mat-icon>{{ field.icon }}</mat-icon>
+              {{ field.label }}
+            </span>
+            <span class="value">{{ getFieldValue(field.key) }}</span>
+          </div>
         </div>
 
         <div class="edit-form" *ngIf="isEditingProfile">
-          <mat-form-field appearance="outline">
-            <mat-label>Full Name</mat-label>
-            <input matInput [(ngModel)]="editableUser.name" />
+          <div class="avatar-editor">
+            <img class="avatar avatar-edit-preview" [src]="editableUser.avatar || user.avatar || 'assets/profile.jpg'" alt="Avatar preview" />
+            <div class="avatar-editor-actions">
+              <button mat-stroked-button type="button" (click)="avatarInput.click()">
+                <mat-icon>upload</mat-icon>
+                Upload Image
+              </button>
+              <button mat-button type="button" color="warn" (click)="clearAvatar()">
+                <mat-icon>refresh</mat-icon>
+                Reset
+              </button>
+            </div>
+            <input #avatarInput type="file" accept="image/*" (change)="onAvatarFileSelected($event)" hidden />
+          </div>
+
+          <mat-form-field appearance="outline" class="avatar-url-field">
+            <mat-label>Profile Image URL</mat-label>
+            <input matInput type="text" placeholder="https://example.com/avatar.png" [(ngModel)]="editableUser.avatar" />
           </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Email</mat-label>
-            <input matInput [(ngModel)]="editableUser.email" />
+
+          <mat-form-field appearance="outline" class="bio-field">
+            <mat-label>Bio (max 30 words)</mat-label>
+            <textarea
+              matInput
+              rows="3"
+              placeholder="Write a short bio about your goals and focus"
+              [(ngModel)]="editableUser.bio"
+            ></textarea>
+            <mat-hint align="end">{{ bioWordCount }}/30 words</mat-hint>
           </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Username</mat-label>
-            <input matInput [(ngModel)]="editableUser.username" />
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Country</mat-label>
-            <input matInput [(ngModel)]="editableUser.country" />
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Role</mat-label>
-            <input matInput [(ngModel)]="editableUser.role" />
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Institution</mat-label>
-            <input matInput [(ngModel)]="editableUser.institution" />
+
+          <p class="bio-limit-error" *ngIf="isBioTooLong">Bio is too long. Keep it within 30 words.</p>
+
+          <mat-form-field appearance="outline" *ngFor="let field of profileFields">
+            <mat-label>{{ field.label }}</mat-label>
+            <input matInput [type]="field.inputType || 'text'" [placeholder]="field.placeholder" [(ngModel)]="editableUser[field.key]" />
           </mat-form-field>
 
           <div class="form-actions">
@@ -77,6 +132,17 @@
 
     <mat-tab label="Activity">
       <section class="tab-panel">
+        <div class="activity-actions">
+          <button mat-stroked-button color="primary" (click)="logFocusSession()">
+            <mat-icon>bolt</mat-icon>
+            Log Focus Session
+          </button>
+          <button mat-button color="warn" (click)="clearActivityHistory()">
+            <mat-icon>delete_outline</mat-icon>
+            Clear Activity
+          </button>
+        </div>
+
         <div class="stats-grid">
           <div class="stat-card">
             <p>Total Solved</p>
@@ -135,7 +201,7 @@
       <section class="tab-panel">
         <div class="resume-card">
           <h3>Resume Workspace</h3>
-          <p class="resume-desc">Build, update, and export your resume directly from profile.</p>
+          <p class="resume-desc">Build, update, and export your resume directly from your profile command center.</p>
 
           <div class="progress-row">
             <span>Completion</span>
@@ -147,13 +213,17 @@
               <mat-icon>edit</mat-icon>
               Create Resume
             </button>
+            <button mat-stroked-button color="primary" (click)="syncProfileToResume()">
+              <mat-icon>auto_fix_high</mat-icon>
+              Prefill from Profile
+            </button>
             <button mat-stroked-button color="accent" (click)="editResume()" [disabled]="!hasResumeData()">
               <mat-icon>mode_edit</mat-icon>
               Edit Resume
             </button>
-            <button mat-stroked-button (click)="downloadPdf()" [disabled]="!hasResumeData()">
+            <button mat-stroked-button (click)="downloadPdf()" [disabled]="!hasResumeData() || isDownloadingResume">
               <mat-icon>download</mat-icon>
-              Download PDF
+              {{ isDownloadingResume ? 'Downloading...' : 'Download PDF' }}
             </button>
           </div>
 

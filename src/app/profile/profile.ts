@@ -26,6 +26,18 @@ interface UserProfile {
   institution?: string;
   email?: string;
   avatar?: string;
+  bio?: string;
+}
+
+type ProfileFieldKey = keyof Pick<UserProfile, 'name' | 'email' | 'username' | 'country' | 'role' | 'institution'>;
+
+interface ProfileField {
+  key: ProfileFieldKey;
+  label: string;
+  placeholder: string;
+  required: boolean;
+  icon: string;
+  inputType?: 'text' | 'email';
 }
 
 interface ActivityCell {
@@ -61,6 +73,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private readonly PRACTICE_SOLVED_KEY = 'practice_solved_problems';
   private readonly PROFILE_ACTIVITY_KEY = 'profile_activity_map';
   private readonly HEATMAP_DAYS = 180;
+  private readonly EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  private readonly MAX_AVATAR_SIZE_BYTES = 2 * 1024 * 1024;
+  private readonly MAX_BIO_WORDS = 30;
 
   user: UserProfile = {
     name: '',
@@ -69,13 +84,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
     role: '',
     institution: '',
     email: '',
-    avatar: 'assets/profile.jpg'
+    avatar: 'assets/profile.jpg',
+    bio: ''
   };
 
   editableUser: UserProfile = { ...this.user };
   resume: Resume | null = null;
   isLoadingResume = false;
   isEditingProfile = false;
+  isDownloadingResume = false;
 
   totalSolvedProblems = 0;
   profileCompletion = 0;
@@ -87,6 +104,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
   selectedHeatmapRange: HeatmapRange = 90;
   readonly heatmapRanges: HeatmapRange[] = [30, 90, 180];
   heatmapCells: ActivityCell[] = [];
+
+  readonly profileFields: ProfileField[] = [
+    { key: 'name', label: 'Full Name', placeholder: 'Enter your full name', required: true, icon: 'badge' },
+    { key: 'email', label: 'Email', placeholder: 'name@example.com', required: true, icon: 'mail', inputType: 'email' },
+    { key: 'username', label: 'Username', placeholder: 'Choose a username', required: true, icon: 'alternate_email' },
+    { key: 'country', label: 'Country', placeholder: 'Your country', required: false, icon: 'public' },
+    { key: 'role', label: 'Role', placeholder: 'Student, Engineer, etc.', required: false, icon: 'work' },
+    { key: 'institution', label: 'Institution', placeholder: 'School or company', required: false, icon: 'school' }
+  ];
 
   private destroy$ = new Subject<void>();
 
@@ -112,14 +138,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.user = {
         name: currentUser.name || '',
         email: currentUser.email || '',
-        username: currentUser.username || 'N/A',
-        country: currentUser.country || 'N/A',
-        role: currentUser.role || 'N/A',
-        institution: currentUser.institution || 'N/A',
-        avatar: currentUser.avatar || 'assets/profile.jpg'
+        username: currentUser.username || '',
+        country: currentUser.country || '',
+        role: currentUser.role || '',
+        institution: currentUser.institution || '',
+        avatar: currentUser.avatar || 'assets/profile.jpg',
+        bio: this.sanitizeBio(currentUser.bio || '')
       };
       this.editableUser = { ...this.user };
     }
+
+    this.hydrateUserFromStorage();
 
     // Load resume
     this.loadResume();
@@ -150,6 +179,39 @@ export class ProfileComponent implements OnInit, OnDestroy {
     return this.heatmapCells.slice(-this.selectedHeatmapRange);
   }
 
+  get requiredMissingFields(): string[] {
+    return this.profileFields
+      .filter(field => field.required)
+      .filter(field => !this.getTrimmedValue(this.user[field.key]))
+      .map(field => field.label);
+  }
+
+  get profileStatusLabel(): string {
+    if (this.profileCompletion >= 90) {
+      return 'Profile is production-ready';
+    }
+    if (this.profileCompletion >= 60) {
+      return 'Strong progress, a few details left';
+    }
+    return 'Complete required fields to unlock full profile value';
+  }
+
+  get bioWordCount(): number {
+    return this.countWords(this.editableUser.bio);
+  }
+
+  get bioPreview(): string {
+    return this.getTrimmedValue(this.user.bio) || 'Add a short bio (up to 30 words) to tell others about your focus and goals.';
+  }
+
+  get bioActionLabel(): string {
+    return this.getTrimmedValue(this.user.bio) ? 'Edit Bio' : 'Add Bio';
+  }
+
+  get isBioTooLong(): boolean {
+    return this.bioWordCount > this.MAX_BIO_WORDS;
+  }
+
   setHeatmapRange(range: HeatmapRange): void {
     this.selectedHeatmapRange = range;
   }
@@ -170,15 +232,50 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   saveProfileDetails(): void {
-    this.user = {
+    const nextUser: UserProfile = {
       ...this.user,
       ...this.editableUser,
-      name: (this.editableUser.name || '').trim(),
-      email: (this.editableUser.email || '').trim(),
-      username: (this.editableUser.username || '').trim(),
-      country: (this.editableUser.country || '').trim(),
-      role: (this.editableUser.role || '').trim(),
-      institution: (this.editableUser.institution || '').trim()
+      name: this.getTrimmedValue(this.editableUser.name),
+      email: this.getTrimmedValue(this.editableUser.email),
+      username: this.getTrimmedValue(this.editableUser.username),
+      country: this.getTrimmedValue(this.editableUser.country),
+      role: this.getTrimmedValue(this.editableUser.role),
+      institution: this.getTrimmedValue(this.editableUser.institution),
+      bio: this.sanitizeBio(this.editableUser.bio)
+    };
+
+    const avatarValue = this.getTrimmedValue(this.editableUser.avatar);
+    nextUser.avatar = avatarValue || 'assets/profile.jpg';
+
+    if (!nextUser.name || !nextUser.email || !nextUser.username) {
+      this.snackBar.open('Name, email, and username are required.', 'Close', {
+        duration: 2800,
+        horizontalPosition: 'end',
+        verticalPosition: 'bottom'
+      });
+      return;
+    }
+
+    if (this.countWords(nextUser.bio) > this.MAX_BIO_WORDS) {
+      this.snackBar.open('Bio can be maximum 30 words.', 'Close', {
+        duration: 2600,
+        horizontalPosition: 'end',
+        verticalPosition: 'bottom'
+      });
+      return;
+    }
+
+    if (!this.EMAIL_REGEX.test(nextUser.email)) {
+      this.snackBar.open('Please enter a valid email address.', 'Close', {
+        duration: 2600,
+        horizontalPosition: 'end',
+        verticalPosition: 'bottom'
+      });
+      return;
+    }
+
+    this.user = {
+      ...nextUser
     };
 
     this.persistCurrentUser();
@@ -207,6 +304,147 @@ export class ProfileComponent implements OnInit, OnDestroy {
         });
       });
     }
+  }
+
+  copyUsername(): void {
+    if (!this.user.username) {
+      return;
+    }
+
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(this.user.username).then(() => {
+        this.snackBar.open('Username copied to clipboard', 'Close', {
+          duration: 2200,
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
+        });
+      });
+    }
+  }
+
+  onAvatarFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files && input.files.length > 0 ? input.files[0] : null;
+
+    if (!file) {
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      this.snackBar.open('Please select a valid image file.', 'Close', {
+        duration: 2600,
+        horizontalPosition: 'end',
+        verticalPosition: 'bottom'
+      });
+      input.value = '';
+      return;
+    }
+
+    if (file.size > this.MAX_AVATAR_SIZE_BYTES) {
+      this.snackBar.open('Image size must be less than 2MB.', 'Close', {
+        duration: 2600,
+        horizontalPosition: 'end',
+        verticalPosition: 'bottom'
+      });
+      input.value = '';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = typeof reader.result === 'string' ? reader.result : '';
+      if (!result) {
+        return;
+      }
+
+      this.applyAvatar(result);
+      this.snackBar.open('Profile image updated.', 'Close', {
+        duration: 2400,
+        horizontalPosition: 'end',
+        verticalPosition: 'bottom'
+      });
+    };
+
+    reader.onerror = () => {
+      this.snackBar.open('Could not read this image file.', 'Close', {
+        duration: 2600,
+        horizontalPosition: 'end',
+        verticalPosition: 'bottom'
+      });
+    };
+
+    reader.readAsDataURL(file);
+    input.value = '';
+  }
+
+  clearAvatar(): void {
+    this.applyAvatar('assets/profile.jpg');
+    this.snackBar.open('Profile image reset.', 'Close', {
+      duration: 2200,
+      horizontalPosition: 'end',
+      verticalPosition: 'bottom'
+    });
+  }
+
+  openBioEditor(): void {
+    if (!this.isEditingProfile) {
+      this.startEditProfile();
+    }
+  }
+
+  logFocusSession(): void {
+    this.trackDailyActivity(1);
+    this.snackBar.open('Focus session logged for today.', 'Close', {
+      duration: 2200,
+      horizontalPosition: 'end',
+      verticalPosition: 'bottom'
+    });
+  }
+
+  clearActivityHistory(): void {
+    if (typeof window !== 'undefined') {
+      const confirmed = window.confirm('Clear all profile activity history? This action cannot be undone.');
+      if (!confirmed) {
+        return;
+      }
+    }
+
+    this.saveActivityMap({});
+    this.refreshDashboardStats();
+    this.snackBar.open('Activity history cleared.', 'Close', {
+      duration: 2200,
+      horizontalPosition: 'end',
+      verticalPosition: 'bottom'
+    });
+  }
+
+  reloadProfileFromStorage(): void {
+    try {
+      if (typeof window === 'undefined' || !window.localStorage) {
+        return;
+      }
+
+      this.hydrateUserFromStorage();
+
+      this.editableUser = { ...this.user };
+      this.refreshDashboardStats();
+      this.snackBar.open('Profile synced from local storage.', 'Close', {
+        duration: 2400,
+        horizontalPosition: 'end',
+        verticalPosition: 'bottom'
+      });
+    } catch (error) {
+      console.error('Error syncing profile from storage:', error);
+      this.snackBar.open('Unable to sync profile from local storage.', 'Close', {
+        duration: 2600,
+        horizontalPosition: 'end',
+        verticalPosition: 'bottom'
+      });
+    }
+  }
+
+  getFieldValue(fieldKey: ProfileFieldKey): string {
+    return this.getTrimmedValue(this.user[fieldKey]) || 'Not added';
   }
 
   /**
@@ -241,10 +479,57 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.openResumeBuilder();
   }
 
+  syncProfileToResume(): void {
+    const existing = this.resumeService.getCurrentResume();
+    if (!existing) {
+      this.snackBar.open('Resume is not ready yet. Please try again.', 'Close', {
+        duration: 2400,
+        horizontalPosition: 'end',
+        verticalPosition: 'bottom'
+      });
+      return;
+    }
+
+    const updated: Resume = {
+      ...existing,
+      personalInfo: {
+        ...existing.personalInfo,
+        fullName: this.getTrimmedValue(this.user.name) || existing.personalInfo.fullName,
+        email: this.getTrimmedValue(this.user.email) || existing.personalInfo.email,
+        location: this.getTrimmedValue(this.user.country) || existing.personalInfo.location,
+        professionalSummary:
+          this.getTrimmedValue(this.user.bio) ||
+          existing.personalInfo.professionalSummary ||
+          `Aspiring ${this.getTrimmedValue(this.user.role) || 'professional'} focused on consistent problem-solving and skill development.`
+      }
+    };
+
+    this.resumeService.saveResume(updated).subscribe({
+      next: (resume) => {
+        this.resume = resume;
+        this.updateResumeCompletion();
+        this.trackDailyActivity(2);
+        this.snackBar.open('Resume prefilled from profile details.', 'Close', {
+          duration: 2600,
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
+        });
+      },
+      error: (error) => {
+        console.error('Error prefilling resume from profile:', error);
+        this.snackBar.open('Could not prefill resume right now.', 'Close', {
+          duration: 2600,
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
+        });
+      }
+    });
+  }
+
   /**
    * Download resume as PDF
    */
-  downloadPdf(): void {
+  async downloadPdf(): Promise<void> {
     if (!this.resume) {
       this.snackBar.open('No resume to download. Please create one first.', 'Close', {
         duration: 3000,
@@ -254,32 +539,38 @@ export class ProfileComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.isDownloadingResume = true;
+
     try {
-      // Check if pdfMake is available globally
-      if ((window as any).pdfMake) {
-        const pdfMake = (window as any).pdfMake;
-        const docDefinition = this.resumePdfService.getPdfDocDefinition(this.resume);
-        pdfMake.createPdf(docDefinition).download(`${this.resume.personalInfo.fullName || 'Resume'}.pdf`);
-        this.snackBar.open('PDF downloaded successfully!', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'end',
-          verticalPosition: 'bottom'
-        });
-        this.trackDailyActivity(2);
-      } else {
-        this.snackBar.open('PDF library not loaded. Please add pdfmake library.', 'Close', {
-          duration: 4000,
-          horizontalPosition: 'end',
-          verticalPosition: 'bottom'
-        });
+      const pdfMake = await this.getPdfMakeInstance();
+      if (!pdfMake) {
+        throw new Error('pdfMake could not be initialized');
       }
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      this.snackBar.open('Error generating PDF. Please try again.', 'Close', {
-        duration: 3000,
+
+      const docDefinition = this.resumePdfService.getPdfDocDefinition(this.resume);
+      const fileName = `${this.getSafeResumeFileName()}.pdf`;
+
+      const downloaded = await this.tryPdfDownload(pdfMake, docDefinition, fileName);
+      if (!downloaded) {
+        throw new Error('All PDF download strategies failed');
+      }
+
+      this.snackBar.open('Resume downloaded successfully.', 'Close', {
+        duration: 2800,
         horizontalPosition: 'end',
         verticalPosition: 'bottom'
       });
+      this.trackDailyActivity(2);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      this.downloadResumeTextFallback();
+      this.snackBar.open('PDF download failed. Downloaded TXT version instead.', 'Close', {
+        duration: 3800,
+        horizontalPosition: 'end',
+        verticalPosition: 'bottom'
+      });
+    } finally {
+      this.isDownloadingResume = false;
     }
   }
 
@@ -314,14 +605,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   private getProfileCompletion(): number {
-    const checks = [
-      !!this.user.name,
-      !!this.user.email,
-      !!this.user.username,
-      !!this.user.country,
-      !!this.user.role,
-      !!this.user.institution
-    ];
+    const checks = this.profileFields.map(field => !!this.getTrimmedValue(this.user[field.key]));
 
     const filled = checks.filter(Boolean).length;
     return Math.round((filled / checks.length) * 100);
@@ -457,5 +741,217 @@ export class ProfileComponent implements OnInit, OnDestroy {
     } catch (error) {
       console.error('Error saving profile activity:', error);
     }
+  }
+
+  private getTrimmedValue(value?: string): string {
+    const normalized = (value || '').trim();
+    return normalized.toUpperCase() === 'N/A' ? '' : normalized;
+  }
+
+  private applyAvatar(avatar: string): void {
+    const value = this.getTrimmedValue(avatar) || 'assets/profile.jpg';
+    this.user.avatar = value;
+    this.editableUser.avatar = value;
+    this.persistCurrentUser();
+  }
+
+  private async getPdfMakeInstance(): Promise<any | null> {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+
+    const existing = (window as any).pdfMake;
+    if (existing) {
+      return existing;
+    }
+
+    try {
+      const [pdfMakeModule, fontsModule] = await Promise.all([
+        import('pdfmake/build/pdfmake'),
+        import('pdfmake/build/vfs_fonts')
+      ]);
+
+      const pdfMake = (pdfMakeModule as any).default || (pdfMakeModule as any).pdfMake || pdfMakeModule;
+      const fonts = (fontsModule as any).default || fontsModule;
+      const vfs = fonts?.pdfMake?.vfs || fonts?.vfs;
+
+      if (pdfMake && vfs) {
+        pdfMake.vfs = vfs;
+      }
+
+      (window as any).pdfMake = pdfMake;
+      return pdfMake;
+    } catch (error) {
+      console.error('Error loading pdfMake dynamically:', error);
+      return null;
+    }
+  }
+
+  private getSafeResumeFileName(): string {
+    const source = this.getTrimmedValue(this.resume?.personalInfo?.fullName) || 'resume';
+    return source
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '-') || 'resume';
+  }
+
+  private async tryPdfDownload(pdfMake: any, docDefinition: any, fileName: string): Promise<boolean> {
+    if (typeof window === 'undefined') {
+      return false;
+    }
+
+    // Strategy 1: pdfMake native download API.
+    try {
+      await new Promise<void>((resolve, reject) => {
+        pdfMake.createPdf(docDefinition).download(fileName, () => resolve());
+        setTimeout(() => reject(new Error('Timed out waiting for native download callback')), 2000);
+      });
+      return true;
+    } catch (nativeError) {
+      console.warn('Native pdfMake download failed, trying blob fallback.', nativeError);
+    }
+
+    // Strategy 2: Blob + anchor download.
+    try {
+      await new Promise<void>((resolve, reject) => {
+        pdfMake.createPdf(docDefinition).getBlob((blob: Blob) => {
+          try {
+            const objectUrl = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = objectUrl;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            // Delay revoke to avoid race conditions in some browsers/devices.
+            setTimeout(() => URL.revokeObjectURL(objectUrl), 10000);
+            resolve();
+          } catch (error) {
+            reject(error);
+          }
+        });
+      });
+      return true;
+    } catch (blobError) {
+      console.warn('Blob PDF download failed, trying data-url fallback.', blobError);
+    }
+
+    // Strategy 3: Open PDF in a new tab via data URL as final PDF fallback.
+    try {
+      await new Promise<void>((resolve, reject) => {
+        pdfMake.createPdf(docDefinition).getDataUrl((dataUrl: string) => {
+          const newWindow = window.open(dataUrl, '_blank');
+          if (!newWindow) {
+            reject(new Error('Popup blocked for PDF data URL window'));
+            return;
+          }
+          resolve();
+        });
+      });
+      return true;
+    } catch (dataUrlError) {
+      console.warn('All PDF download strategies failed.', dataUrlError);
+      return false;
+    }
+  }
+
+  private downloadResumeTextFallback(): void {
+    if (!this.resume || typeof window === 'undefined') {
+      return;
+    }
+
+    const lines: string[] = [];
+    const p = this.resume.personalInfo;
+    lines.push(p.fullName || 'Resume');
+    lines.push([p.email, p.phone, p.location].filter(Boolean).join(' | '));
+    lines.push('');
+
+    if (p.professionalSummary) {
+      lines.push('PROFESSIONAL SUMMARY');
+      lines.push(p.professionalSummary);
+      lines.push('');
+    }
+
+    if (this.resume.experience.length) {
+      lines.push('EXPERIENCE');
+      this.resume.experience.forEach(exp => {
+        lines.push(`${exp.jobTitle} - ${exp.company}`);
+        lines.push(`${exp.startDate} - ${exp.endDate || 'Present'}`);
+        if (exp.description) lines.push(exp.description);
+        exp.achievements?.forEach(a => lines.push(`- ${a}`));
+        lines.push('');
+      });
+    }
+
+    if (this.resume.education.length) {
+      lines.push('EDUCATION');
+      this.resume.education.forEach(edu => {
+        lines.push(`${edu.degree} in ${edu.field} - ${edu.institution}`);
+        if (edu.graduationDate) lines.push(edu.graduationDate);
+        if (edu.gpa) lines.push(`GPA: ${edu.gpa}`);
+        lines.push('');
+      });
+    }
+
+    if (this.resume.skills.length) {
+      lines.push('SKILLS');
+      this.resume.skills.forEach(skill => {
+        lines.push(`${skill.category}: ${skill.skills.join(', ')}`);
+      });
+    }
+
+    const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${this.getSafeResumeFileName()}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+  }
+
+  private hydrateUserFromStorage(): void {
+    try {
+      if (typeof window === 'undefined' || !window.localStorage) {
+        return;
+      }
+
+      const raw = localStorage.getItem(this.USER_STORAGE_KEY);
+      const parsed: Partial<UserProfile> = raw ? JSON.parse(raw) : {};
+
+      this.user = {
+        ...this.user,
+        name: this.getTrimmedValue(parsed.name) || this.user.name,
+        email: this.getTrimmedValue(parsed.email) || this.user.email,
+        username: this.getTrimmedValue(parsed.username) || this.user.username,
+        country: this.getTrimmedValue(parsed.country) || this.user.country,
+        role: this.getTrimmedValue(parsed.role) || this.user.role,
+        institution: this.getTrimmedValue(parsed.institution) || this.user.institution,
+        avatar: this.getTrimmedValue(parsed.avatar) || this.user.avatar,
+        bio: this.sanitizeBio(parsed.bio) || this.user.bio
+      };
+    } catch (error) {
+      console.error('Error hydrating profile from storage:', error);
+    }
+  }
+
+  private sanitizeBio(value?: string): string {
+    if (!value) {
+      return '';
+    }
+
+    const words = value.trim().split(/\s+/).filter(Boolean);
+    return words.slice(0, this.MAX_BIO_WORDS).join(' ');
+  }
+
+  private countWords(value?: string): number {
+    const normalized = this.getTrimmedValue(value);
+    if (!normalized) {
+      return 0;
+    }
+
+    return normalized.split(/\s+/).length;
   }
 }
