@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AssessService, Assessment, AssessmentResult, AssessmentOverview } from './services/assess.service';
 
 @Component({
@@ -20,7 +21,8 @@ import { AssessService, Assessment, AssessmentResult, AssessmentOverview } from 
     MatIconModule,
     MatTabsModule,
     MatChipsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSnackBarModule
   ],
   templateUrl: './assess.html',
   styleUrl: './assess.scss'
@@ -35,8 +37,13 @@ export class AssessComponent implements OnInit {
   isLoadingAssessments = false;
   isLoadingResults = false;
   isLoadingRecommended = false;
+  selectedResult: AssessmentResult | null = null;
+  isSubmittingAttempt = false;
 
-  constructor(private assessService: AssessService) {}
+  constructor(
+    private assessService: AssessService,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     this.loadAllContent();
@@ -125,17 +132,65 @@ export class AssessComponent implements OnInit {
   }
 
   startAssessment(assessment: Assessment): void {
-    console.log('Starting assessment:', assessment.title);
-    // This will be integrated with the test modal similar to practice component
+    this.isSubmittingAttempt = true;
+    this.assessService.startAssessment(assessment.id).subscribe({
+      next: (result) => {
+        this.selectedResult = result;
+        this.snackBar.open(`Assessment completed: ${result.score}%`, 'Close', {
+          duration: 2200,
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
+        });
+        this.loadAllContent();
+      },
+      error: (error) => {
+        console.error('Error starting assessment:', error);
+        this.snackBar.open('Unable to start assessment right now.', 'Close', {
+          duration: 2500,
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
+        });
+      },
+      complete: () => {
+        this.isSubmittingAttempt = false;
+      }
+    });
   }
 
   retakeAssessment(result: AssessmentResult): void {
-    console.log('Retaking assessment:', result.title);
-    // This will be integrated with the test modal
+    this.isSubmittingAttempt = true;
+    this.assessService.retakeAssessment(result.assessmentId).subscribe({
+      next: (newResult) => {
+        this.selectedResult = newResult;
+        this.snackBar.open(`Retake completed: ${newResult.score}%`, 'Close', {
+          duration: 2200,
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
+        });
+        this.loadAllContent();
+      },
+      error: (error) => {
+        console.error('Error retaking assessment:', error);
+        this.snackBar.open('Unable to retake assessment right now.', 'Close', {
+          duration: 2500,
+          horizontalPosition: 'end',
+          verticalPosition: 'bottom'
+        });
+      },
+      complete: () => {
+        this.isSubmittingAttempt = false;
+      }
+    });
   }
 
   viewResults(result: AssessmentResult): void {
-    console.log('Viewing results for:', result.title);
-    // This will open a detailed results view
+    this.selectedResult = result;
+  }
+
+  viewResultsByAssessment(assessmentId: string): void {
+    const latest = this.assessmentResults.find(result => result.assessmentId === assessmentId);
+    if (latest) {
+      this.selectedResult = latest;
+    }
   }
 }

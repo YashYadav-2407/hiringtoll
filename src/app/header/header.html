@@ -1,7 +1,23 @@
 <header class="app-header">
   <div class="header-container">
     <div class="header-left">
-      <span class="header-title">Hiring Tool</span>
+      <nav class="app-switch" aria-label="Application switcher">
+        <a
+          class="switch-item"
+          routerLink="/dashboard"
+          [routerLinkActiveOptions]="{ exact: true }"
+          routerLinkActive="active"
+        >
+          Hiring Tool
+        </a>
+        <a
+          class="switch-item"
+          href="https://hiringtoll2-0-client.onrender.com/"
+          rel="noopener noreferrer"
+        >
+          Hiring Tool 2.0
+        </a>
+      </nav>
 
       <nav class="header-nav" aria-label="Primary">
         <a class="nav-item" routerLink="/dashboard" routerLinkActive="active">

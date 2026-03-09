@@ -500,6 +500,18 @@
   }
 }
 
+.selected-result-card {
+  margin-top: 16px;
+  border-radius: 12px;
+  border: 1px solid #dbe5f3;
+  background: #f8fbff;
+
+  mat-card-content p {
+    margin: 6px 0;
+    color: #334155;
+  }
+}
+
 /* ===============================
    LOADING & EMPTY STATES
 ================================ */

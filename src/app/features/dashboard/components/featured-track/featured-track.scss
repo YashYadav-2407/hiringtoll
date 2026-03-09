@@ -18,12 +18,21 @@
   height: 200%;
   background: rgba(23, 128, 55, 0.08);
   transform: rotate(25deg);
+  z-index: 0;
+  pointer-events: none;
 }
 
 .track-header {
+  position: relative;
+  z-index: 1;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.track-content {
+  position: relative;
+  z-index: 1;
 }
 
 .track-badge {
@@ -77,17 +86,18 @@
   border-radius: 999px;
 }
 
-button {
+button[mat-raised-button] {
   border-radius: 12px;
   padding: 9px 16px;
   font-weight: 600;
   background: linear-gradient(135deg, #228f42 0%, #13682f 100%);
-  color: #ffffff;
+  color: #ffffff !important;
+  --mdc-protected-button-label-text-color: #ffffff;
   box-shadow: 0 8px 18px rgba(21, 89, 44, 0.26);
   transition: all 0.25s ease;
 }
 
-button:hover {
+button[mat-raised-button]:hover {
   transform: translateY(-2px);
   box-shadow: 0 14px 26px rgba(21, 89, 44, 0.36);
 }

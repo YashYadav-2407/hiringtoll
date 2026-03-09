@@ -39,6 +39,40 @@
   background: linear-gradient(180deg, #ffffff 0%, #f2f9f4 100%);
 }
 
+.app-switch {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid #cde2d4;
+}
+
+.switch-item {
+  text-decoration: none;
+  color: #446555;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 9px 14px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #145b2d;
+    background: #edf7ef;
+    border-color: #cde1d3;
+  }
+
+  &.active {
+    color: #ffffff;
+    background: linear-gradient(135deg, #238f43 0%, #156e33 100%);
+    border-color: #156e33;
+    box-shadow: 0 8px 14px rgba(21, 104, 49, 0.26);
+  }
+}
+
 .nav-item {
   position: relative;
   font-size: 13px;
@@ -105,6 +139,16 @@
 @media (max-width: 768px) {
   .header-container {
     padding: 0 14px;
+  }
+
+  .header-left {
+    gap: 12px;
+  }
+
+  .app-switch {
+    max-width: 52vw;
+    overflow-x: auto;
+    scrollbar-width: thin;
   }
 
   .header-nav {
