@@ -88,6 +88,8 @@
   color: #2f5a44;
   background: #f1f8f3;
   border: 1px solid #d3e5d8;
+  cursor: pointer;
+  font-family: inherit;
   transition: all 0.2s ease;
 
   &:hover {
@@ -140,6 +142,10 @@
 .schedule-section {
   width: 100%;
   animation: fadeUp 0.8s ease-out;
+}
+
+.single-panel {
+  grid-template-columns: 1fr;
 }
 
 @keyframes dashboardBgFlow {

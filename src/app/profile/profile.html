@@ -1,102 +1,174 @@
 <div class="profile-container">
-
-  <!-- Top Section -->
-  <div class="profile-header">
-    <img class="avatar" src="assets/profile.jpg" alt="Profile" />
-    <div class="info">
-      <h2>{{ user.name }}</h2>
+  <section class="profile-hero">
+    <img class="avatar" [src]="user.avatar || 'assets/profile.jpg'" alt="Profile" />
+    <div class="hero-content">
+      <p class="eyebrow">Your Profile</p>
+      <h2>{{ user.name || 'Complete your profile' }}</h2>
+      <p class="subtext">Keep details updated, monitor activity streaks, and maintain your resume in one place.</p>
+      <div class="hero-chips">
+        <span>{{ profileCompletion }}% profile complete</span>
+        <span>{{ totalSolvedProblems }} solved in practice</span>
+        <span>{{ currentStreak }} day streak</span>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <mat-divider></mat-divider>
+  <mat-tab-group class="profile-tabs" animationDuration="200ms">
+    <mat-tab label="Overview">
+      <section class="tab-panel">
+        <div class="panel-header">
+          <h3>Account Details</h3>
+          <div class="header-actions">
+            <button *ngIf="!isEditingProfile" mat-stroked-button color="primary" (click)="startEditProfile()">
+              <mat-icon>edit</mat-icon>
+              Edit
+            </button>
+            <button *ngIf="!isEditingProfile" mat-button (click)="copyEmail()" [disabled]="!user.email" matTooltip="Copy your email">
+              <mat-icon>content_copy</mat-icon>
+              Copy Email
+            </button>
+          </div>
+        </div>
 
-  <!-- Details -->
-  <div class="details">
-    <div class="row">
-      <span class="label">Email:</span>
-      <span class="value">{{ user.email }}</span>
-    </div>
+        <div class="details" *ngIf="!isEditingProfile">
+          <div class="row"><span class="label">Email</span><span class="value">{{ user.email || 'Not added' }}</span></div>
+          <div class="row"><span class="label">Username</span><span class="value">{{ user.username || 'Not added' }}</span></div>
+          <div class="row"><span class="label">Country</span><span class="value">{{ user.country || 'Not added' }}</span></div>
+          <div class="row"><span class="label">Role</span><span class="value">{{ user.role || 'Not added' }}</span></div>
+          <div class="row"><span class="label">Institution</span><span class="value">{{ user.institution || 'Not added' }}</span></div>
+        </div>
 
-    <div class="row">
-      <span class="label">Username:</span>
-      <span class="value">{{ user.username }}</span>
-    </div>
+        <div class="edit-form" *ngIf="isEditingProfile">
+          <mat-form-field appearance="outline">
+            <mat-label>Full Name</mat-label>
+            <input matInput [(ngModel)]="editableUser.name" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput [(ngModel)]="editableUser.email" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Username</mat-label>
+            <input matInput [(ngModel)]="editableUser.username" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Country</mat-label>
+            <input matInput [(ngModel)]="editableUser.country" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Role</mat-label>
+            <input matInput [(ngModel)]="editableUser.role" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Institution</mat-label>
+            <input matInput [(ngModel)]="editableUser.institution" />
+          </mat-form-field>
 
-    <div class="row">
-      <span class="label">Country:</span>
-      <span class="value">{{ user.country }}</span>
-    </div>
+          <div class="form-actions">
+            <button mat-raised-button color="primary" (click)="saveProfileDetails()">
+              <mat-icon>save</mat-icon>
+              Save Changes
+            </button>
+            <button mat-stroked-button (click)="cancelEditProfile()">Cancel</button>
+          </div>
+        </div>
+      </section>
+    </mat-tab>
 
-    <div class="row">
-      <span class="label">Student/Professional:</span>
-      <span class="value">{{ user.role }}</span>
-    </div>
+    <mat-tab label="Activity">
+      <section class="tab-panel">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <p>Total Solved</p>
+            <strong>{{ totalSolvedProblems }}</strong>
+          </div>
+          <div class="stat-card">
+            <p>Current Streak</p>
+            <strong>{{ currentStreak }} days</strong>
+          </div>
+          <div class="stat-card">
+            <p>Best Streak</p>
+            <strong>{{ bestStreak }} days</strong>
+          </div>
+          <div class="stat-card">
+            <p>Last Active</p>
+            <strong>{{ lastActiveLabel }}</strong>
+          </div>
+        </div>
 
-    <div class="row">
-      <span class="label">Institution:</span>
-      <span class="value">{{ user.institution }}</span>
-    </div>
-  </div>
+        <div class="heatmap-controls">
+          <span>Range:</span>
+          <button
+            *ngFor="let range of heatmapRanges"
+            mat-button
+            class="range-btn"
+            [class.active]="selectedHeatmapRange === range"
+            (click)="setHeatmapRange(range)"
+          >
+            {{ range }} days
+          </button>
+        </div>
 
-  <mat-divider></mat-divider>
-<!-- Heat Map Box -->
-<div class="card heatmap-card">
+        <div class="heatmap-grid">
+          <div
+            class="day"
+            *ngFor="let cell of visibleHeatmapCells"
+            [class]="'day level-' + cell.level"
+            [matTooltip]="getCellTooltip(cell)"
+            matTooltipPosition="above"
+          ></div>
+        </div>
 
-  <h3>Submissions Heat Map</h3>
+        <div class="legend">
+          <span>Less</span>
+          <i class="day level-0"></i>
+          <i class="day level-1"></i>
+          <i class="day level-2"></i>
+          <i class="day level-3"></i>
+          <i class="day level-4"></i>
+          <span>More</span>
+        </div>
+      </section>
+    </mat-tab>
 
-  <div class="heatmap-grid">
-    <div class="day" *ngFor="let d of [].constructor(180)"></div>
-  </div>
+    <mat-tab label="Resume">
+      <section class="tab-panel">
+        <div class="resume-card">
+          <h3>Resume Workspace</h3>
+          <p class="resume-desc">Build, update, and export your resume directly from profile.</p>
 
-  <p class="note">Daily submission activity overview</p>
+          <div class="progress-row">
+            <span>Completion</span>
+            <strong>{{ resumeCompletion }}%</strong>
+          </div>
 
-</div>
+          <div class="resume-actions">
+            <button mat-raised-button color="primary" (click)="openResumeBuilder()">
+              <mat-icon>edit</mat-icon>
+              Create Resume
+            </button>
+            <button mat-stroked-button color="accent" (click)="editResume()" [disabled]="!hasResumeData()">
+              <mat-icon>mode_edit</mat-icon>
+              Edit Resume
+            </button>
+            <button mat-stroked-button (click)="downloadPdf()" [disabled]="!hasResumeData()">
+              <mat-icon>download</mat-icon>
+              Download PDF
+            </button>
+          </div>
 
-<!-- Resume Builder Box -->
-<div class="card resume-card">
-
-  <h3>Resume Builder</h3>
-
-  <p class="resume-desc">
-    Build a professional resume using your profile and activity data.
-  </p>
-
-  <div class="resume-actions">
-    <button mat-raised-button color="primary" (click)="openResumeBuilder()" matTooltip="Create or edit your resume">
-      <mat-icon>edit</mat-icon>
-      <span>Create Resume</span>
-    </button>
-    <button mat-stroked-button color="accent" (click)="editResume()" [disabled]="!hasResumeData()" matTooltip="Edit your existing resume">
-      <mat-icon>mode_edit</mat-icon>
-      <span>Edit Resume</span>
-    </button>
-    <button mat-stroked-button (click)="downloadPdf()" [disabled]="!hasResumeData()" matTooltip="Download your resume as PDF">
-      <mat-icon>download</mat-icon>
-      <span>Download PDF</span>
-    </button>
-  </div>
-
-  <!-- Resume Preview (if data exists) -->
-  <div class="resume-preview" *ngIf="hasResumeData() && resume">
-    <mat-divider class="preview-divider"></mat-divider>
-    <h4>Resume Summary</h4>
-    <div class="preview-content">
-      <p *ngIf="resume.personalInfo.fullName" class="preview-item">
-        <strong>Name:</strong> {{ resume.personalInfo.fullName }}
-      </p>
-      <p *ngIf="resume.experience.length > 0" class="preview-item">
-        <strong>Experience Entries:</strong> {{ resume.experience.length }}
-      </p>
-      <p *ngIf="resume.education.length > 0" class="preview-item">
-        <strong>Education Entries:</strong> {{ resume.education.length }}
-      </p>
-      <p *ngIf="resume.skills.length > 0" class="preview-item">
-        <strong>Skill Categories:</strong> {{ resume.skills.length }}
-      </p>
-      <p class="preview-item last-modified">
-        Last modified: {{ resume.lastModified | date: 'short' }}
-      </p>
-    </div>
-  </div>
-
-</div>
+          <div class="resume-preview" *ngIf="hasResumeData() && resume">
+            <mat-divider></mat-divider>
+            <h4>Resume Summary</h4>
+            <div class="preview-content">
+              <p *ngIf="resume.personalInfo.fullName" class="preview-item"><strong>Name:</strong> {{ resume.personalInfo.fullName }}</p>
+              <p *ngIf="resume.experience.length > 0" class="preview-item"><strong>Experience Entries:</strong> {{ resume.experience.length }}</p>
+              <p *ngIf="resume.education.length > 0" class="preview-item"><strong>Education Entries:</strong> {{ resume.education.length }}</p>
+              <p *ngIf="resume.skills.length > 0" class="preview-item"><strong>Skill Categories:</strong> {{ resume.skills.length }}</p>
+              <p class="preview-item"><strong>Last modified:</strong> {{ resume.lastModified | date: 'short' }}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </mat-tab>
+  </mat-tab-group>

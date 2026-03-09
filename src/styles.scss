@@ -61,3 +61,12 @@ mat-card {
   border-radius: 16px !important;
 }
 
+.mcq-test-dialog .mat-mdc-dialog-surface {
+  max-height: 90vh;
+  overflow: hidden;
+}
+
+.mcq-test-dialog .mat-mdc-dialog-container {
+  padding: 0;
+}
+

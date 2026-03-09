@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
+import { Auth } from '../../../../core/services/auth';
 
 @Component({
   selector: 'app-welcome-card',
@@ -11,10 +12,13 @@ import { CommonModule } from '@angular/common';
 })
 export class WelcomeCardComponent implements OnInit {
   greeting: string = 'Good Afternoon';
-  userName: string = 'Yash';
+  userName: string = 'User';
+
+  constructor(private auth: Auth) {}
 
   ngOnInit(): void {
     this.setGreeting();
+    this.setUserName();
   }
 
   /**
@@ -32,5 +36,15 @@ export class WelcomeCardComponent implements OnInit {
     } else {
       this.greeting = 'Good Night';
     }
+  }
+
+  /**
+   * Resolve display name for the current logged in user.
+   */
+  private setUserName(): void {
+    const currentUser = this.auth.getCurrentUser();
+    const resolvedName = currentUser?.name || currentUser?.username;
+
+    this.userName = resolvedName && resolvedName.trim().length > 0 ? resolvedName.trim() : 'User';
   }
 }

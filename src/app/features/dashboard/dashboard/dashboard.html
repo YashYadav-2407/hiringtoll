@@ -1,6 +1,10 @@
 <app-header></app-header>
 
 <div class="dashboard">
+  <section class="welcome-section">
+    <app-welcome-card></app-welcome-card>
+  </section>
+
   <section class="dashboard-intro">
     <div>
       <p class="eyebrow">Workspace Overview</p>
@@ -24,28 +28,54 @@
       </div>
     </div>
 
-    <nav class="dashboard-tabs" aria-label="Dashboard sections">
-      <a class="tab-pill active" href="#welcome-panel">Welcome</a>
-      <a class="tab-pill" href="#focus-panel">Focus Track</a>
-      <a class="tab-pill" href="#streak-panel">Streak</a>
-      <a class="tab-pill" href="#planner-panel">Planner</a>
+    <nav class="dashboard-tabs" aria-label="Dashboard sections" role="tablist">
+      <button
+        *ngFor="let tab of tabs"
+        type="button"
+        class="tab-pill"
+        role="tab"
+        [class.active]="isActiveTab(tab.id)"
+        [attr.aria-selected]="isActiveTab(tab.id)"
+        [attr.aria-controls]="tab.id + '-panel'"
+        [id]="tab.id + '-tab'"
+        (click)="setActiveTab(tab.id)"
+      >
+        {{ tab.label }}
+      </button>
     </nav>
   </section>
 
-  <section class="welcome-section" id="welcome-panel">
-    <app-welcome-card></app-welcome-card>
-  </section>
-
-  <section class="info-section">
-    <div id="focus-panel">
+  <section
+    *ngIf="isActiveTab('focus')"
+    class="info-section single-panel"
+    id="focus-panel"
+    role="tabpanel"
+    aria-labelledby="focus-tab"
+  >
+    <div>
       <app-featured-track></app-featured-track>
     </div>
-    <div id="streak-panel">
+  </section>
+
+  <section
+    *ngIf="isActiveTab('streak')"
+    class="info-section single-panel"
+    id="streak-panel"
+    role="tabpanel"
+    aria-labelledby="streak-tab"
+  >
+    <div>
       <app-streak-widget></app-streak-widget>
     </div>
   </section>
 
-  <section class="schedule-section" id="planner-panel">
+  <section
+    *ngIf="isActiveTab('planner')"
+    class="schedule-section"
+    id="planner-panel"
+    role="tabpanel"
+    aria-labelledby="planner-tab"
+  >
     <app-calendar-todo></app-calendar-todo>
   </section>
 

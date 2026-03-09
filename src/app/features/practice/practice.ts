@@ -192,6 +192,9 @@ export class PracticeComponent implements OnInit {
         const dialogRef = this.dialog.open(MCQTestModalComponent, {
           width: '90%',
           maxWidth: '900px',
+          height: '90vh',
+          maxHeight: '90vh',
+          panelClass: 'mcq-test-dialog',
           data: {
             assessment,
             questions,
