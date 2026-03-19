@@ -21,23 +21,28 @@
 
       <nav class="header-nav" aria-label="Primary">
         <a class="nav-item" routerLink="/dashboard" routerLinkActive="active">
-          Dashboard
+          <mat-icon aria-hidden="true">space_dashboard</mat-icon>
+          <span>Dashboard</span>
         </a>
 
         <a class="nav-item" routerLink="/learn" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          Learn
+          <mat-icon aria-hidden="true">menu_book</mat-icon>
+          <span>Learn</span>
         </a>
 
         <a class="nav-item" routerLink="/practice" routerLinkActive="active">
-          Practice
+          <mat-icon aria-hidden="true">code</mat-icon>
+          <span>Practice</span>
         </a>
 
         <a class="nav-item" routerLink="/assess" routerLinkActive="active">
-          Assess
+          <mat-icon aria-hidden="true">task_alt</mat-icon>
+          <span>Assess</span>
         </a>
 
         <a class="nav-item" routerLink="/typing" routerLinkActive="active">
-          Typing
+          <mat-icon aria-hidden="true">keyboard</mat-icon>
+          <span>Typing</span>
         </a>
       </nav>
     </div>
