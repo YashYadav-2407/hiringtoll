@@ -1,12 +1,30 @@
 <div class="layout-container">
   <aside class="sidenav" *ngIf="!showSidenav()">
-    <div class="sidenav-brand">
-      <span class="brand-mark">HT</span>
-      <div class="brand-text">
-        <strong>Hiring Tool</strong>
-        <small>Career Prep Platform</small>
+    <button class="sidenav-brand" type="button" (click)="openProfilePage()" aria-label="Open profile page">
+      <div class="brand-head">
+        <span class="brand-mark">HT</span>
+        <div class="brand-text">
+          <strong>Hiring Tool</strong>
+          <small>Career Prep Platform</small>
+        </div>
       </div>
-    </div>
+
+      <div class="profile-strip">
+        <div class="profile-avatar-shell">
+          <img
+            class="profile-avatar"
+            [src]="sidebarProfile.avatar"
+            [alt]="sidebarProfile.name + ' avatar'"
+            (error)="onSidebarAvatarError($event)"
+          />
+        </div>
+        <div class="profile-meta">
+          <strong>{{ sidebarProfile.name }}</strong>
+          <small>{{ sidebarProfile.subtitle }}</small>
+        </div>
+        <mat-icon class="profile-cta" aria-hidden="true">arrow_forward_ios</mat-icon>
+      </div>
+    </button>
 
     <p class="sidenav-caption">Main Navigation</p>
 

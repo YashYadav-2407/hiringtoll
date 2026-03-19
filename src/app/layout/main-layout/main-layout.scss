@@ -27,12 +27,33 @@
 
   .sidenav-brand {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 12px;
+    width: 100%;
     padding: 14px;
     border-radius: 14px;
-    border: 1px solid #d7e7dc;
-    background: linear-gradient(135deg, #ffffff 0%, #edf9f0 100%);
+    border: 1px solid #cfe4d6;
+    background: linear-gradient(145deg, #ffffff 0%, #eef8f2 100%);
+    text-align: left;
+    cursor: pointer;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      border-color: #b6ddc4;
+      box-shadow: 0 12px 18px rgba(19, 93, 43, 0.14);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(35, 143, 67, 0.24);
+    }
+  }
+
+  .brand-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
 
   .brand-mark {
@@ -60,6 +81,67 @@
       color: #5f786b;
       font-size: 12px;
     }
+  }
+
+  .profile-strip {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #e8f5ec 0%, #f5fbf7 100%);
+    border: 1px solid #d0e6d8;
+  }
+
+  .profile-avatar-shell {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    padding: 2px;
+    background: linear-gradient(135deg, #1f9a45 0%, #126430 100%);
+    display: grid;
+    place-items: center;
+  }
+
+  .profile-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+    background: #edf6f0;
+  }
+
+  .profile-meta {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: 2px;
+
+    strong,
+    small {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    strong {
+      font-size: 13px;
+      color: #113423;
+      font-weight: 700;
+    }
+
+    small {
+      font-size: 11px;
+      color: #547062;
+    }
+  }
+
+  .profile-cta {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    color: #1a7a39;
   }
 
   .sidenav-caption {
