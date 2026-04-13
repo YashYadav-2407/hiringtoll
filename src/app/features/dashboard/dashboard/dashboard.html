@@ -7,24 +7,24 @@
 
   <section class="dashboard-intro">
     <div>
-      <p class="eyebrow">Workspace Overview</p>
-      <h1>Interview Preparation Dashboard</h1>
+      <p class="eyebrow">Learning Tool Overview</p>
+      <h1>Learning Tool Dashboard</h1>
       <p class="subtitle">
-        Track your consistency, plan focused tasks, and progress through structured interview prep.
+        Track your consistency, plan focused tasks, and explore interview opportunities and tech events from one place.
       </p>
     </div>
     <div class="summary-strip">
       <div class="summary-item">
         <span class="label">Focus Area</span>
-        <strong>DSA + System Design</strong>
+        <strong>Learning + Practice</strong>
       </div>
       <div class="summary-item">
         <span class="label">Mode</span>
-        <strong>Daily Practice</strong>
+        <strong>Interview Tool</strong>
       </div>
       <div class="summary-item">
         <span class="label">Target</span>
-        <strong>Hiring Ready</strong>
+        <strong>Event Ready</strong>
       </div>
     </div>
 
@@ -77,6 +77,16 @@
     aria-labelledby="planner-tab"
   >
     <app-calendar-todo></app-calendar-todo>
+  </section>
+
+  <section
+    *ngIf="isActiveTab('participation')"
+    class="schedule-section"
+    id="participation-panel"
+    role="tabpanel"
+    aria-labelledby="participation-tab"
+  >
+    <app-participation-widget></app-participation-widget>
   </section>
 
 </div>

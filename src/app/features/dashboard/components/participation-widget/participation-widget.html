@@ -1,0 +1,52 @@
+<mat-card class="participation-widget">
+  <div class="widget-header">
+    <div>
+      <p class="eyebrow">Participation Tool</p>
+      <h3>Hackathons, events, and tech meetups</h3>
+      <p class="widget-copy">
+        Browse curated opportunities and jump to the official application page from your site.
+      </p>
+    </div>
+    <div class="header-badge">
+      <span>New</span>
+      <strong>Apply from here</strong>
+    </div>
+  </div>
+
+  <div class="event-grid">
+    <article class="event-card" *ngFor="let event of events">
+      <div class="event-top">
+        <span class="event-category">{{ event.category }}</span>
+        <span class="event-deadline">Apply by {{ event.deadline }}</span>
+      </div>
+
+      <h4>{{ event.title }}</h4>
+      <p class="event-description">{{ event.description }}</p>
+
+      <dl class="event-meta">
+        <div>
+          <dt>Date</dt>
+          <dd>{{ event.date }}</dd>
+        </div>
+        <div>
+          <dt>Location</dt>
+          <dd>{{ event.location }}</dd>
+        </div>
+      </dl>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="button"
+        (click)="applyForEvent(event)"
+        [disabled]="isApplied(event.id)"
+      >
+        {{ isApplied(event.id) ? 'Applied' : 'Apply on Site' }}
+      </button>
+
+      <p class="event-status" *ngIf="isApplied(event.id)">
+        Your application has been saved inside the site. You can use this panel to track opportunities and apply to more events.
+      </p>
+    </article>
+  </div>
+</mat-card>

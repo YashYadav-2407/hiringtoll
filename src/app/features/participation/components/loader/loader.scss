@@ -1,0 +1,46 @@
+.loader-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.loader-card {
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid #dbe9de;
+  background: #fff;
+}
+
+.loader-banner {
+  height: 150px;
+}
+
+.loader-body {
+  padding: 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.loader-line {
+  height: 14px;
+  border-radius: 999px;
+}
+
+.loader-line.short {
+  width: 55%;
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #edf4ef 0%, #f8fbf9 50%, #edf4ef 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.list-view {
+  grid-template-columns: 1fr;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

@@ -1,0 +1,176 @@
+<div class="participation-page">
+  <section class="hero-panel">
+    <div class="hero-copy">
+      <p class="eyebrow">Participation Tool</p>
+      <h1>Discover tech events, apply instantly, and keep your opportunities organized.</h1>
+      <p class="subtitle">
+        Browse hackathons, contests, workshops, and meetups from Unstop, Devfolio, MLH, and HackerEarth.
+      </p>
+
+      <div class="hero-actions">
+        <button mat-raised-button color="primary" routerLink="/dashboard">Back to Dashboard</button>
+        <button mat-stroked-button type="button" (click)="resetFilters()">Clear Filters</button>
+      </div>
+    </div>
+
+    <div class="hero-stats" *ngIf="stats$ | async as stats">
+      <div class="stat-card">
+        <span>Total Events</span>
+        <strong>{{ stats.total }}</strong>
+      </div>
+      <div class="stat-card">
+        <span>Upcoming</span>
+        <strong>{{ stats.upcoming }}</strong>
+      </div>
+      <div class="stat-card">
+        <span>Saved</span>
+        <strong>{{ stats.saved }}</strong>
+      </div>
+      <div class="stat-card">
+        <span>Applied</span>
+        <strong>{{ stats.applied }}</strong>
+      </div>
+    </div>
+  </section>
+
+  <div class="toast" *ngIf="toast$ | async as toast">
+    <span>{{ toast }}</span>
+    <button mat-icon-button type="button" (click)="dismissToast()"><mat-icon>close</mat-icon></button>
+  </div>
+
+  <section class="toolbar-panel">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search events</mat-label>
+      <input matInput [formControl]="searchControl" placeholder="Search by title or tags" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <div class="view-toggle" *ngIf="viewMode$ | async as viewMode">
+      <button mat-stroked-button type="button" [class.active]="viewMode === 'grid'" (click)="changeViewMode('grid')">
+        <mat-icon>grid_view</mat-icon>
+        Grid
+      </button>
+      <button mat-stroked-button type="button" [class.active]="viewMode === 'list'" (click)="changeViewMode('list')">
+        <mat-icon>view_agenda</mat-icon>
+        List
+      </button>
+    </div>
+  </section>
+
+  <section class="content-grid">
+    <ng-container *ngIf="filters$ | async as filters">
+      <app-filter-sidebar
+        [filters]="filters"
+        (filtersChange)="updateFilters($event)"
+        (resetFilters)="resetFilters()"
+      ></app-filter-sidebar>
+    </ng-container>
+
+    <div class="events-area">
+      <mat-tab-group>
+        <mat-tab label="Featured">
+          <ng-container *ngIf="featuredEvents$ | async as featuredEvents">
+            <section class="featured-tab-content">
+              <div class="section-heading">
+                <div>
+                  <p class="eyebrow">Recommended</p>
+                  <h2>Featured opportunities</h2>
+                </div>
+                <span class="badge">AI-assisted ranking</span>
+              </div>
+
+              <div class="featured-grid" *ngIf="featuredEvents.length > 0; else featuredEmpty">
+                <app-event-card
+                  *ngFor="let event of featuredEvents; trackBy: trackEventId"
+                  [event]="event"
+                  [viewMode]="'grid'"
+                  (bookmarkToggle)="toggleBookmark($event)"
+                  (applyNow)="applyNow($event)"
+                ></app-event-card>
+              </div>
+
+              <ng-template #featuredEmpty>
+                <div class="empty-state">
+                  <mat-icon>stars</mat-icon>
+                  <h3>No featured events right now</h3>
+                  <p>Check back soon for highlighted recommendations.</p>
+                </div>
+              </ng-template>
+            </section>
+          </ng-container>
+        </mat-tab>
+
+        <mat-tab label="All Events">
+          <ng-container *ngIf="loading$ | async; else allEventsState">
+            <app-event-loader [viewMode]="(viewMode$ | async) || 'grid'"></app-event-loader>
+          </ng-container>
+          <ng-template #allEventsState>
+            <ng-container *ngIf="events$ | async as events">
+              <div class="empty-state" *ngIf="events.length === 0; else allEventsList">
+                <mat-icon>event_busy</mat-icon>
+                <h3>No events match your filters</h3>
+                <p>Try clearing filters or broadening your search.</p>
+              </div>
+
+              <ng-template #allEventsList>
+                <div class="event-grid" [class.list-view]="(viewMode$ | async) === 'list'">
+                  <app-event-card
+                    *ngFor="let event of events; trackBy: trackEventId"
+                    [event]="event"
+                    [viewMode]="(viewMode$ | async) || 'grid'"
+                    (bookmarkToggle)="toggleBookmark($event)"
+                    (applyNow)="applyNow($event)"
+                  ></app-event-card>
+                </div>
+              </ng-template>
+            </ng-container>
+          </ng-template>
+        </mat-tab>
+
+        <mat-tab label="Saved">
+          <ng-container *ngIf="savedEvents$ | async as savedEvents">
+            <div class="empty-state" *ngIf="savedEvents.length === 0; else savedList">
+              <mat-icon>bookmark_border</mat-icon>
+              <h3>No saved events yet</h3>
+              <p>Bookmark events to keep them on your dashboard.</p>
+            </div>
+
+            <ng-template #savedList>
+              <div class="event-grid" [class.list-view]="(viewMode$ | async) === 'list'">
+                <app-event-card
+                  *ngFor="let event of savedEvents; trackBy: trackEventId"
+                  [event]="event"
+                  [viewMode]="(viewMode$ | async) || 'grid'"
+                  (bookmarkToggle)="toggleBookmark($event)"
+                  (applyNow)="applyNow($event)"
+                ></app-event-card>
+              </div>
+            </ng-template>
+          </ng-container>
+        </mat-tab>
+
+        <mat-tab label="Applied">
+          <ng-container *ngIf="appliedEvents$ | async as appliedEvents">
+            <div class="empty-state" *ngIf="appliedEvents.length === 0; else appliedList">
+              <mat-icon>check_circle_outline</mat-icon>
+              <h3>No applied events yet</h3>
+              <p>Your application history will appear here.</p>
+            </div>
+
+            <ng-template #appliedList>
+              <div class="event-grid" [class.list-view]="(viewMode$ | async) === 'list'">
+                <app-event-card
+                  *ngFor="let event of appliedEvents; trackBy: trackEventId"
+                  [event]="event"
+                  [viewMode]="(viewMode$ | async) || 'grid'"
+                  (bookmarkToggle)="toggleBookmark($event)"
+                  (applyNow)="applyNow($event)"
+                ></app-event-card>
+              </div>
+            </ng-template>
+          </ng-container>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </section>
+</div>

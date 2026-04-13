@@ -1,0 +1,55 @@
+<mat-card class="filter-sidebar">
+  <div class="header-row">
+    <div>
+      <p class="eyebrow">Filters</p>
+      <h3>Find the right event</h3>
+    </div>
+    <button mat-stroked-button type="button" (click)="clear()">
+      <mat-icon>refresh</mat-icon>
+      Reset
+    </button>
+  </div>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Platform</mat-label>
+    <mat-select [formControl]="form.controls.platforms" multiple>
+      <mat-option *ngFor="let platform of platforms" [value]="platform">{{ platform }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Mode</mat-label>
+    <mat-select [formControl]="form.controls.modes" multiple>
+      <mat-option *ngFor="let mode of modes" [value]="mode">{{ mode }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Status</mat-label>
+    <mat-select [formControl]="form.controls.status">
+      <mat-option *ngFor="let status of statuses" [value]="status">{{ status | titlecase }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Sort by</mat-label>
+    <mat-select [formControl]="form.controls.sort">
+      <mat-option value="deadline">Deadline</mat-option>
+      <mat-option value="popularity">Popularity</mat-option>
+      <mat-option value="newest">Newest</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div class="chip-block">
+    <div class="chip-label">Tags</div>
+    <mat-chip-set>
+      <mat-chip-option
+        *ngFor="let tag of tags"
+        [selected]="isTagActive(tag)"
+        (click)="toggleTag(tag)"
+      >
+        {{ tag }}
+      </mat-chip-option>
+    </mat-chip-set>
+  </div>
+</mat-card>

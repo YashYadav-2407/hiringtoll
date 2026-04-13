@@ -25,23 +25,19 @@
     <!-- HEADER -->
     <div class="auth-header">
       <h1 class="auth-title">
-        <span *ngIf="isLogin()" class="step-text">Welcome Back</span>
-        <span *ngIf="isSignUp()" class="step-text">Create Account</span>
-        <span *ngIf="isLoginOtp() || isSignUpOtp() || isForgotPasswordOtp()" class="step-text">Verify Email</span>
-        <span *ngIf="isForgotPassword()" class="step-text">Reset Password</span>
-        <span *ngIf="isResetPassword()" class="step-text">Create New Password</span>
+        <span *ngIf="!isSignUp() && !isOtpVerificationStep() && !isSignUpOtpVerification()" class="step-text">Welcome Back</span>
+        <span *ngIf="isSignUp() && !isSignUpOtpVerification()" class="step-text">Create Account</span>
+        <span *ngIf="isOtpVerificationStep() || isSignUpOtpVerification()" class="step-text">Verify Email</span>
       </h1>
       <p class="auth-subtitle">
-        <span *ngIf="isLogin()">Sign in to your account to continue</span>
-        <span *ngIf="isSignUp()">Sign up to get started</span>
-        <span *ngIf="isLoginOtp() || isSignUpOtp() || isForgotPasswordOtp()">Enter the 6-digit code sent to your email</span>
-        <span *ngIf="isForgotPassword()">Enter your email to receive a reset code</span>
-        <span *ngIf="isResetPassword()">Create a strong password for your account</span>
+        <span *ngIf="!isSignUp() && !isOtpVerificationStep() && !isSignUpOtpVerification()">Sign in to your account to continue</span>
+        <span *ngIf="isSignUp() && !isSignUpOtpVerification()">Sign up to get started</span>
+        <span *ngIf="isOtpVerificationStep() || isSignUpOtpVerification()">Enter the 6-digit code sent to your email</span>
       </p>
     </div>
 
     <!-- LOGIN FORM -->
-    <form *ngIf="isLogin()" [formGroup]="loginForm" (ngSubmit)="onLogin()" class="auth-form">
+    <form *ngIf="!isSignUp() && !isOtpVerificationStep() && !isSignUpOtpVerification()" [formGroup]="loginForm" (ngSubmit)="onLogin()" class="auth-form">
       <div class="form-group">
         <label for="login-email" class="form-label">Email Address</label>
         <input
@@ -98,21 +94,21 @@
       <button
         type="button"
         class="btn btn-secondary btn-block"
-        (click)="toggleAuthMode()"
+        (click)="toggleForm()"
         [disabled]="loadingState()"
       >
         Create Account
       </button>
 
       <div class="forgot-password-link">
-        <a href="#" (click)="onForgotPasswordClick(); $event.preventDefault()" class="link">
+        <a href="#" (click)="$event.preventDefault()" class="link">
           Forgot your password?
         </a>
       </div>
     </form>
 
     <!-- SIGNUP FORM -->
-    <form *ngIf="isSignUp()" [formGroup]="signUpForm" (ngSubmit)="onSignUp()" class="auth-form">
+    <form *ngIf="isSignUp() && !isSignUpOtpVerification()" [formGroup]="signUpForm" (ngSubmit)="onSignUp()" class="auth-form">
       <div class="form-row">
         <div class="form-group">
           <label for="name" class="form-label">Full Name</label>
@@ -270,7 +266,7 @@
       <button
         type="button"
         class="btn btn-secondary btn-block"
-        (click)="toggleAuthMode()"
+        (click)="toggleForm()"
         [disabled]="loadingState()"
       >
         Sign In
@@ -278,7 +274,7 @@
     </form>
 
     <!-- LOGIN OTP VERIFICATION -->
-    <form *ngIf="isLoginOtp()" [formGroup]="otpForm" (ngSubmit)="onVerifyLoginOtp()" class="auth-form auth-form-otp">
+    <form *ngIf="isOtpVerificationStep()" [formGroup]="otpForm" (ngSubmit)="onVerifyOtp()" class="auth-form auth-form-otp">
       <div class="otp-header">
         <p class="otp-email">We sent a code to</p>
         <p class="otp-email-value">{{ userEmailForOtp() }}</p>
@@ -336,7 +332,7 @@
     </form>
 
     <!-- SIGNUP OTP VERIFICATION -->
-    <form *ngIf="isSignUpOtp()" [formGroup]="otpForm" (ngSubmit)="onVerifySignUpOtp()" class="auth-form auth-form-otp">
+    <form *ngIf="isSignUpOtpVerification()" [formGroup]="otpForm" (ngSubmit)="onVerifySignUpOtp()" class="auth-form auth-form-otp">
       <div class="otp-header">
         <p class="otp-email">We sent a code to</p>
         <p class="otp-email-value">{{ userEmailForOtp() }}</p>
@@ -385,193 +381,24 @@
         <button
           type="button"
           class="btn-link"
-          (click)="toggleAuthMode()"
+          (click)="toggleForm()"
           [disabled]="loadingState()"
         >
           Back to Sign Up
         </button>
       </div>
     </form>
-
-    <!-- FORGOT PASSWORD EMAIL FORM -->
-    <form *ngIf="isForgotPassword()" [formGroup]="forgotPasswordForm" (ngSubmit)="onForgotPassword()" class="auth-form">
-      <div class="form-group">
-        <label for="forgot-email" class="form-label">Email Address</label>
-        <p class="form-hint">Enter the email associated with your account and we'll send you a code to reset your password.</p>
-        <input
-          id="forgot-email"
-          type="email"
-          formControlName="email"
-          placeholder="your@email.com"
-          class="form-input"
-          [class.error]="submitted() && forgotPasswordForm.get('email')?.invalid"
-        />
-        <span class="error-text" *ngIf="submitted() && forgotPasswordForm.get('email')?.invalid">
-          {{ getForgotPasswordErrorMessage('email') }}
-        </span>
-      </div>
-
-      <button
-        type="submit"
-        class="btn btn-primary btn-block"
-        [disabled]="loadingState()"
-      >
-        <span *ngIf="!loadingState()">Send Reset Code</span>
-        <span *ngIf="loadingState()" class="loading-spinner">Sending...</span>
-      </button>
-
-      <button
-        type="button"
-        class="btn btn-secondary btn-block"
-        (click)="goBackToLogin()"
-        [disabled]="loadingState()"
-      >
-        Back to Login
-      </button>
-    </form>
-
-    <!-- FORGOT PASSWORD OTP VERIFICATION -->
-    <form *ngIf="isForgotPasswordOtp()" [formGroup]="otpForm" (ngSubmit)="onVerifyForgotPasswordOtp()" class="auth-form auth-form-otp">
-      <div class="otp-header">
-        <p class="otp-email">We sent a code to</p>
-        <p class="otp-email-value">{{ userEmailForOtp() }}</p>
-        <p class="otp-instruction">Enter the 6-digit code below</p>
-      </div>
-
-      <div class="form-group">
-        <label for="forgot-otp-input" class="form-label">Verification Code</label>
-        <input
-          id="forgot-otp-input"
-          type="text"
-          formControlName="otp"
-          placeholder="000000"
-          class="form-input otp-input"
-          (input)="otpForm.get('otp')?.setValue($any($event.target).value.replace(/[^0-9]/g, ''))"
-          maxlength="6"
-          [class.error]="submitted() && otpForm.get('otp')?.invalid"
-        />
-        <span class="error-text" *ngIf="submitted() && otpForm.get('otp')?.invalid">
-          {{ getOtpErrorMessage('otp') }}
-        </span>
-      </div>
-
-      <button
-        type="submit"
-        class="btn btn-primary btn-block"
-        [disabled]="loadingState()"
-      >
-        <span *ngIf="!loadingState()">Verify Code</span>
-        <span *ngIf="loadingState()" class="loading-spinner">Verifying...</span>
-      </button>
-
-      <div class="otp-options">
-        <button
-          type="button"
-          class="btn-link"
-          (click)="onResendOtp()"
-          [disabled]="otpResendCooldown() > 0 || loadingState()"
-        >
-          <span *ngIf="otpResendCooldown() === 0">Resend Code</span>
-          <span *ngIf="otpResendCooldown() > 0">Resend in {{ otpResendCooldown() }}s</span>
-        </button>
-
-        <span class="divider">•</span>
-
-        <button
-          type="button"
-          class="btn-link"
-          (click)="onForgotPasswordClick()"
-          [disabled]="loadingState()"
-        >
-          Different Email
-        </button>
-      </div>
-    </form>
-
-    <!-- PASSWORD RESET FORM -->
-    <form *ngIf="isResetPassword()" [formGroup]="resetPasswordForm" (ngSubmit)="onResetPassword()" class="auth-form">
-      <div class="form-group">
-        <label for="reset-otp-input" class="form-label">Verification Code</label>
-        <p class="form-hint">Enter the 6-digit code sent to {{ userEmailForOtp() }}</p>
-        <input
-          id="reset-otp-input"
-          type="text"
-          formControlName="otp"
-          placeholder="000000"
-          class="form-input otp-input"
-          (input)="resetPasswordForm.get('otp')?.setValue($any($event.target).value.replace(/[^0-9]/g, ''))"
-          maxlength="6"
-          [class.error]="submitted() && resetPasswordForm.get('otp')?.invalid"
-        />
-        <span class="error-text" *ngIf="submitted() && resetPasswordForm.get('otp')?.invalid">
-          {{ getResetPasswordErrorMessage('otp') }}
-        </span>
-      </div>
-
-      <div class="form-group">
-        <label for="new-password" class="form-label">New Password</label>
-        <p class="form-hint">Create a strong password with at least 8 characters</p>
-        <input
-          id="new-password"
-          type="password"
-          formControlName="password"
-          placeholder="Min. 8 characters"
-          class="form-input"
-          [class.error]="submitted() && resetPasswordForm.get('password')?.invalid"
-        />
-        <span class="error-text" *ngIf="submitted() && resetPasswordForm.get('password')?.invalid">
-          {{ getResetPasswordErrorMessage('password') }}
-        </span>
-      </div>
-
-      <div class="form-group">
-        <label for="confirm-new-password" class="form-label">Confirm Password</label>
-        <input
-          id="confirm-new-password"
-          type="password"
-          formControlName="confirmPassword"
-          placeholder="Confirm new password"
-          class="form-input"
-          [class.error]="submitted() && resetPasswordForm.get('confirmPassword')?.invalid"
-        />
-        <span class="error-text" *ngIf="submitted() && resetPasswordForm.get('confirmPassword')?.invalid">
-          {{ getResetPasswordErrorMessage('confirmPassword') }}
-        </span>
-      </div>
-
-      <button
-        type="submit"
-        class="btn btn-primary btn-block"
-        [disabled]="loadingState()"
-      >
-        <span *ngIf="!loadingState()">Reset Password</span>
-        <span *ngIf="loadingState()" class="loading-spinner">Resetting...</span>
-      </button>
-
-      <div class="form-divider">
-        <span>Remember your password?</span>
-      </div>
-
-      <button
-        type="button"
-        class="btn btn-secondary btn-block"
-        (click)="goBackToLogin()"
-        [disabled]="loadingState()"
-      >
-        Back to Login
-      </button>
-    </form>
   </div>
 
   <!-- FOOTER -->
   <div class="auth-footer">
     <p class="footer-text">
-      <span *ngIf="!isResetPassword() && !isForgotPassword() && !isForgotPasswordOtp()">
+      <span *ngIf="!isOtpVerificationStep() && !isSignUpOtpVerification()">
         © 2024 Hiring Toll. All rights reserved. | 
         <a href="#" class="footer-link">Privacy Policy</a> | 
         <a href="#" class="footer-link">Terms of Service</a>
       </span>
-      <span *ngIf="isResetPassword() || isForgotPassword() || isForgotPasswordOtp()">
+      <span *ngIf="isOtpVerificationStep() || isSignUpOtpVerification()">
         Need help? <a href="mailto:support@hiringtoll.com" class="footer-link">Contact Support</a>
       </span>
     </p>

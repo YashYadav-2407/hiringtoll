@@ -1,0 +1,11 @@
+<div class="loader-grid" [class.list-view]="viewMode === 'list'">
+  <div class="loader-card" *ngFor="let item of items; trackBy: trackByIndex">
+    <div class="loader-banner shimmer"></div>
+    <div class="loader-body">
+      <div class="loader-line short shimmer"></div>
+      <div class="loader-line shimmer"></div>
+      <div class="loader-line shimmer"></div>
+      <div class="loader-line short shimmer"></div>
+    </div>
+  </div>
+</div>

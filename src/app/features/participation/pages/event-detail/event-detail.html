@@ -1,0 +1,105 @@
+<div class="detail-page">
+  <button mat-stroked-button type="button" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+    Back to events
+  </button>
+
+  <ng-container *ngIf="event$ | async as event; else loadingState">
+    <ng-container *ngIf="event; else missingState">
+      <section class="detail-hero" [style.background]="event.banner">
+        <div>
+          <p class="eyebrow">{{ event.platform }} · {{ event.category }}</p>
+          <h1>{{ event.title }}</h1>
+          <p class="subtitle">{{ event.description }}</p>
+
+          <div class="hero-actions">
+            <button mat-raised-button color="primary" type="button" (click)="applyNow(event)">
+              Apply Now
+            </button>
+            <button mat-stroked-button type="button" (click)="toggleBookmark(event)">
+              {{ event.isSaved ? 'Saved' : 'Save event' }}
+            </button>
+          </div>
+        </div>
+
+        <div class="detail-stats">
+          <div>
+            <span>Deadline</span>
+            <strong>{{ event.deadlineDate | date: 'mediumDate' }}</strong>
+          </div>
+          <div>
+            <span>Mode</span>
+            <strong>{{ event.mode }}</strong>
+          </div>
+          <div>
+            <span>Prize</span>
+            <strong>{{ event.prize || 'TBA' }}</strong>
+          </div>
+          <div>
+            <span>Status</span>
+            <strong>{{ event.status | titlecase }}</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="detail-grid">
+        <mat-card>
+          <h2>Eligibility</h2>
+          <ul>
+            <li *ngFor="let item of event.eligibility">{{ item }}</li>
+          </ul>
+        </mat-card>
+
+        <mat-card>
+          <h2>Timeline</h2>
+          <div class="timeline">
+            <div class="timeline-item" *ngFor="let point of event.timeline">
+              <strong>{{ point.label }}</strong>
+              <span>{{ point.date | date: 'mediumDate' }}</span>
+              <p>{{ point.detail }}</p>
+            </div>
+          </div>
+        </mat-card>
+      </section>
+
+      <mat-card class="detail-card">
+        <h2>Tags</h2>
+        <mat-chip-set>
+          <mat-chip *ngFor="let tag of event.tags">{{ tag }}</mat-chip>
+        </mat-chip-set>
+      </mat-card>
+
+      <section class="related-section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Suggested next</p>
+            <h2>Related events</h2>
+          </div>
+        </div>
+
+        <div class="related-grid">
+          <app-event-card
+            *ngFor="let related of (relatedEvents$ | async) || []; trackBy: trackRelated"
+            [event]="related"
+            [viewMode]="'grid'"
+            (bookmarkToggle)="toggleBookmark($event)"
+            (applyNow)="applyNow($event)"
+          ></app-event-card>
+        </div>
+      </section>
+    </ng-container>
+  </ng-container>
+
+  <ng-template #loadingState>
+    <app-event-loader></app-event-loader>
+  </ng-template>
+
+  <ng-template #missingState>
+    <mat-card class="empty-card">
+      <mat-icon>event_busy</mat-icon>
+      <h2>Event not found</h2>
+      <p>The event you are looking for is not available anymore.</p>
+      <button mat-raised-button color="primary" type="button" routerLink="/participation">Back to events</button>
+    </mat-card>
+  </ng-template>
+</div>

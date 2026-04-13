@@ -1,0 +1,56 @@
+<mat-card class="event-card" [class.list-view]="viewMode === 'list'">
+  <div class="banner" [style.background]="event.banner">
+    <div class="banner-overlay"></div>
+    <div class="banner-meta">
+      <span class="platform">{{ event.platform }}</span>
+      <span class="status" *ngIf="event.status === 'ongoing'">Live now</span>
+      <span class="status warning" *ngIf="event.daysLeft >= 0 && event.daysLeft <= 7">Deadline soon</span>
+      <span class="status muted" *ngIf="event.status === 'past'">Completed</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="title-row">
+      <div>
+        <p class="category">{{ event.category }}</p>
+        <h3><a [routerLink]="['/participation', event.id]">{{ event.title }}</a></h3>
+      </div>
+
+      <button mat-icon-button type="button" class="bookmark-button" (click)="bookmarkToggle.emit(event)" [attr.aria-pressed]="event.isSaved">
+        <mat-icon>{{ event.isSaved ? 'bookmark' : 'bookmark_border' }}</mat-icon>
+      </button>
+    </div>
+
+    <p class="description">{{ event.description }}</p>
+
+    <mat-chip-set class="tag-set" aria-label="Event tags">
+      <mat-chip *ngFor="let tag of event.tags; trackBy: trackTag">{{ tag }}</mat-chip>
+    </mat-chip-set>
+
+    <div class="meta-grid">
+      <div>
+        <span class="meta-label">Deadline</span>
+        <strong>{{ event.deadlineDate | date: 'mediumDate' }}</strong>
+      </div>
+      <div>
+        <span class="meta-label">Prize</span>
+        <strong>{{ event.prize || 'TBA' }}</strong>
+      </div>
+      <div>
+        <span class="meta-label">Mode</span>
+        <strong>{{ event.mode }}</strong>
+      </div>
+      <div>
+        <span class="meta-label">Saved</span>
+        <strong>{{ event.isSaved ? 'Yes' : 'No' }}</strong>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button mat-stroked-button type="button" [routerLink]="['/participation', event.id]">Details</button>
+      <button mat-raised-button color="primary" type="button" (click)="applyNow.emit(event)">
+        {{ event.isApplied ? 'Applied' : 'Apply Now' }}
+      </button>
+    </div>
+  </div>
+</mat-card>

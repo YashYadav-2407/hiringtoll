@@ -1,0 +1,155 @@
+.participation-widget {
+  border: 1px solid #d6e8dc;
+  border-radius: 20px;
+  padding: 22px;
+  background: linear-gradient(180deg, #ffffff 0%, #f6fbf7 100%);
+  box-shadow: 0 18px 40px rgba(14, 61, 32, 0.08);
+}
+
+.widget-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5d7a6b;
+  font-weight: 700;
+}
+
+h3 {
+  margin: 0;
+  font-size: 24px;
+  color: #123524;
+}
+
+.widget-copy {
+  margin: 8px 0 0;
+  color: #4e695a;
+  max-width: 720px;
+}
+
+.header-badge {
+  display: grid;
+  gap: 4px;
+  min-width: 140px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #1c8a41 0%, #12602c 100%);
+  color: #fff;
+  text-align: right;
+}
+
+.header-badge span {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.85;
+}
+
+.event-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.event-card {
+  border: 1px solid #dceadf;
+  border-radius: 18px;
+  padding: 18px;
+  background: #fff;
+  display: grid;
+  gap: 12px;
+}
+
+.event-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.event-category,
+.event-deadline {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.event-category {
+  color: #155d31;
+  background: #e8f6ed;
+}
+
+.event-deadline {
+  color: #7a4f00;
+  background: #fff5dd;
+}
+
+.event-card h4 {
+  margin: 0;
+  font-size: 18px;
+  color: #163d29;
+}
+
+.event-description {
+  margin: 0;
+  color: #4c6558;
+  line-height: 1.5;
+}
+
+.event-status {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #eef8f0;
+  color: #25583a;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.event-meta {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.event-meta dt {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #72897c;
+  margin-bottom: 3px;
+}
+
+.event-meta dd {
+  margin: 0;
+  color: #183d2a;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .widget-header {
+    flex-direction: column;
+  }
+
+  .header-badge {
+    text-align: left;
+    min-width: auto;
+    width: 100%;
+  }
+
+  .event-grid {
+    grid-template-columns: 1fr;
+  }
+}

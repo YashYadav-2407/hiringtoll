@@ -18,6 +18,11 @@ import { PrivacyComponent } from './pages/privacy/privacy';
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'login', component: Login },
+  {
+    path: 'participation',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./features/participation/participation.routes').then((m) => m.PARTICIPATION_ROUTES),
+  },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'dashboard-2', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'learn', component: LearnComponent, canActivate: [AuthGuard] },
