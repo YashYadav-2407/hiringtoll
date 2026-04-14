@@ -45,6 +45,28 @@
     </nav>
   </section>
 
+  <section class="participation-home-section">
+    <article class="participation-home-card">
+      <div class="card-copy">
+        <p class="eyebrow">Participation Tool</p>
+        <h3>Explore hackathons, contests, and tech events</h3>
+        <p class="subtitle">
+          Discover opportunities from Unstop, Devfolio, MLH, and HackerEarth, then apply directly from your platform.
+        </p>
+
+        <div class="card-metrics">
+          <span>40+ live events</span>
+          <span>Smart filters</span>
+          <span>Saved & applied tracking</span>
+        </div>
+      </div>
+
+      <div class="card-cta">
+        <a class="btn-open" routerLink="/participation">Open Participation Dashboard</a>
+      </div>
+    </article>
+  </section>
+
   <section
     *ngIf="isActiveTab('focus')"
     class="info-section single-panel"
@@ -77,16 +99,6 @@
     aria-labelledby="planner-tab"
   >
     <app-calendar-todo></app-calendar-todo>
-  </section>
-
-  <section
-    *ngIf="isActiveTab('participation')"
-    class="schedule-section"
-    id="participation-panel"
-    role="tabpanel"
-    aria-labelledby="participation-tab"
-  >
-    <app-participation-widget></app-participation-widget>
   </section>
 
 </div>

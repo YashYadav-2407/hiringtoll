@@ -1,0 +1,70 @@
+<article class="participation-dashboard">
+  <header class="participation-header">
+    <div>
+      <p class="eyebrow">Participation Hub</p>
+      <h2>Discover hackathons and apply faster</h2>
+      <p>
+        Track live opportunities from top platforms and jump into applications with one click.
+      </p>
+    </div>
+    <button type="button" class="btn-open-hub" (click)="openParticipationHub()">
+      Open Full Participation Tool
+    </button>
+  </header>
+
+  <div class="participation-stats">
+    <div class="stat-box">
+      <span>Live Events</span>
+      <strong>42</strong>
+    </div>
+    <div class="stat-box">
+      <span>This Week Deadlines</span>
+      <strong>11</strong>
+    </div>
+    <div class="stat-box">
+      <span>Applied via Platform</span>
+      <strong>7</strong>
+    </div>
+  </div>
+
+  <div class="participation-filter-buttons" role="group" aria-label="Participation category filters">
+    <button
+      *ngFor="let category of participationCategories"
+      type="button"
+      class="category-chip"
+      [class.active]="isActiveParticipationCategory(category)"
+      (click)="setParticipationCategory(category)"
+    >
+      {{ category }}
+    </button>
+  </div>
+
+  <div class="participation-card-grid">
+    <article class="participation-card" *ngFor="let event of filteredParticipationEvents">
+      <div class="card-top">
+        <span class="platform-pill">{{ event.platform }}</span>
+        <span class="mode-pill">{{ event.mode }}</span>
+      </div>
+
+      <h3>{{ event.title }}</h3>
+
+      <div class="meta-line">
+        <span><strong>Category:</strong> {{ event.category }}</span>
+        <span><strong>Deadline:</strong> {{ event.deadline }}</span>
+      </div>
+
+      <div class="meta-line">
+        <span><strong>Prize:</strong> {{ event.prize }}</span>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag" *ngFor="let tag of event.tags">{{ tag }}</span>
+      </div>
+
+      <div class="card-actions">
+        <button type="button" class="btn-secondary" (click)="openParticipationHub()">View Details</button>
+        <button type="button" class="btn-primary" (click)="applyToEvent(event)">Apply Now</button>
+      </div>
+    </article>
+  </div>
+</article>

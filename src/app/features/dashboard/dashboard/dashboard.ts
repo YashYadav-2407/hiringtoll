@@ -1,15 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { HeaderComponent } from '../../../header/header';
 import { WelcomeCardComponent } from '../components/welcome-card/welcome-card';
 import { FeaturedTrackComponent } from '../components/featured-track/featured-track';
 import { StreakWidgetComponent } from '../components/streak-widget/streak-widget';
 import { FooterComponent } from '../../../core/footer/footer';
 import { CalendarTodoComponent } from '../components/calendar-todo/calendar-todo';
-import { ParticipationWidgetComponent } from '../components/participation-widget/participation-widget';
 
-type DashboardTab = 'focus' | 'streak' | 'planner' | 'participation';
+type DashboardTab = 'focus' | 'streak' | 'planner';
 
 interface DashboardTabConfig {
   id: DashboardTab;
@@ -27,7 +26,7 @@ interface DashboardTabConfig {
     StreakWidgetComponent,
     FooterComponent,
     CalendarTodoComponent,
-    ParticipationWidgetComponent,
+    RouterModule,
 
   ],
   templateUrl: './dashboard.html',
@@ -39,8 +38,7 @@ export class DashboardComponent {
   readonly tabs: DashboardTabConfig[] = [
     { id: 'focus', label: 'Focus Track' },
     { id: 'streak', label: 'Streak' },
-    { id: 'planner', label: 'Planner' },
-    { id: 'participation', label: 'Participation Tool' }
+    { id: 'planner', label: 'Planner' }
   ];
 
   constructor(private route: ActivatedRoute) {}
