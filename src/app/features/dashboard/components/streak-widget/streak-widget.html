@@ -1,40 +1,46 @@
-<mat-card class="streak-card">
-
+<article class="streak-card">
   <div class="streak-header">
-    <span class="fire" [matTooltip]="isLoggedInToday ? 'Logged in today!' : 'Not logged in yet today'">🔥</span>
-    <div>
-      <p class="eyebrow">Consistency Tracker</p>
-      <h3>Your Coding Streak</h3>
+    <div class="title-group">
+      <span class="eyebrow">Consistency Tracker</span>
+      <h2>Your Coding Streak</h2>
     </div>
+    <span
+      class="status-badge"
+      [class.active]="isLoggedInToday"
+      [matTooltip]="isLoggedInToday ? 'Logged in today' : 'Not logged in yet today'"
+    >
+      <span class="status-dot"></span>
+      {{ isLoggedInToday ? 'Active today' : 'Pending today' }}
+    </span>
   </div>
 
-  <div class="streak-stats">
+  <div class="streak-stats" aria-label="Streak summary">
     <div class="stat">
       <span class="stat-label">Current</span>
       <span class="stat-value">{{ streak }}</span>
     </div>
-    <div class="stat-divider"></div>
+    <div class="stat-divider" aria-hidden="true"></div>
     <div class="stat">
       <span class="stat-label">Best</span>
       <span class="stat-value">{{ bestStreak }}</span>
     </div>
-    <div class="stat-divider"></div>
+    <div class="stat-divider" aria-hidden="true"></div>
     <div class="stat">
       <span class="stat-label">Goal</span>
       <span class="stat-value">{{ target }}</span>
     </div>
   </div>
 
-  <p class="streak-text">
-    Build your habit with one meaningful coding session each day.
-  </p>
+  <p class="streak-text">Build your habit with one meaningful coding session each day.</p>
 
   <div class="streak-progress">
-    <div class="progress-bar">
-      <div class="progress-fill" [style.width.%]="progressPercentage" 
-           [class.goal-reached]="streak >= target"></div>
+    <div class="progress-meta">
+      <span class="progress-label">Progress</span>
+      <span class="progress-label">{{ progressPercentage | number:'1.0-0' }}% completed</span>
     </div>
-    <span class="progress-label">{{ progressPercentage | number:'1.0-0' }}% completed</span>
+    <div class="progress-bar" role="progressbar" [attr.aria-valuenow]="progressPercentage" aria-valuemin="0" aria-valuemax="100">
+      <div class="progress-fill" [style.width.%]="progressPercentage" [class.goal-reached]="streak >= target"></div>
+    </div>
   </div>
 
   <div class="streak-info" *ngIf="lastLoginDate">
@@ -42,18 +48,17 @@
   </div>
 
   <div class="button-group">
-    <button mat-stroked-button (click)="logProgress()" 
-            [disabled]="isLoggedInToday"
-            [matTooltip]="isLoggedInToday ? 'Already logged in today' : 'Mark today as active'"
-            class="log-btn">
+    <button
+      mat-stroked-button
+      (click)="logProgress()"
+      [disabled]="isLoggedInToday"
+      [matTooltip]="isLoggedInToday ? 'Already logged in today' : 'Mark today as active'"
+      class="log-btn"
+    >
       {{ isLoggedInToday ? '✓ Logged In Today' : 'Log Today\'s Progress' }}
     </button>
-    <button mat-icon-button 
-            matTooltip="Reset streak counter"
-            (click)="resetStreak()"
-            class="reset-btn">
+    <button mat-icon-button matTooltip="Reset streak counter" (click)="resetStreak()" class="reset-btn">
       <mat-icon>restart_alt</mat-icon>
     </button>
   </div>
-
-</mat-card>
+</article>

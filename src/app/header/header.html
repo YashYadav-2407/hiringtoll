@@ -1,67 +1,159 @@
 <header class="app-header">
-  <div class="header-container">
-    <div class="header-left">
-      <nav class="app-switch" aria-label="Application switcher">
-        <a
-          class="switch-item"
-          routerLink="/dashboard"
-          [routerLinkActiveOptions]="{ exact: true }"
-          routerLinkActive="active"
-        >
-          Learning Tool
+  <div class="header-wrapper">
+    <div class="header-container">
+      <!-- Brand Section -->
+      <div class="header-brand">
+        <a routerLink="/dashboard" class="brand-logo" aria-label="Home">
+          <span class="brand-icon">📚</span>
+          <span class="brand-name">Learning</span>
         </a>
-        <a
-          class="switch-item"
-          href="https://hiringtoll2-0-client.onrender.com/"
-          rel="noopener noreferrer"
-        >
-          Interview Tool
-        </a>
-        <a
-          class="switch-item"
-          routerLink="/participation"
-          routerLinkActive="active"
-        >
-          Participation Tool
-        </a>
-      </nav>
+      </div>
 
-      <nav class="header-nav" aria-label="Primary">
-        <a class="nav-item" routerLink="/dashboard" routerLinkActive="active">
+      <button
+        type="button"
+        class="mobile-menu-button"
+        (click)="toggleMobileMenu()"
+        [attr.aria-expanded]="mobileMenuOpen"
+        aria-controls="mobile-header-menu"
+        aria-label="Toggle navigation menu"
+      >
+        <mat-icon aria-hidden="true">menu</mat-icon>
+      </button>
+
+      <!-- Primary Navigation -->
+      <nav class="header-nav" aria-label="Primary navigation">
+        <a 
+          class="nav-item" 
+          routerLink="/dashboard" 
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          title="View dashboard"
+        >
           <mat-icon aria-hidden="true">space_dashboard</mat-icon>
           <span>Dashboard</span>
         </a>
 
-        <a class="nav-item" routerLink="/learn" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <a 
+          class="nav-item" 
+          routerLink="/learn" 
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          title="Learning materials"
+        >
           <mat-icon aria-hidden="true">menu_book</mat-icon>
           <span>Learn</span>
         </a>
 
-        <a class="nav-item" routerLink="/practice" routerLinkActive="active">
+        <a 
+          class="nav-item" 
+          routerLink="/practice" 
+          routerLinkActive="active"
+          title="Practice problems"
+        >
           <mat-icon aria-hidden="true">code</mat-icon>
           <span>Practice</span>
         </a>
 
-        <a class="nav-item" routerLink="/assess" routerLinkActive="active">
+        <a 
+          class="nav-item" 
+          routerLink="/assess" 
+          routerLinkActive="active"
+          title="Assessment tools"
+        >
           <mat-icon aria-hidden="true">task_alt</mat-icon>
           <span>Assess</span>
         </a>
 
-        <a class="nav-item" routerLink="/typing" routerLinkActive="active">
+        <a 
+          class="nav-item" 
+          routerLink="/typing" 
+          routerLinkActive="active"
+          title="Typing practice"
+        >
           <mat-icon aria-hidden="true">keyboard</mat-icon>
           <span>Typing</span>
         </a>
 
-        <a class="nav-item" routerLink="/participation" routerLinkActive="active">
+        <a 
+          class="nav-item" 
+          routerLink="/participation" 
+          routerLinkActive="active"
+          title="Participation opportunities"
+        >
           <mat-icon aria-hidden="true">event_available</mat-icon>
           <span>Participation</span>
         </a>
       </nav>
+
+      <!-- Right Section: Tools & Profile -->
+      <div class="header-right">
+        <nav class="tool-switcher" aria-label="Tool switcher">
+          <a 
+            class="tool-item active" 
+            routerLink="/dashboard"
+            [routerLinkActiveOptions]="{ exact: false }"
+            routerLinkActive="active"
+            title="Learning Tool"
+          >
+            Learning
+          </a>
+          <a 
+            class="tool-item" 
+            href="https://hiringtoll2-0-client.onrender.com/"
+            rel="noopener noreferrer"
+            title="Interview Tool"
+          >
+            Interview
+          </a>
+        </nav>
+
+        <a class="profile-button" routerLink="/profile" aria-label="Open profile menu">
+          <mat-icon>account_circle</mat-icon>
+        </a>
+      </div>
     </div>
 
-    <div class="header-right">
-      <a class="profile-avatar" routerLink="/profile" aria-label="Open profile">
-        <mat-icon>account_circle</mat-icon>
+    <div
+      id="mobile-header-menu"
+      class="mobile-menu"
+      *ngIf="mobileMenuOpen"
+      role="navigation"
+      aria-label="Mobile navigation"
+    >
+      <nav class="mobile-menu-section" aria-label="Primary navigation mobile">
+        <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMobileMenu()">
+          <mat-icon aria-hidden="true">space_dashboard</mat-icon>
+          <span>Dashboard</span>
+        </a>
+        <a routerLink="/learn" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMobileMenu()">
+          <mat-icon aria-hidden="true">menu_book</mat-icon>
+          <span>Learn</span>
+        </a>
+        <a routerLink="/practice" routerLinkActive="active" (click)="closeMobileMenu()">
+          <mat-icon aria-hidden="true">code</mat-icon>
+          <span>Practice</span>
+        </a>
+        <a routerLink="/assess" routerLinkActive="active" (click)="closeMobileMenu()">
+          <mat-icon aria-hidden="true">task_alt</mat-icon>
+          <span>Assess</span>
+        </a>
+        <a routerLink="/typing" routerLinkActive="active" (click)="closeMobileMenu()">
+          <mat-icon aria-hidden="true">keyboard</mat-icon>
+          <span>Typing</span>
+        </a>
+        <a routerLink="/participation" routerLinkActive="active" (click)="closeMobileMenu()">
+          <mat-icon aria-hidden="true">event_available</mat-icon>
+          <span>Participation</span>
+        </a>
+      </nav>
+
+      <div class="mobile-menu-section mobile-tools" aria-label="Tool switcher mobile">
+        <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }" (click)="closeMobileMenu()">Learning Tool</a>
+        <a href="https://hiringtoll2-0-client.onrender.com/" rel="noopener noreferrer">Interview Tool</a>
+      </div>
+
+      <a class="mobile-profile-link" routerLink="/profile" (click)="closeMobileMenu()">
+        <mat-icon aria-hidden="true">account_circle</mat-icon>
         <span>Profile</span>
       </a>
     </div>

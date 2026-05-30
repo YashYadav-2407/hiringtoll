@@ -1,38 +1,70 @@
 <app-header></app-header>
 
-<div class="dashboard">
-  <section class="welcome-section">
+<main class="dashboard">
+  <!-- Welcome Section -->
+  <section class="welcome-section" aria-label="Welcome">
     <app-welcome-card></app-welcome-card>
   </section>
 
-  <section class="dashboard-intro">
-    <div>
-      <p class="eyebrow">Learning Tool Overview</p>
-      <h1>Learning Tool Dashboard</h1>
-      <p class="subtitle">
-        Track your consistency, plan focused tasks, and explore interview opportunities and tech events from one place.
-      </p>
-    </div>
-    <div class="summary-strip">
-      <div class="summary-item">
-        <span class="label">Focus Area</span>
-        <strong>Learning + Practice</strong>
+  <!-- Hero Section -->
+  <section class="dashboard-hero">
+    <div class="hero-content">
+      <div class="hero-text">
+        <p class="eyebrow">Learning Dashboard</p>
+        <h1>Master your skills systematically</h1>
+        <p class="subtitle">
+          Track consistency, practice with purpose, and discover opportunities all in one place.
+        </p>
       </div>
-      <div class="summary-item">
-        <span class="label">Mode</span>
-        <strong>Interview Tool</strong>
-      </div>
-      <div class="summary-item">
-        <span class="label">Target</span>
-        <strong>Event Ready</strong>
-      </div>
-    </div>
 
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-label">Focus Area</span>
+          <span class="stat-value">Learning + Practice</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Mode</span>
+          <span class="stat-value">Interview Ready</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Target</span>
+          <span class="stat-value">Event Prepared</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Participation Opportunity Card -->
+  <section class="opportunities-section">
+    <article class="opportunity-card">
+      <div class="card-left">
+        <p class="eyebrow">Explore Opportunities</p>
+        <h2>Hackathons, contests, and tech events</h2>
+        <p class="subtitle">
+          Discover 40+ live events from Unstop, Devfolio, MLH, and HackerEarth. Apply directly and track your applications.
+        </p>
+        <ul class="features-list">
+          <li>40+ live events</li>
+          <li>Smart filters & search</li>
+          <li>Application tracking</li>
+        </ul>
+      </div>
+      <div class="card-right">
+        <a class="btn-primary" routerLink="/participation">
+          <span>Explore Participation</span>
+          <mat-icon>arrow_forward</mat-icon>
+        </a>
+      </div>
+    </article>
+  </section>
+
+  <!-- Tab Navigation -->
+  <section class="tabs-section">
     <nav class="dashboard-tabs" aria-label="Dashboard sections" role="tablist">
       <button
         *ngFor="let tab of tabs"
         type="button"
-        class="tab-pill"
+        class="tab-button"
         role="tab"
         [class.active]="isActiveTab(tab.id)"
         [attr.aria-selected]="isActiveTab(tab.id)"
@@ -40,67 +72,40 @@
         [id]="tab.id + '-tab'"
         (click)="setActiveTab(tab.id)"
       >
-        {{ tab.label }}
+        <span class="tab-label">{{ tab.label }}</span>
+        <span class="tab-indicator"></span>
       </button>
     </nav>
   </section>
 
-  <section class="participation-home-section">
-    <article class="participation-home-card">
-      <div class="card-copy">
-        <p class="eyebrow">Participation Tool</p>
-        <h3>Explore hackathons, contests, and tech events</h3>
-        <p class="subtitle">
-          Discover opportunities from Unstop, Devfolio, MLH, and HackerEarth, then apply directly from your platform.
-        </p>
-
-        <div class="card-metrics">
-          <span>40+ live events</span>
-          <span>Smart filters</span>
-          <span>Saved & applied tracking</span>
-        </div>
-      </div>
-
-      <div class="card-cta">
-        <a class="btn-open" routerLink="/participation">Open Participation Dashboard</a>
-      </div>
-    </article>
-  </section>
-
+  <!-- Tab Content Panels -->
   <section
     *ngIf="isActiveTab('focus')"
-    class="info-section single-panel"
+    class="content-panel"
     id="focus-panel"
     role="tabpanel"
     aria-labelledby="focus-tab"
   >
-    <div>
-      <app-featured-track></app-featured-track>
-    </div>
+    <app-featured-track></app-featured-track>
   </section>
 
   <section
     *ngIf="isActiveTab('streak')"
-    class="info-section single-panel"
+    class="content-panel"
     id="streak-panel"
     role="tabpanel"
     aria-labelledby="streak-tab"
   >
-    <div>
-      <app-streak-widget></app-streak-widget>
-    </div>
+    <app-streak-widget></app-streak-widget>
   </section>
 
   <section
     *ngIf="isActiveTab('planner')"
-    class="schedule-section"
+    class="content-panel"
     id="planner-panel"
     role="tabpanel"
     aria-labelledby="planner-tab"
   >
     <app-calendar-todo></app-calendar-todo>
   </section>
-
-</div>
-
-<app-footer></app-footer>
+</main>

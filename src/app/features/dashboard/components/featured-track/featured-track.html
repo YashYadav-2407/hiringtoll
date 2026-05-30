@@ -1,24 +1,26 @@
-<mat-card class="featured-track">
+<article class="featured-track">
   <div class="track-header">
-    <span class="track-badge">Featured Track</span>
-    <span class="priority-pill">High Impact</span>
+    <div class="track-meta">
+      <span class="track-badge">Featured Track</span>
+      <span class="priority-badge">High Impact</span>
+    </div>
   </div>
 
-  <div class="track-content">
-    <h3>DSA Interview Sprint</h3>
+  <div class="track-body">
+    <h2>DSA Interview Sprint</h2>
 
-    <p class="track-desc">
-      A focused path with company-style arrays, trees, and graph problems built for interview confidence.
+    <p class="track-description">
+      A focused learning path with company-style arrays, trees, and graph problems built for interview confidence.
     </p>
 
-    <div class="track-meta">
-      <span>120 curated problems</span>
-      <span>4-week plan</span>
-      <span>Beginner to advanced</span>
-    </div>
+    <ul class="track-features">
+      <li>120 curated problems</li>
+      <li>4-week structured plan</li>
+      <li>Beginner to advanced</li>
+    </ul>
 
-    <button mat-raised-button color="primary" (click)="startTrack()">
+    <button class="btn-start" (click)="startTrack()">
       Start Structured Practice
     </button>
   </div>
-</mat-card>
+</article>

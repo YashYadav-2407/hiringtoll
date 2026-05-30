@@ -1,103 +1,228 @@
-.featured-track {
-  position: relative;
-  padding: 24px;
-  border-radius: 18px;
-  background: linear-gradient(180deg, #ffffff 0%, #f4faf5 100%);
-  color: #143826;
-  border: 1px solid #d4e7da;
-  box-shadow: 0 12px 26px rgba(15, 70, 35, 0.1);
-  overflow: hidden;
-}
+/* ============================================
+   FEATURED TRACK COMPONENT
+   Modern, premium content card
+   ============================================ */
 
-.featured-track::after {
-  content: '';
-  position: absolute;
-  top: -40%;
-  right: -30%;
-  width: 60%;
-  height: 200%;
-  background: rgba(23, 128, 55, 0.08);
-  transform: rotate(25deg);
-  z-index: 0;
-  pointer-events: none;
+.featured-track {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+  padding: 32px;
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+  color: #111827;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  animation: slideInUp 0.5s ease-out;
+
+  &:hover {
+    border-color: #d1d5db;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
 }
 
 .track-header {
   position: relative;
-  z-index: 1;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-}
-
-.track-content {
-  position: relative;
-  z-index: 1;
-}
-
-.track-badge {
-  background: #e7f5eb;
-  color: #156e2f;
-  border: 1px solid #cce3d4;
-  padding: 5px 10px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.6px;
-  text-transform: uppercase;
-}
-
-.priority-pill {
-  font-size: 12px;
-  color: #527264;
-  background: #f2f8f4;
-  padding: 4px 10px;
-  border-radius: 999px;
-}
-
-.track-content h3 {
-  margin: 14px 0 0;
-  font-size: 24px;
-  font-weight: 800;
-  letter-spacing: 0.4px;
-}
-
-.track-desc {
-  margin: 10px 0 14px;
-  font-size: 14px;
-  line-height: 1.6;
-  color: #4a695a;
-  max-width: 420px;
+  align-items: flex-start;
 }
 
 .track-meta {
   display: flex;
+  gap: 8px;
+}
+
+.track-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #d1fae5;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.priority-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.track-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.featured-track h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: #111827;
+}
+
+.track-description {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #6b7280;
+}
+
+.track-features {
+  list-style: none;
+  display: flex;
   flex-wrap: wrap;
-  gap: 14px;
-  font-size: 12px;
-  margin-bottom: 18px;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    transition: all 0.2s ease;
+
+    &::before {
+      content: '✓';
+      font-weight: 800;
+      color: #16a34a;
+    }
+
+    &:hover {
+      background: #ecfdf5;
+      border-color: #d1fae5;
+    }
+  }
 }
 
-.track-meta span {
-  background: #edf8f0;
-  color: #27523c;
-  border: 1px solid #d6e8dc;
-  padding: 4px 10px;
-  border-radius: 999px;
+.btn-start {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  color: #ffffff;
+  border: 1px solid #15803d;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);
+
+  &:hover {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    border-color: #16a34a;
+    box-shadow: 0 8px 20px rgba(22, 163, 74, 0.3);
+    transform: translateY(-2px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #15803d;
+    outline-offset: 2px;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 }
 
-button[mat-raised-button] {
-  border-radius: 12px;
-  padding: 9px 16px;
-  font-weight: 600;
-  background: linear-gradient(135deg, #228f42 0%, #13682f 100%);
-  color: #ffffff !important;
-  --mdc-protected-button-label-text-color: #ffffff;
-  box-shadow: 0 8px 18px rgba(21, 89, 44, 0.26);
-  transition: all 0.25s ease;
+/* ---- ANIMATIONS ---- */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-button[mat-raised-button]:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 26px rgba(21, 89, 44, 0.36);
+/* ---- RESPONSIVE DESIGN ---- */
+@media (max-width: 768px) {
+  .featured-track {
+    gap: 16px;
+    padding: 24px;
+  }
+
+  .featured-track h2 {
+    font-size: 24px;
+  }
+
+  .track-description {
+    font-size: 14px;
+  }
+
+  .track-features li {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  .btn-start {
+    width: 100%;
+    padding: 11px 20px;
+  }
 }
+
+@media (max-width: 480px) {
+  .featured-track {
+    gap: 12px;
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .track-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .featured-track h2 {
+    font-size: 20px;
+  }
+
+  .track-description {
+    font-size: 13px;
+  }
+
+  .track-features {
+    gap: 8px;
+  }
+
+  .track-features li {
+    font-size: 11px;
+    padding: 5px 8px;
+  }
+
+  .btn-start {
+    font-size: 13px;
+    padding: 10px 16px;
+  }
+}
+

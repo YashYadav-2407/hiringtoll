@@ -1,174 +1,280 @@
+/* ============================================
+   STREAK WIDGET COMPONENT
+   Clean, premium progress card
+   ============================================ */
+
 .streak-card {
-  padding: 22px;
-  border-radius: 18px;
-  background: linear-gradient(180deg, #ffffff 0%, #f3faf5 100%);
-  color: #133a27;
-  border: 1px solid #d4e7da;
-  box-shadow: 0 12px 26px rgba(15, 70, 35, 0.1);
-  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 28px;
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+  color: #111827;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   position: relative;
   overflow: hidden;
-}
+  transition: all 0.3s ease;
 
-.streak-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle at top,
-    rgba(27, 132, 60, 0.16),
-    transparent 70%
-  );
+  &:hover {
+    border-color: #d1d5db;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
 }
 
 .streak-header {
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
 
-  .eyebrow {
-    margin: 0;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 11px;
-    color: #668476;
+.title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #9ca3af;
+}
+
+.streak-header h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #111827;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+
+  &.active {
+    background: #ecfdf5;
+    color: #047857;
+    border-color: #d1fae5;
   }
 }
 
-.streak-header h3 {
-  margin: 2px 0 0;
-  font-size: 18px;
-  font-weight: 800;
-}
-
-.fire {
-  font-size: 24px;
-  cursor: help;
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
 }
 
 .streak-stats {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
-  margin: 12px 0 16px;
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
 }
 
 .stat {
   display: flex;
   flex-direction: column;
+  gap: 4px;
   align-items: center;
+  text-align: center;
 }
 
 .stat-label {
   font-size: 11px;
-  color: #6a8778;
-  font-weight: 500;
+  color: #9ca3af;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.08em;
 }
 
 .stat-value {
   font-size: 28px;
   font-weight: 800;
-  margin-top: 4px;
   line-height: 1;
-  color: #155934;
+  color: #111827;
 }
 
 .stat-divider {
-  width: 1px;
-  height: 40px;
-  background: #d8e9de;
+  display: none;
 }
 
 .streak-text {
-  font-size: 13px;
-  color: #4c6a5b;
-  margin: 12px 0 14px;
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #6b7280;
 }
 
 .streak-progress {
-  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
 }
 
 .progress-bar {
   height: 8px;
-  background: #e0eee4;
-  border-radius: 6px;
+  background: #e5e7eb;
+  border-radius: 999px;
   overflow: hidden;
-  margin-bottom: 6px;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #229245, #157136);
-  border-radius: 6px;
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  border-radius: inherit;
   transition: width 0.4s ease;
 
   &.goal-reached {
-    background: #0f6030;
-    box-shadow: 0 0 12px rgba(20, 111, 53, 0.46);
+    background: linear-gradient(135deg, #15803d 0%, #166534 100%);
   }
 }
 
 .progress-label {
-  font-size: 11px;
-  display: block;
-  color: #5e7a6c;
-  font-weight: 500;
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 600;
 }
 
 .streak-info {
-  margin: 10px 0 12px;
-  font-size: 12px;
-  color: #5e7a6c;
+  font-size: 13px;
+  color: #6b7280;
 }
 
 .info-text {
   display: block;
 }
 
-/* button group */
 .button-group {
   display: flex;
-  gap: 8px;
-  justify-content: flex-start;
   align-items: center;
-  margin-top: 12px;
+  gap: 10px;
 }
 
 .log-btn {
   flex: 1;
-  border-radius: 12px;
-  padding: 8px 18px;
-  font-weight: 600;
-  color: #195f31;
-  border-color: #c3ddcb;
-  background: #ecf8f0;
-  transition: all 0.3s ease;
+  min-height: 44px;
+  border-radius: 8px;
+  padding: 0 18px;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  border: 1px solid #15803d;
+  transition: all 0.2s ease;
+  --mdc-outlined-button-label-text-color: #ffffff;
+  --mdc-outlined-button-outline-color: #15803d;
+
+  .mdc-button__label {
+    color: #ffffff;
+  }
 
   &:hover:not(:disabled) {
-    background: #e1f3e7;
-    border-color: #b5d6bf;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    border-color: #16a34a;
+    box-shadow: 0 6px 16px rgba(22, 163, 74, 0.22);
+    transform: translateY(-1px);
   }
 
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
   }
 }
 
 .reset-btn {
-  color: #3d5f50;
-  transition: all 0.3s ease;
+  width: 44px;
+  height: 44px;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  transition: all 0.2s ease;
 
   &:hover {
-    color: #165a2e;
-    transform: rotate(180deg);
-    background: #eaf5ee;
+    color: #111827;
+    background: #f9fafb;
+    border-color: #d1d5db;
+    transform: rotate(90deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .streak-card {
+    gap: 16px;
+    padding: 22px;
+  }
+
+  .streak-header {
+    flex-direction: column;
+  }
+
+  .streak-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .stat {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .progress-meta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .button-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .reset-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .streak-card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .streak-header h2 {
+    font-size: 18px;
+  }
+
+  .stat-value {
+    font-size: 24px;
+  }
+
+  .streak-text {
+    font-size: 14px;
   }
 }
 

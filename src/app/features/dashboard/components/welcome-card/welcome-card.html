@@ -1,15 +1,17 @@
-<mat-card class="welcome">
-  <div class="welcome-top">
-    <p class="eyebrow">Daily Brief</p>
-    <span class="status">Active</span>
+<article class="welcome-card">
+  <div class="welcome-header">
+    <div>
+      <p class="eyebrow">Daily Brief</p>
+      <h2>{{ greeting }}, <span class="name">{{ userName }}</span></h2>
+    </div>
+    <span class="status-badge">Active</span>
   </div>
 
-  <h2>{{ greeting }}, {{ userName }}</h2>
-  <p>Welcome back. Keep momentum with one focused concept and one timed problem today.</p>
+  <p class="welcome-message">Welcome back. Keep momentum today with focused learning and intentional practice.</p>
 
-  <div class="highlights">
-    <span>Consistency over intensity</span>
-    <span>Track progress weekly</span>
-    <span>Practice with intent</span>
-  </div>
-</mat-card>
+  <ul class="highlights">
+    <li>Consistency over intensity</li>
+    <li>Track progress weekly</li>
+    <li>Practice with intent</li>
+  </ul>
+</article>
