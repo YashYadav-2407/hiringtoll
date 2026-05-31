@@ -5,7 +5,7 @@
       <div class="header-brand">
         <a routerLink="/dashboard" class="brand-logo" aria-label="Home">
           <span class="brand-icon">📚</span>
-          <span class="brand-name">Learning</span>
+          <span class="brand-name">Hiringtoll 1.0</span>
         </a>
       </div>
 
@@ -21,7 +21,8 @@
       </button>
 
       <!-- Primary Navigation -->
-      <nav class="header-nav" aria-label="Primary navigation">
+      <nav class="header-nav" #primaryNav aria-label="Primary navigation">
+        <span #navIndicator class="nav-indicator" aria-hidden="true"></span>
         <a 
           class="nav-item" 
           routerLink="/dashboard" 
@@ -85,25 +86,23 @@
         </a>
       </nav>
 
-      <!-- Right Section: Tools & Profile -->
       <div class="header-right">
         <nav class="tool-switcher" aria-label="Tool switcher">
-          <a 
-            class="tool-item active" 
-            routerLink="/dashboard"
-            [routerLinkActiveOptions]="{ exact: false }"
-            routerLinkActive="active"
-            title="Learning Tool"
-          >
-            Learning
-          </a>
-          <a 
-            class="tool-item" 
+          <a
+            #interviewCta
+            class="tool-item interview-cta"
             href="https://hiringtoll2-0-client.onrender.com/"
             rel="noopener noreferrer"
-            title="Interview Tool"
+            title="AI Mock Interview subscription"
+            aria-label="AI Mock Interview PRO subscription"
           >
-            Interview
+            <span class="tool-item-icon" aria-hidden="true">
+              <mat-icon>psychology_alt</mat-icon>
+            </span>
+            <span class="tool-item-label">AI Mock Interview</span>
+            <span class="tool-item-badge">PRO</span>
+            <span class="tool-item-reflection" aria-hidden="true"></span>
+            <span class="tool-item-shimmer" aria-hidden="true"></span>
           </a>
         </nav>
 
@@ -121,10 +120,6 @@
       aria-label="Mobile navigation"
     >
       <nav class="mobile-menu-section" aria-label="Primary navigation mobile">
-        <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMobileMenu()">
-          <mat-icon aria-hidden="true">space_dashboard</mat-icon>
-          <span>Dashboard</span>
-        </a>
         <a routerLink="/learn" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMobileMenu()">
           <mat-icon aria-hidden="true">menu_book</mat-icon>
           <span>Learn</span>

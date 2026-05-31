@@ -131,14 +131,12 @@
     box-shadow: 0 6px 14px rgba(21, 128, 61, 0.24);
   }
 
-  &:has(.tab-button:hover)::before,
   &:has(.tab-button:focus-visible)::before,
   &:has(.tab-button.active)::before {
     opacity: 1;
   }
 
   @for $i from 1 through 3 {
-    &:has(.tab-button:nth-child(#{$i}):hover)::before,
     &:has(.tab-button:nth-child(#{$i}):focus-visible)::before,
     &:has(.tab-button:nth-child(#{$i}).active)::before {
       transform: translateX(calc((108px) * (#{$i} - 1)));
@@ -173,11 +171,6 @@
     display: none;
   }
 
-  &:hover {
-    color: #111827;
-    transform: translateY(-1px);
-  }
-
   &:active {
     transform: translateY(0) scale(0.98);
   }
@@ -190,10 +183,6 @@
   &.active {
     color: #ffffff;
     font-weight: 700;
-
-    &:hover {
-      color: #ffffff;
-    }
   }
 }
 
@@ -318,24 +307,11 @@
     height: 18px;
   }
 
-  &:hover {
-    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-    border-color: #16a34a;
-    box-shadow: 0 8px 16px rgba(22, 163, 74, 0.3);
-    transform: translateY(-2px);
-  }
-
   &:focus-visible {
     outline: 2px solid #15803d;
     outline-offset: 2px;
   }
-
-  &:active {
-    transform: translateY(0);
-  }
 }
-
-/* ---- CONTENT PANEL ---- */
 .content-panel {
   animation: fadeInUp 0.4s ease-out;
 }
